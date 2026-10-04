@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=3.1">
+    <link rel="stylesheet" href="style.css?v=3.2">
 </head>
 <body>
 
@@ -164,7 +164,14 @@
     <div id="viewHistory" class="app-view" style="display: none;">
         <!-- Month Navigation Bar -->
         <div class="month-nav-bar">
-            <button class="btn-month-nav" id="btnPrevMonth" onclick="changeMonth(-1)" title="חודש קודם">
+            <button class="btn-summary-modal btn-month-summary-action" onclick="openActiveMonthSummary(); this.blur();" title="סיכום חודשי">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <line x1="6" y1="20" x2="6" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="18" y1="20" x2="18" y2="14"></line>
+                </svg>
+            </button>
+            <button class="btn-month-nav" id="btnPrevMonth" onclick="changeMonth(-1); this.blur();" title="חודש קודם">
                 <svg viewBox="0 0 24 24" width="20" height="20"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
             </button>
             <div class="month-title-wrapper" onclick="openMonthPickerModal()" title="בחר חודש">
@@ -172,32 +179,9 @@
                 <span class="month-count-badge" id="monthNavCount">(0)</span>
                 <svg class="month-title-chevron" viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l5 5 5-5z"/></svg>
             </div>
-            <button class="btn-month-nav" id="btnNextMonth" onclick="changeMonth(1)" title="חודש הבא">
+            <button class="btn-month-nav" id="btnNextMonth" onclick="changeMonth(1); this.blur();" title="חודש הבא">
                 <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
             </button>
-            <button class="btn-summary-modal btn-month-summary-action" onclick="openActiveMonthSummary()" title="סיכום חודשי">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                    <line x1="6" y1="20" x2="6" y2="10"></line>
-                    <line x1="12" y1="20" x2="12" y2="4"></line>
-                    <line x1="18" y1="20" x2="18" y2="14"></line>
-                </svg>
-            </button>
-        </div>
-
-        <div id="selectionToolbar" class="selection-toolbar">
-            <span id="selectedCountText" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan);">0 נבחרו</span>
-            <div class="toolbar-buttons">
-                <button class="btn-toolbar btn-toolbar-select" onclick="selectAllShifts()">בחר הכל</button>
-                <button class="btn-toolbar btn-toolbar-delete" onclick="deleteSelectedShifts()">מחק נבחרים</button>
-            </div>
-        </div>
-
-        <div id="sortingToolbar" class="selection-toolbar">
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan);">גרור לסידור מחדש</span>
-            <div class="toolbar-buttons">
-                <button class="btn-toolbar btn-toolbar-select" onclick="sortShiftsByDate()">איפוס לתאריכים</button>
-                <button class="btn-toolbar btn-toolbar-save" onclick="saveManualSorting()">שמור סדר</button>
-            </div>
         </div>
 
         <div id="shiftsContainer" class="shifts-list"></div>
@@ -295,10 +279,27 @@
                     <div style="text-align: center; color: var(--text-muted); padding: 20px;">טוען משתמשים...</div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 
 <div class="bottom-nav-wrapper">
+    <div id="selectionToolbar" class="selection-toolbar floating-toolbar">
+        <span id="selectedCountText" class="floating-toolbar-count">0 נבחרו</span>
+        <div class="toolbar-buttons">
+            <button class="btn-toolbar btn-toolbar-select" onclick="selectAllShifts()">בחר הכל</button>
+            <button class="btn-toolbar btn-toolbar-delete" onclick="deleteSelectedShifts()">מחק נבחרים</button>
+        </div>
+    </div>
+
+    <div id="sortingToolbar" class="selection-toolbar floating-toolbar">
+        <span class="floating-toolbar-count">מיון משמרות</span>
+        <div class="toolbar-buttons">
+            <button class="btn-toolbar btn-toolbar-select" onclick="sortShiftsByDate()">איפוס</button>
+            <button class="btn-toolbar btn-toolbar-save" onclick="saveManualSorting()">שמור סדר</button>
+        </div>
+    </div>
+
     <div class="bottom-nav-container">
         <div id="toolsDrawerWrap" class="tools-drawer-wrap">
             <button id="btnToolsMain" class="btn-tools-main" onclick="toggleToolsDrawer()" title="כלים">
@@ -655,6 +656,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=4.0"></script>
+<script type="module" src="script.js?v=4.1"></script>
 </body>
 </html>

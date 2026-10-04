@@ -815,6 +815,11 @@ window.navigateTo = function(viewName, closeMenu = true) {
     document.getElementById('viewProfile').style.display = (viewName === 'profile') ? 'flex' : 'none';
     document.getElementById('viewAdmin').style.display = (viewName === 'admin') ? 'flex' : 'none';
 
+    if (viewName !== 'history') {
+        if (typeof isSelectionMode !== 'undefined' && isSelectionMode) toggleSelectionMode();
+        if (typeof isSortingMode !== 'undefined' && isSortingMode) toggleSortingMode();
+    }
+
     const bottomNavEl = document.getElementById('bottomNav').closest('.bottom-nav-wrapper');
     if (viewName === 'profile' || viewName === 'admin') {
         bottomNavEl.style.display = 'none'; 
@@ -870,6 +875,7 @@ window.toggleToolsDrawer = function(forceState) {
         wrap.classList.remove('open');
         if (backdrop) backdrop.classList.remove('open');
         if (navWrapper) navWrapper.classList.remove('tools-open');
+        window._blockShiftClickUntil = Date.now() + 500;
     }
     window.updateBodyScrollLock();
 };
@@ -1148,11 +1154,11 @@ function setupGlobalInteractions() {
                 } else if (actionType) {
                     window.handleToolAction(actionType);
                 }
-            } else {
-                if (e.cancelable) {
-                    e.preventDefault();
-                }
             }
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+            e.stopPropagation();
             longPressed = false;
 
             if (e.type === 'touchend' || e.type === 'touchcancel') {
@@ -1185,6 +1191,7 @@ function setupGlobalInteractions() {
 }
 
 window.handleToolAction = function(type) {
+    window._blockShiftClickUntil = Date.now() + 500;
     if (type === 'multipanel') toggleMultiPanelMode();
     else if (type === 'sorting') toggleSortingMode();
     else if (type === 'selection') toggleSelectionMode();
@@ -1745,6 +1752,9 @@ function getInitialMonthKey() {
 }
 
 window.changeMonth = function(direction) {
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+    }
     if (!activeMonthKey || activeMonthKey === 'NONE') {
         activeMonthKey = getInitialMonthKey();
     }
@@ -1952,6 +1962,7 @@ window.saveManualSorting = function() {
 };
 
 window.handleCardClick = function(event, id) {
+    if (window._blockShiftClickUntil && Date.now() < window._blockShiftClickUntil) return;
     if (isSortingMode) return;
     if (event.target.closest('button') || event.target.closest('input') || event.target.closest('.checkbox-label-container')) return;
 

@@ -580,12 +580,17 @@ header {
 .bottom-nav-wrapper {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    padding: 12px 16px 20px;
+    padding: 10px 16px max(18px, env(safe-area-inset-bottom, 18px));
     display: flex;
-    justify-content: center;
-    background: linear-gradient(180deg, transparent 0%, rgba(11, 19, 41, 0.7) 40%, var(--bg-primary) 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    background: linear-gradient(180deg, transparent 0%, rgba(11, 19, 41, 0.8) 35%, var(--bg-primary) 100%);
     z-index: 900;
     pointer-events: none; 
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .bottom-nav-wrapper.tools-open,
@@ -1075,32 +1080,68 @@ header {
 
 .selection-toolbar {
     display: none;
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 10px 14px;
-    border: 1px solid var(--border-color);
+    background: rgba(18, 24, 38, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 40px;
+    padding: 5px 12px 5px 8px;
+    border: 1px solid var(--accent-cyan-dim, rgba(0, 210, 255, 0.3));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 210, 255, 0.12);
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 10px;
+    width: fit-content;
+    min-width: 250px;
+    max-width: 320px;
+    pointer-events: auto;
+    margin-bottom: 0;
+    animation: floatingToolbarSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes floatingToolbarSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .selection-toolbar.active {
     display: flex;
 }
 
+.floating-toolbar-count {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    white-space: nowrap;
+    letter-spacing: -0.2px;
+    padding-right: 4px;
+}
+
 .toolbar-buttons {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 6px;
 }
 
 .btn-toolbar {
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.8rem;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 0.78rem;
     font-weight: 700;
     border: none;
     cursor: pointer;
+    transition: transform 0.12s, opacity 0.12s, background-color 0.12s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.btn-toolbar:active {
+    transform: scale(0.92);
 }
 
 .btn-toolbar-select {
@@ -1146,16 +1187,24 @@ header {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.12s, background-color 0.12s, border-color 0.12s;
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    user-select: none;
 }
 
-.btn-month-nav:hover {
-    background: rgba(0, 229, 255, 0.15);
-    border-color: var(--accent-cyan);
+@media (hover: hover) and (pointer: fine) {
+    .btn-month-nav:hover {
+        background: rgba(0, 229, 255, 0.15);
+        border-color: var(--accent-cyan);
+    }
 }
 
 .btn-month-nav:active {
+    background: rgba(0, 229, 255, 0.25);
+    border-color: var(--accent-cyan);
+    color: #fff;
     transform: scale(0.9);
 }
 
@@ -1536,6 +1585,11 @@ header {
 
 .mode-selection .select-checkbox-container {
     display: flex;
+}
+
+.shifts-list.mode-selection,
+.shifts-list.mode-sorting {
+    padding-bottom: 50px;
 }
 
 .custom-checkbox {
