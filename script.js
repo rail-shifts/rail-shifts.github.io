@@ -2612,34 +2612,40 @@ window.handleShiftSearchInput = function(val) {
     renderShifts();
 };
 
-function matchesShiftSearch(shift, query) {
-    if (!query) return true;
-    
-    // Check siddur
-    if (shift.siddur && shift.siddur.toLowerCase().includes(query)) return true;
+function normalizeSearchText(str) {
+    if (!str) return '';
+    return str
+        .toLowerCase()
+        .replace(/["'״׳`]/g, '')       // מסיר גרשיים וגרשים מכל הסוגים (נל"ת -> נלת)
+        .replace(/יי/g, 'י')           // פרימיה -> פרמיה
+        .replace(/[\u0591-\u05C7]/g, '')// מסיר ניקוד אם קיים
+        .trim();
+}
 
-    // Check notes
-    if (shift.notes && shift.notes.toLowerCase().includes(query)) return true;
+function matchesShiftSearch(shift, rawQuery) {
+    if (!rawQuery) return true;
+    const qNorm = normalizeSearchText(rawQuery);
+    if (!qNorm) return true;
 
-    // Check date parts (YYYY-MM-DD or DD/MM)
-    if (shift.date) {
-        const parts = shift.date.split('-');
-        if (parts.length === 3) {
-            const dFmt = `${parts[2]}/${parts[1]}`;
-            const fullFmt = `${parts[2]}/${parts[1]}/${parts[0]}`;
-            if (dFmt.includes(query) || fullFmt.includes(query) || shift.date.includes(query)) return true;
-        }
-        const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-        const [y, m, d] = shift.date.split('-').map(Number);
-        const dayIdx = new Date(y, m - 1, d).getDay();
-        const dayName = dayNames[dayIdx] || '';
-        if (dayName.includes(query) || ('יום ' + dayName).includes(query)) return true;
+    // 1. בדיקת תגיות מיוחדות: נל"ת / פרמיה / הדרכה / הערות
+    if (qNorm === 'נלת') {
+        const nalt = (Number(shift.naltStartMinutes) || 0) + (Number(shift.naltEndMinutes) || 0);
+        return nalt > 0;
+    }
+    if (qNorm === 'פרמיה') {
+        return Boolean(shift.premStartTime && shift.premEndTime);
+    }
+    if (qNorm === 'הדרכה') {
+        return Boolean(shift.instructorStartTime && shift.instructorEndTime);
+    }
+    if (qNorm === 'הערה' || qNorm === 'הערות') {
+        return Boolean(shift.notes && shift.notes.trim());
     }
 
-    // Check shift type keywords
-    const isMorning = query === 'בוקר';
-    const isNoon = query === 'צהריים' || query === 'צהרים';
-    const isNight = query === 'לילה';
+    // 2. בדיקת סוג משמרת (בוקר / צהריים / לילה)
+    const isMorning = qNorm === 'בוקר';
+    const isNoon = qNorm === 'צהרים' || qNorm === 'צהריים';
+    const isNight = qNorm === 'לילה';
 
     if (shift.startTime && (isMorning || isNoon || isNight)) {
         const h = Number(shift.startTime.split(':')[0]) || 0;
@@ -2648,21 +2654,47 @@ function matchesShiftSearch(shift, query) {
         if (isNight && (h >= 18 || h < 4)) return true;
     }
 
-    // Check tags: prem, nalt, instructor
-    if (query === 'פרמיה' || query === 'פרימיה') {
-        if (shift.premStartTime && shift.premEndTime) return true;
-    }
-    if (query === 'נלת' || query === 'נל״ת') {
-        const nalt = (Number(shift.naltStartMinutes) || 0) + (Number(shift.naltEndMinutes) || 0);
-        if (nalt > 0) return true;
-    }
-    if (query === 'הדרכה') {
-        if (shift.instructorStartTime && shift.instructorEndTime) return true;
+    // 3. בדיקת תאריך חכמה וגמישה (2/9, 02.09, 2/9/26, 2026-09-02, יום ראשון)
+    if (shift.date) {
+        const [sYear, sMonth, sDay] = shift.date.split('-'); // 2026, 09, 02
+        const sDayNum = parseInt(sDay, 10);                  // 2
+        const sMonthNum = parseInt(sMonth, 10);              // 9
+        const sYearShort = sYear ? sYear.slice(-2) : '';     // 26
+
+        // בדיקה לפי מפרידי תאריכים (. או / או -)
+        const dateQueryParts = rawQuery.trim().split(/[./\-]/).map(p => p.trim()).filter(Boolean);
+        if (dateQueryParts.length >= 2 && dateQueryParts.every(p => !isNaN(Number(p)))) {
+            const qD = parseInt(dateQueryParts[0], 10);
+            const qM = parseInt(dateQueryParts[1], 10);
+            const qY = dateQueryParts[2] ? dateQueryParts[2] : null;
+
+            if (qD === sDayNum && qM === sMonthNum) {
+                if (!qY) return true; // חיפוש 2/9 או 02.09
+                if (qY === sYear || qY === sYearShort) return true; // חיפוש 2/9/26 או 02.09.2026
+            }
+        }
+
+        // בדיקה לפי שם יום
+        const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+        const dayIdx = new Date(Number(sYear), sMonthNum - 1, sDayNum).getDay();
+        const dayName = dayNames[dayIdx] || '';
+        if (dayName.includes(qNorm) || ('יום ' + dayName).includes(qNorm)) return true;
     }
 
-    // Check hours
-    if (shift.startTime && shift.startTime.includes(query)) return true;
-    if (shift.endTime && shift.endTime.includes(query)) return true;
+    // 4. בדיקת טקסט חופשי: סידור והערות
+    if (shift.siddur) {
+        const sNorm = normalizeSearchText(shift.siddur);
+        if (sNorm.includes(qNorm)) return true;
+    }
+
+    if (shift.notes) {
+        const nNorm = normalizeSearchText(shift.notes);
+        if (nNorm.includes(qNorm)) return true;
+    }
+
+    // 5. בדיקת שעות ישירה (08:00 וכו')
+    if (shift.startTime && shift.startTime.includes(rawQuery.trim())) return true;
+    if (shift.endTime && shift.endTime.includes(rawQuery.trim())) return true;
 
     return false;
 }
