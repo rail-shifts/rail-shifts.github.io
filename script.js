@@ -2319,8 +2319,11 @@ function buildShiftCardHTML(shift, overlappingIds) {
     const shiftIdStr = String(shift.id);
     const hasStart = Boolean(shift.startTime);
     const hasEnd = Boolean(shift.endTime);
-    const isIncomplete = !hasStart || !hasEnd;
-    const isActive = hasStart && !hasEnd;
+    const isComplete = hasStart && hasEnd;
+
+    const activeShiftObj = typeof getActiveShift === 'function' ? getActiveShift() : null;
+    const isActive = Boolean(activeShiftObj && String(activeShiftObj.id) === shiftIdStr);
+    const isIncomplete = !isComplete && !isActive;
     const isSelected = selectedShiftIds.has(shiftIdStr);
     const isOverlap = overlappingIds.has(shiftIdStr);
 
@@ -2487,7 +2490,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
                             ' + (hasNotes ? '<span class="tag tag-notes" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
                         </div>\
                         <div class="badges-group-left">\
-                            ' + (hasStart && hasEnd ? '<span class="tag tag-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : '<span class="tag tag-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>') + '\
+                            ' + (isComplete ? '<span class="tag tag-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                             ' + (isOverlap ? '<span class="tag tag-overlap">כפילות</span>' : '') + '\
                         </div>\
                     </div>\

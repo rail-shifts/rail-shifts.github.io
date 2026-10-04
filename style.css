@@ -1823,9 +1823,9 @@ header {
 }
 
 .tag-alert {
-    background: rgba(0, 210, 255, 0.12);
-    color: var(--accent-cyan);
-    border: 1px solid rgba(0, 210, 255, 0.3);
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
     padding: 0 6px;
     min-width: 24px;
 }
