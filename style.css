@@ -1191,55 +1191,78 @@ header {
 .btn-month-search-action {
     flex-shrink: 0;
     margin-right: auto; /* Pushes to far left in RTL */
+    position: relative;
+    overflow: hidden;
 }
 
-/* Integrated Search Bar Overlay in Month Nav */
-.month-search-overlay {
+.btn-month-search-action .icon-search-magnifier,
+.btn-month-search-action .icon-search-close {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-primary);
-    border-bottom: 1px solid rgba(0, 229, 255, 0.25);
-    display: flex;
-    align-items: center;
-    padding: 4px 6px;
-    z-index: 5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-month-search-action .icon-search-close {
     opacity: 0;
-    pointer-events: none;
-    transform: translateY(-4px);
-    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translate(-50%, -50%) scale(0.6) rotate(-90deg);
+    color: var(--accent-red);
 }
 
-.month-search-overlay.active {
+.month-nav-bar.is-searching .btn-month-search-action .icon-search-magnifier {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6) rotate(90deg);
+}
+
+.month-nav-bar.is-searching .btn-month-search-action .icon-search-close {
     opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
 }
 
-.month-search-inner {
+/* Center Group Transitions */
+.month-nav-center-group {
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.month-nav-bar.is-searching .month-nav-center-group {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Integrated Search Field in Center (Between buttons) */
+.month-search-center {
+    position: absolute;
+    left: 48px;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
-    gap: 8px;
-    width: 100%;
+    gap: 6px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 24px;
+    border-radius: 20px;
     padding: 0 12px;
-    height: 38px;
+    height: 36px;
     box-sizing: border-box;
-    transition: border-color 0.2s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, border-color 0.2s ease;
 }
 
-.month-search-inner:focus-within {
+.month-nav-bar.is-searching .month-search-center {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.month-search-center:focus-within {
     border-color: var(--accent-cyan);
-    background: rgba(0, 229, 255, 0.04);
-}
-
-.search-input-icon {
-    color: var(--accent-cyan);
-    flex-shrink: 0;
+    background: rgba(0, 229, 255, 0.05);
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
 }
 
 .shift-search-input {
@@ -1248,7 +1271,7 @@ header {
     border: none;
     outline: none;
     color: #ffffff;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-family: inherit;
     padding: 0;
     text-align: right;
@@ -1257,7 +1280,7 @@ header {
 
 .shift-search-input::placeholder {
     color: var(--text-muted);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
 }
 
 .btn-search-clear {
@@ -1281,25 +1304,6 @@ header {
 
 .btn-search-clear:hover {
     color: #ffffff;
-}
-
-.btn-search-close {
-    background: transparent;
-    border: none;
-    color: var(--accent-cyan);
-    font-size: 0.85rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    outline: none;
-    transition: opacity 0.15s;
-}
-
-.btn-search-close:active {
-    opacity: 0.7;
 }
 .month-picker-modal-content {
     display: flex;

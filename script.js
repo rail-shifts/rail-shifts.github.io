@@ -2566,23 +2566,25 @@ function buildShiftCardHTML(shift, overlappingIds) {
 let currentShiftSearchQuery = '';
 
 window.toggleShiftSearch = function() {
-    const overlay = document.getElementById('monthSearchOverlay');
+    const bar = document.getElementById('monthNavBar');
     const input = document.getElementById('shiftSearchInput');
-    if (!overlay) return;
-    const isOpening = !overlay.classList.contains('active');
-    overlay.classList.toggle('active', isOpening);
-    if (isOpening && input) {
-        setTimeout(() => input.focus(), 100);
-    } else {
+    if (!bar) return;
+    const isSearching = bar.classList.contains('is-searching');
+    if (isSearching) {
         closeShiftSearch();
+    } else {
+        bar.classList.add('is-searching');
+        if (input) {
+            setTimeout(() => input.focus(), 80);
+        }
     }
 };
 
 window.closeShiftSearch = function() {
-    const overlay = document.getElementById('monthSearchOverlay');
+    const bar = document.getElementById('monthNavBar');
     const input = document.getElementById('shiftSearchInput');
     const clearBtn = document.getElementById('btnSearchClear');
-    if (overlay) overlay.classList.remove('active');
+    if (bar) bar.classList.remove('is-searching');
     if (input) input.value = '';
     if (clearBtn) clearBtn.classList.remove('visible');
     currentShiftSearchQuery = '';
