@@ -1536,28 +1536,19 @@ header {
     background: rgba(0, 210, 255, 0.05);
 }
 
-.shift-corner-icon {
-    position: absolute;
-    top: -7px;
-    right: -7px;
-    width: 22px;
-    height: 22px;
-    display: none;
+.shift-type-icon-inline {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
-    pointer-events: none;
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
 }
 
-.shift-corner-icon svg {
+.shift-type-icon-inline svg {
     width: 100%;
     height: 100%;
-}
-
-.shift-card.type-morning .shift-corner-icon,
-.shift-card.type-noon .shift-corner-icon,
-.shift-card.type-night .shift-corner-icon {
-    display: flex;
+    display: block;
 }
 
 .shift-card.active-shift {
@@ -1653,9 +1644,10 @@ header {
 
 .shift-row-main {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: minmax(88px, max-content) 1fr auto;
     align-items: start;
     width: 100%;
+    gap: 8px;
 }
 
 .shift-date-box {
@@ -1664,7 +1656,6 @@ header {
     align-items: flex-start;
     text-align: right;
     min-width: 0;
-    margin-left: 8px;
 }
 
 .shift-day-name {
@@ -1673,6 +1664,9 @@ header {
     color: var(--text-main);
     line-height: 1.25;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .shift-formatted-date {

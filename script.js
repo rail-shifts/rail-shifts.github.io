@@ -2388,9 +2388,55 @@ function buildShiftCardHTML(shift, overlappingIds) {
     let nightSvg = '<g><circle cx="11.5" cy="12" r="8" fill="url(#night-grad-' + shiftIdStr + ')" mask="url(#moon-mask-' + shiftIdStr + ')"/><path d="M19 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2zM14 10l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5.5-1zM18.5 13l.4.8.8.4-.8.4-.4.8-.4-.8-.8-.4.8-.4.4-.8z" fill="url(#night-grad-' + shiftIdStr + ')" stroke="none"/></g>';
 
     let cornerIconInner = '';
-    if (shiftTypeClass === 'type-morning') cornerIconInner = morningSvg;
-    else if (shiftTypeClass === 'type-noon') cornerIconInner = noonSvg;
-    else if (shiftTypeClass === 'type-night') cornerIconInner = nightSvg;
+    let shiftTypeTitle = '';
+    if (shiftTypeClass === 'type-morning') {
+        cornerIconInner = morningSvg;
+        shiftTypeTitle = 'משמרת בוקר';
+    } else if (shiftTypeClass === 'type-noon') {
+        cornerIconInner = noonSvg;
+        shiftTypeTitle = 'משמרת צהריים';
+    } else if (shiftTypeClass === 'type-night') {
+        cornerIconInner = nightSvg;
+        shiftTypeTitle = 'משמרת לילה';
+    }
+
+    let typeIconHtml = '';
+    if (cornerIconInner) {
+        typeIconHtml = '\
+            <span class="shift-type-icon-inline" title="' + shiftTypeTitle + '">\
+                <svg viewBox="0 0 24 24">\
+                    <defs>\
+                        <linearGradient id="morning-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
+                            <stop offset="0%" stop-color="#38bdf8"/>\
+                            <stop offset="100%" stop-color="#0284c7"/>\
+                        </linearGradient>\
+                        <linearGradient id="combined-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="0%" y2="100%">\
+                            <stop offset="0%" stop-color="#fbbf24"/>\
+                            <stop offset="100%" stop-color="#38bdf8"/>\
+                        </linearGradient>\
+                        <linearGradient id="sun-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
+                            <stop offset="0%" stop-color="#fde047"/>\
+                            <stop offset="100%" stop-color="#f59e0b"/>\
+                        </linearGradient>\
+                        <linearGradient id="noon-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
+                            <stop offset="0%" stop-color="#fef08a"/>\
+                            <stop offset="50%" stop-color="#f59e0b"/>\
+                            <stop offset="100%" stop-color="#d97706"/>\
+                        </linearGradient>\
+                        <linearGradient id="night-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
+                            <stop offset="0%" stop-color="#e9d5ff"/>\
+                            <stop offset="50%" stop-color="#a855f7"/>\
+                            <stop offset="100%" stop-color="#818cf8"/>\
+                        </linearGradient>\
+                        <mask id="moon-mask-' + shiftIdStr + '">\
+                            <rect width="24" height="24" fill="white"/>\
+                            <circle cx="15.5" cy="11.5" r="7.5" fill="black"/>\
+                        </mask>\
+                    </defs>\
+                    ' + cornerIconInner + '\
+                </svg>\
+            </span>';
+    }
 
     const naltSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.76l.12.34V17z"/><circle fill="currentColor" cx="7.5" cy="14.5" r="1.5"/><circle fill="currentColor" cx="16.5" cy="14.5" r="1.5"/></svg>';
     const premSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
@@ -2403,45 +2449,6 @@ function buildShiftCardHTML(shift, overlappingIds) {
         <div class="shift-card ' + shiftTypeClass + ' ' + (isActive ? 'active-shift' : '') + ' ' + (isOverlap ? 'has-overlap' : '') + ' ' + (isIncomplete && !isActive ? 'incomplete' : '') + ' ' + (isSelected ? 'selected-for-delete' : '') + '" \
              data-id="' + shiftIdStr + '" \
              draggable="' + (isSortingMode ? 'true' : 'false') + '">\
-            \
-            <div class="shift-corner-icon">\
-                <svg viewBox="0 0 24 24">\
-                    <defs>\
-                        <linearGradient id="morning-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
-                            <stop offset="0%" stop-color="#38bdf8"/>\
-                            <stop offset="50%" stop-color="#0ea5e9"/>\
-                            <stop offset="100%" stop-color="#0369a1"/>\
-                        </linearGradient>\
-                        <linearGradient id="combined-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="0%" y2="100%">\
-                            <stop offset="0%" stop-color="#fde047"/>\
-                            <stop offset="25%" stop-color="#fb923c"/>\
-                            <stop offset="50%" stop-color="#ef4444"/>\
-                            <stop offset="51%" stop-color="#38bdf8"/>\
-                            <stop offset="100%" stop-color="#0369a1"/>\
-                        </linearGradient>\
-                        <linearGradient id="sun-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
-                            <stop offset="0%" stop-color="#fde047"/>\
-                            <stop offset="35%" stop-color="#f97316"/>\
-                            <stop offset="100%" stop-color="#e11d48"/>\
-                        </linearGradient>\
-                        <linearGradient id="noon-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
-                            <stop offset="0%" stop-color="#fed7aa"/>\
-                            <stop offset="50%" stop-color="#f97316"/>\
-                            <stop offset="100%" stop-color="#c2410c"/>\
-                        </linearGradient>\
-                        <linearGradient id="night-grad-' + shiftIdStr + '" x1="0%" y1="0%" x2="100%" y2="100%">\
-                            <stop offset="0%" stop-color="#e879f9"/>\
-                            <stop offset="50%" stop-color="#a855f7"/>\
-                            <stop offset="100%" stop-color="#7e22ce"/>\
-                        </linearGradient>\
-                        <mask id="moon-mask-' + shiftIdStr + '">\
-                            <rect width="24" height="24" fill="white"/>\
-                            <circle cx="15.5" cy="11.5" r="7.5" fill="black"/>\
-                        </mask>\
-                    </defs>\
-                    ' + cornerIconInner + '\
-                </svg>\
-            </div>\
             \
             <div class="shift-header" onclick="handleCardClick(event, \'' + shiftIdStr + '\')">\
                 <div class="drag-handle-container">\
@@ -2460,8 +2467,8 @@ function buildShiftCardHTML(shift, overlappingIds) {
                 </div>\
                 <div class="shift-content-block">\
                     <div class="shift-row-main">\
-                        <div class="shift-date-box" style="margin-left: 10px;">\
-                            <span class="shift-day-name">' + dayName + '</span>\
+                        <div class="shift-date-box">\
+                            <span class="shift-day-name">' + typeIconHtml + '<span>' + dayName + '</span></span>\
                             <span class="shift-formatted-date">' + dateFmt + '</span>\
                         </div>\
                         <div class="shift-middle-box">\
