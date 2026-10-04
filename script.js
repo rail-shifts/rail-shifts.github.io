@@ -186,7 +186,16 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+const isTestEnvironment = window.location.hostname.includes('vercel.app') || window.location.hostname === 'localhost';
+
 async function handleUserAuthenticationSync(uid) {
+    if (isTestEnvironment) {
+        console.log('[Test Mode] Isolated environment: Cloud shifts sync disabled. Preserving local shifts.');
+        let localShifts = JSON.parse(localStorage.getItem('railway_shifts') || '[]');
+        window.shifts = localShifts;
+        refreshUIAfterSync();
+        return;
+    }
     try {
         const shiftsRef = collection(db, 'users', uid, 'shifts');
         const snapshot = await getDocs(shiftsRef);
@@ -326,10 +335,14 @@ window.confirmSignOut = function() {
         async () => {
             try {
                 await signOut(auth);
-                window.shifts = [];
                 window.isUserInstructor = false;
-                localStorage.removeItem('railway_shifts');
-                localStorage.removeItem('railway_last_user');
+                if (!isTestEnvironment) {
+                    window.shifts = [];
+                    localStorage.removeItem('railway_shifts');
+                    localStorage.removeItem('railway_last_user');
+                } else {
+                    console.log('[Test Mode] Isolated environment: Preserving local shifts on logout.');
+                }
                 refreshUIAfterSync();
             } catch (error) {
                 console.error("Sign out error:", error);
@@ -352,7 +365,7 @@ window.loadLocalShifts = function() {
 window.saveShiftToCloudAndLocal = async function(shiftObj) {
     localStorage.setItem('railway_shifts', JSON.stringify(window.shifts));
     
-    if (window.currentUser) {
+    if (window.currentUser && !isTestEnvironment) {
         localStorage.setItem('railway_last_user', window.currentUser.uid);
         try {
             await setDoc(doc(db, 'users', window.currentUser.uid, 'shifts', String(shiftObj.id)), shiftObj);
@@ -365,7 +378,7 @@ window.saveShiftToCloudAndLocal = async function(shiftObj) {
 window.deleteShiftFromCloudAndLocal = async function(shiftId) {
     localStorage.setItem('railway_shifts', JSON.stringify(window.shifts));
     
-    if (window.currentUser) {
+    if (window.currentUser && !isTestEnvironment) {
         try {
             await deleteDoc(doc(db, 'users', window.currentUser.uid, 'shifts', String(shiftId)));
         } catch (e) {
@@ -1188,6 +1201,24 @@ function setupGlobalInteractions() {
         exportBtn.addEventListener('touchend', () => exportBtn.classList.remove('active-touch'));
         exportBtn.addEventListener('touchcancel', () => exportBtn.classList.remove('active-touch'));
     }
+
+    document.querySelectorAll('.btn-month-nav, .btn-month-summary-action').forEach(btn => {
+        if (btn.dataset.navTouchInit) return;
+        btn.dataset.navTouchInit = 'true';
+
+        btn.addEventListener('touchstart', () => {
+            btn.classList.add('btn-pressed');
+        }, { passive: true });
+
+        const removePressed = () => {
+            setTimeout(() => {
+                btn.classList.remove('btn-pressed');
+            }, 140);
+        };
+
+        btn.addEventListener('touchend', removePressed);
+        btn.addEventListener('touchcancel', () => btn.classList.remove('btn-pressed'));
+    });
 }
 
 window.handleToolAction = function(type) {

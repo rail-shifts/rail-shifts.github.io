@@ -1201,11 +1201,12 @@ header {
     }
 }
 
-.btn-month-nav:active {
-    background: rgba(0, 229, 255, 0.25);
-    border-color: var(--accent-cyan);
-    color: #fff;
-    transform: scale(0.9);
+.btn-month-nav:active,
+.btn-month-nav.btn-pressed {
+    background: rgba(0, 229, 255, 0.28) !important;
+    border-color: var(--accent-cyan) !important;
+    color: #fff !important;
+    transform: scale(0.9) !important;
 }
 
 .btn-month-nav svg {
@@ -1362,10 +1363,11 @@ header {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.btn-summary-modal:active {
-    transform: scale(0.85);
-    background: rgba(0, 210, 255, 0.15);
-    border-color: var(--accent-cyan);
+.btn-summary-modal:active,
+.btn-summary-modal.btn-pressed {
+    transform: scale(0.85) !important;
+    background: rgba(0, 210, 255, 0.22) !important;
+    border-color: var(--accent-cyan) !important;
 }
 
 .btn-summary-modal svg {
