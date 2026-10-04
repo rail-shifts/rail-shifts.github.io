@@ -1514,39 +1514,34 @@ header {
 .shifts-list-inner {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    gap: 8px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .shift-card {
-    background: transparent;
-    border-radius: 0;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: none;
-    transition: background 0.12s, border-color 0.12s;
+    background: var(--bg-card);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 3px solid rgba(0, 210, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.15s, background-color 0.15s;
     user-select: none;
     position: relative;
 }
 
-.shift-card:last-child {
-    border-bottom: none;
-}
-
 .shift-card:active {
-    background: rgba(0, 210, 255, 0.04);
+    background: rgba(0, 210, 255, 0.05);
 }
 
 .shift-corner-icon {
     position: absolute;
-    top: 6px;
-    right: 8px;
-    width: 20px;
-    height: 20px;
+    top: -7px;
+    right: -7px;
+    width: 22px;
+    height: 22px;
     display: none;
     align-items: center;
     justify-content: center;
@@ -1566,23 +1561,27 @@ header {
 }
 
 .shift-card.active-shift {
-    background: rgba(16, 185, 129, 0.07);
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-card) 40%);
+    border-color: rgba(16, 185, 129, 0.45);
     border-right: 3px solid var(--accent-green);
 }
 
 .shift-card.has-overlap {
-    background: rgba(234, 179, 8, 0.07);
+    background: linear-gradient(90deg, rgba(234, 179, 8, 0.08) 0%, var(--bg-card) 40%);
+    border-color: rgba(234, 179, 8, 0.45);
     border-right: 3px solid var(--accent-yellow);
 }
 
 .shift-card.selected-for-delete {
-    background: rgba(239, 68, 68, 0.12);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--accent-red);
     border-right: 3px solid var(--accent-red);
 }
 
 .shift-card.dragging {
     opacity: 0.5;
-    background: rgba(0, 210, 255, 0.08);
+    border: 2px dashed var(--accent-cyan);
+    transform: scale(0.98);
 }
 
 .shift-card.drag-over {
@@ -1863,10 +1862,10 @@ header {
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.22);
     border-top: none;
     margin: 0;
-    border-radius: 0;
+    border-radius: 0 0 14px 14px;
 }
 
 .shift-details.expanded {
