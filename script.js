@@ -2616,36 +2616,45 @@ function normalizeSearchText(str) {
     if (!str) return '';
     return str
         .toLowerCase()
-        .replace(/["'״׳`]/g, '')       // מסיר גרשיים וגרשים מכל הסוגים (נל"ת -> נלת)
-        .replace(/יי/g, 'י')           // פרימיה -> פרמיה
-        .replace(/[\u0591-\u05C7]/g, '')// מסיר ניקוד אם קיים
+        .replace(/["'״׳`]/g, '')       // מסיר גרשיים וגרשים
+        .replace(/[\u0591-\u05C7]/g, '')// מסיר ניקוד
         .trim();
 }
 
 function matchesShiftSearch(shift, rawQuery) {
     if (!rawQuery) return true;
-    const qNorm = normalizeSearchText(rawQuery);
+    const qTrim = rawQuery.trim();
+    const qNorm = normalizeSearchText(qTrim);
     if (!qNorm) return true;
 
-    // 1. בדיקת תגיות מיוחדות: נל"ת / פרמיה / הדרכה / הערות
-    if (qNorm === 'נלת') {
-        const nalt = (Number(shift.naltStartMinutes) || 0) + (Number(shift.naltEndMinutes) || 0);
-        return nalt > 0;
-    }
-    if (qNorm === 'פרמיה') {
-        return Boolean(shift.premStartTime && shift.premEndTime);
-    }
-    if (qNorm === 'הדרכה') {
-        return Boolean(shift.instructorStartTime && shift.instructorEndTime);
-    }
-    if (qNorm === 'הערה' || qNorm === 'הערות') {
-        return Boolean(shift.notes && shift.notes.trim());
+    // 1. חיפוש תגיות בזמן אמת (Prefix Matching תוך כדי הקלדה)
+    // פרמיה / פרימיה (פ, פר, פרי, פרמ, פרמי, פרימיה, פרמיה)
+    const isPremMatch = ['פרמיה', 'פרימיה'].some(w => w.startsWith(qNorm) || qNorm.startsWith(w));
+    if (isPremMatch && qNorm.length >= 2) {
+        if (shift.premStartTime && shift.premEndTime) return true;
     }
 
-    // 2. בדיקת סוג משמרת (בוקר / צהריים / לילה)
-    const isMorning = qNorm === 'בוקר';
-    const isNoon = qNorm === 'צהרים' || qNorm === 'צהריים';
-    const isNight = qNorm === 'לילה';
+    // נל"ת / נלת (נ, נל, נלת)
+    const isNaltMatch = ['נלת', 'נל"ת'].some(w => normalizeSearchText(w).startsWith(qNorm));
+    if (isNaltMatch && qNorm.length >= 2) {
+        const nalt = (Number(shift.naltStartMinutes) || 0) + (Number(shift.naltEndMinutes) || 0);
+        if (nalt > 0) return true;
+    }
+
+    // הדרכה (הד, הדר, הדרכ, הדרכה)
+    if ('הדרכה'.startsWith(qNorm) && qNorm.length >= 2) {
+        if (shift.instructorStartTime && shift.instructorEndTime) return true;
+    }
+
+    // הערות (הע, הער, הערה, הערות)
+    if (('הערות'.startsWith(qNorm) || 'הערה'.startsWith(qNorm)) && qNorm.length >= 3) {
+        if (shift.notes && shift.notes.trim()) return true;
+    }
+
+    // 2. חיפוש סוגי משמרות בזמן אמת (בוקר / צהריים / לילה)
+    let isMorning = 'בוקר'.startsWith(qNorm) && qNorm.length >= 2;
+    let isNoon = ('צהרים'.startsWith(qNorm) || 'צהריים'.startsWith(qNorm)) && qNorm.length >= 2;
+    let isNight = 'לילה'.startsWith(qNorm) && qNorm.length >= 2;
 
     if (shift.startTime && (isMorning || isNoon || isNight)) {
         const h = Number(shift.startTime.split(':')[0]) || 0;
@@ -2654,34 +2663,47 @@ function matchesShiftSearch(shift, rawQuery) {
         if (isNight && (h >= 18 || h < 4)) return true;
     }
 
-    // 3. בדיקת תאריך חכמה וגמישה (2/9, 02.09, 2/9/26, 2026-09-02, יום ראשון)
+    // 3. חיפוש תאריכים מתמשך בזמן אמת (2, 2., 2.9, 02/09, 2/9/26, 2026-09-02)
     if (shift.date) {
         const [sYear, sMonth, sDay] = shift.date.split('-'); // 2026, 09, 02
         const sDayNum = parseInt(sDay, 10);                  // 2
         const sMonthNum = parseInt(sMonth, 10);              // 9
         const sYearShort = sYear ? sYear.slice(-2) : '';     // 26
 
-        // בדיקה לפי מפרידי תאריכים (. או / או -)
-        const dateQueryParts = rawQuery.trim().split(/[./\-]/).map(p => p.trim()).filter(Boolean);
-        if (dateQueryParts.length >= 2 && dateQueryParts.every(p => !isNaN(Number(p)))) {
-            const qD = parseInt(dateQueryParts[0], 10);
-            const qM = parseInt(dateQueryParts[1], 10);
-            const qY = dateQueryParts[2] ? dateQueryParts[2] : null;
-
-            if (qD === sDayNum && qM === sMonthNum) {
-                if (!qY) return true; // חיפוש 2/9 או 02.09
-                if (qY === sYear || qY === sYearShort) return true; // חיפוש 2/9/26 או 02.09.2026
-            }
-        }
-
-        // בדיקה לפי שם יום
+        // בדיקה לפי שם יום תוך כדי הקלדה (ר, רא, ראש, ראשו, ראשון)
         const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
         const dayIdx = new Date(Number(sYear), sMonthNum - 1, sDayNum).getDay();
         const dayName = dayNames[dayIdx] || '';
-        if (dayName.includes(qNorm) || ('יום ' + dayName).includes(qNorm)) return true;
+        if (dayName.startsWith(qNorm) || dayName.includes(qNorm) || ('יום ' + dayName).includes(qNorm)) {
+            return true;
+        }
+
+        // אם המשתמש מקליד תאריך עם מפריד (. או / או -)
+        const dateQueryParts = qTrim.split(/[./\-]/).map(p => p.trim());
+        if (dateQueryParts.length > 1) {
+            const qD = parseInt(dateQueryParts[0], 10);
+            const rawM = dateQueryParts[1];
+            const qM = rawM ? parseInt(rawM, 10) : null;
+            const qY = dateQueryParts[2] ? dateQueryParts[2].trim() : null;
+
+            if (!isNaN(qD) && qD === sDayNum) {
+                // הקליד למשל "2." או "2/" (עוד לא סיים להקליד חודש)
+                if (!rawM) return true;
+                // הקליד חודש למשל "2.9"
+                if (!isNaN(qM) && qM === sMonthNum) {
+                    if (!qY) return true;
+                    if (qY === sYear || qY === sYearShort || sYear.startsWith(qY)) return true;
+                }
+            }
+        } else if (!isNaN(Number(qTrim)) && Number(qTrim) > 0 && Number(qTrim) <= 31) {
+            // הקליד רק מספר בודד (למשל "2" או "02") - התאמת יום בחודש
+            if (parseInt(qTrim, 10) === sDayNum) {
+                return true;
+            }
+        }
     }
 
-    // 4. בדיקת טקסט חופשי: סידור והערות
+    // 4. בדיקת טקסט חופשי: סידור והערות תוך כדי הקלדה
     if (shift.siddur) {
         const sNorm = normalizeSearchText(shift.siddur);
         if (sNorm.includes(qNorm)) return true;
@@ -2692,9 +2714,9 @@ function matchesShiftSearch(shift, rawQuery) {
         if (nNorm.includes(qNorm)) return true;
     }
 
-    // 5. בדיקת שעות ישירה (08:00 וכו')
-    if (shift.startTime && shift.startTime.includes(rawQuery.trim())) return true;
-    if (shift.endTime && shift.endTime.includes(rawQuery.trim())) return true;
+    // 5. בדיקת שעות ישירה (08, 08:, 08:00 וכו')
+    if (shift.startTime && shift.startTime.includes(qTrim)) return true;
+    if (shift.endTime && shift.endTime.includes(qTrim)) return true;
 
     return false;
 }
