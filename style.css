@@ -1770,64 +1770,64 @@ header {
 .tag {
     font-size: 0.72rem;
     font-weight: 700;
-    padding: 3px 8px;
+    padding: 0 8px;
+    height: 24px;
+    box-sizing: border-box;
     border-radius: 6px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     font-family: 'Inter', 'Assistant', sans-serif;
     font-variant-numeric: tabular-nums;
 }
 
 .tag-overlap {
-    background: rgba(234, 179, 8, 0.2);
+    background: rgba(234, 179, 8, 0.12);
     color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.5);
+    border: 1px solid rgba(234, 179, 8, 0.3);
 }
 
 .tag-nalt {
-    background: rgba(250, 204, 21, 0.15);
+    background: rgba(250, 204, 21, 0.12);
     color: var(--accent-taxi);
-    border: 1px solid rgba(250, 204, 21, 0.35);
+    border: 1px solid rgba(250, 204, 21, 0.3);
 }
 
 .tag-prem {
-    background: rgba(192, 132, 252, 0.15);
+    background: rgba(192, 132, 252, 0.12);
     color: var(--accent-purple);
-    border: 1px solid rgba(192, 132, 252, 0.35);
+    border: 1px solid rgba(192, 132, 252, 0.3);
 }
 
 .tag-instructor {
-    background: rgba(56, 189, 248, 0.15);
+    background: rgba(56, 189, 248, 0.12);
     color: var(--accent-instructor);
-    border: 1px solid rgba(56, 189, 248, 0.35);
+    border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
 .tag-notes {
-    background: rgba(148, 163, 184, 0.12);
+    background: rgba(148, 163, 184, 0.1);
     color: var(--text-muted);
-    border: 1px solid rgba(148, 163, 184, 0.25);
-    padding: 4px 7px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    padding: 0 6px;
+    min-width: 24px;
 }
 
 .tag-complete {
-    background: rgba(16, 185, 129, 0.15);
+    background: rgba(16, 185, 129, 0.12);
     color: var(--accent-green);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    padding: 4px 7px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0 6px;
+    min-width: 24px;
 }
 
 .tag-alert {
-    background: rgba(249, 115, 22, 0.15);
+    background: rgba(249, 115, 22, 0.12);
     color: #fb923c;
-    border: 1px solid rgba(249, 115, 22, 0.4);
-    padding: 4px 7px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid rgba(249, 115, 22, 0.3);
+    padding: 0 6px;
+    min-width: 24px;
 }
 
 .tag-clock-icon {
@@ -1948,6 +1948,22 @@ header {
     color: var(--text-muted);
 }
 
+.breakdown-label-nalt {
+    color: var(--accent-taxi);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.breakdown-label-prem {
+    color: var(--accent-purple);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
 .breakdown-value {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-variant-numeric: tabular-nums;
@@ -1961,7 +1977,6 @@ header {
     border-radius: 10px;
     padding: 10px 14px;
     font-size: 0.88rem;
-    color: #cbd5e1;
     line-height: 1.45;
     white-space: pre-wrap;
     word-break: break-word;
@@ -1972,6 +1987,20 @@ header {
     gap: 8px;
     font-family: 'Assistant', sans-serif;
     margin-top: 2px;
+}
+
+.notes-label {
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.notes-text {
+    flex: 1;
+    color: #cbd5e1;
 }
 
 .card-actions-bar {
@@ -1994,6 +2023,18 @@ header {
     align-items: center;
     justify-content: center;
     transition: transform 0.1s ease, background-color 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-card-edit {
+    border-color: rgba(0, 210, 255, 0.4);
+    color: var(--accent-cyan);
+    background: rgba(0, 210, 255, 0.08);
+    font-weight: 700;
+}
+
+.btn-card-edit:hover {
+    background: rgba(0, 210, 255, 0.15);
+    border-color: var(--accent-cyan);
 }
 
 .btn-secondary:active, button:active, .admin-action-btn:active {
@@ -2438,17 +2479,23 @@ select.form-control option {
 .checkbox-label-container {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     cursor: pointer;
     font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent-purple);
+    font-weight: 600;
+    color: var(--text-muted);
     user-select: none;
+    transition: color 0.15s ease;
+}
+
+.checkbox-label-container:hover,
+.checkbox-label-container.is-checked {
+    color: #e2e8f0;
 }
 
 .checkbox-label-container input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
     accent-color: var(--accent-purple);
     cursor: pointer;
     border-radius: 4px;

@@ -2522,7 +2522,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
                                     <span class="breakdown-label" style="margin-right: 8px;">יציאה:</span>\
                                     <span class="breakdown-value">' + (shift.endTime || 'לא הוזן') + '</span>\
                                 </div>\
-                                <div class="checkbox-label-container" onclick="handleFullPremClick(event, \'' + shiftIdStr + '\')" style="margin-right: auto;">\
+                                <div class="checkbox-label-container ' + (shift.fullPrem ? 'is-checked' : '') + '" onclick="handleFullPremClick(event, \'' + shiftIdStr + '\')" style="margin-right: auto;">\
                                     <input type="checkbox" ' + (shift.fullPrem ? 'checked' : '') + ' style="pointer-events: none;" tabindex="-1">\
                                     <span>פרמיה מלאה</span>\
                                 </div>\
@@ -2533,12 +2533,12 @@ function buildShiftCardHTML(shift, overlappingIds) {
                         <div class="sub-breakdown">\
                             ' + (naltStart > 0 ? '\
                             <div class="breakdown-item">\
-                                <span class="breakdown-label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span>\
+                                <span class="breakdown-label breakdown-label-nalt">' + naltSvgIcon + ' נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span>\
                                 <span class="breakdown-value">' + naltStartRange + '</span>\
                             </div>' : '') + '\
                             ' + (naltEnd > 0 ? '\
                             <div class="breakdown-item">\
-                                <span class="breakdown-label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span>\
+                                <span class="breakdown-label breakdown-label-nalt">' + naltSvgIcon + ' נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span>\
                                 <span class="breakdown-value">' + naltEndRange + '</span>\
                             </div>' : '') + '\
                         </div>' : '') + '\
@@ -2546,7 +2546,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
                         ' + (hasPrem ? '\
                         <div class="sub-breakdown">\
                             <div class="breakdown-item">\
-                                <span class="breakdown-label">פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
+                                <span class="breakdown-label breakdown-label-prem">' + premSvgIcon + ' פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
                                 <span class="breakdown-value">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
                             </div>\
                         </div>' : '') + '\
@@ -2554,19 +2554,19 @@ function buildShiftCardHTML(shift, overlappingIds) {
                         ' + (window.isUserInstructor && hasInstructor ? '\
                         <div class="sub-breakdown" style="border-color: rgba(56, 189, 248, 0.2);">\
                             <div class="breakdown-item">\
-                                <span class="breakdown-label" style="color: var(--accent-instructor);">פרמיית הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
+                                <span class="breakdown-label" style="color: var(--accent-instructor);">' + instructorSvgIcon + ' פרמיית הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
                                 <span class="breakdown-value">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
                             </div>\
                         </div>' : '') + '\
                         \
                         ' + (hasNotes ? '\
                         <div class="notes-display-box">\
-                            <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px; color: var(--text-muted);"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>\
-                            <span style="flex: 1;">' + shift.notes + '</span>\
+                            <span class="notes-label">' + notesSvgIcon + ' הערות:</span>\
+                            <span class="notes-text">' + shift.notes + '</span>\
                         </div>' : '') + '\
                         \
                         <div class="card-actions-bar">\
-                            <button class="btn-secondary" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">עריכה / השלמת חוסר</button>\
+                            <button class="btn-secondary btn-card-edit" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">עריכה / השלמת חוסר</button>\
                             <button class="btn-secondary btn-danger-outline" onclick="event.stopPropagation(); deleteShift(\'' + shiftIdStr + '\')">מחיקה</button>\
                         </div>\
                     </div>\
