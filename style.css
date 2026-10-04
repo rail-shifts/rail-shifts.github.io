@@ -1564,8 +1564,8 @@ header {
 }
 
 .shift-card.selected-for-delete {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: var(--accent-red);
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.08) 0%, var(--bg-card) 40%);
+    border-color: rgba(239, 68, 68, 0.45);
     border-right: 3px solid var(--accent-red);
 }
 
