@@ -1161,9 +1161,9 @@ header {
 
 /* Month Navigation Bar (Single Month View) */
 .month-nav-bar {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background: rgba(18, 24, 38, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -1171,46 +1171,56 @@ header {
     border-radius: 14px;
     padding: 8px 12px;
     margin-bottom: 12px;
-    gap: 8px;
+    min-height: 52px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     user-select: none;
 }
 
+.month-nav-center-group {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    pointer-events: auto;
+}
+
 .btn-month-nav {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-color);
-    color: var(--accent-cyan);
+    width: 32px;
+    height: 32px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: rgba(255, 255, 255, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.12s, background-color 0.12s, border-color 0.12s;
+    transition: color 0.08s ease, transform 0.08s ease;
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
     outline: none;
     user-select: none;
+    padding: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .btn-month-nav:hover {
-        background: rgba(0, 229, 255, 0.15);
-        border-color: var(--accent-cyan);
+        color: rgba(255, 255, 255, 0.85);
     }
 }
 
 .btn-month-nav:active,
 .btn-month-nav.btn-pressed {
-    background: rgba(0, 229, 255, 0.28) !important;
-    border-color: var(--accent-cyan) !important;
-    color: #fff !important;
+    color: var(--accent-cyan) !important;
     transform: scale(0.9) !important;
 }
 
 .btn-month-nav svg {
-    fill: currentColor;
+    display: block;
+    stroke: currentColor;
+    fill: none;
 }
 
 .month-title-wrapper {
@@ -1218,17 +1228,19 @@ header {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
     cursor: pointer;
-    flex: 1;
-    transition: all 0.2s;
+    width: fit-content;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s;
+    flex: 0 0 auto;
 }
 
 .month-title-wrapper:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(0, 229, 255, 0.3);
 }
 

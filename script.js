@@ -1202,7 +1202,7 @@ function setupGlobalInteractions() {
         exportBtn.addEventListener('touchcancel', () => exportBtn.classList.remove('active-touch'));
     }
 
-    document.querySelectorAll('.btn-month-nav, .btn-month-summary-action').forEach(btn => {
+    document.querySelectorAll('.btn-month-nav').forEach(btn => {
         if (btn.dataset.navTouchInit) return;
         btn.dataset.navTouchInit = 'true';
 
@@ -1210,14 +1210,30 @@ function setupGlobalInteractions() {
             btn.classList.add('btn-pressed');
         }, { passive: true });
 
-        const removePressed = () => {
-            setTimeout(() => {
-                btn.classList.remove('btn-pressed');
-            }, 140);
+        const clearPressed = () => {
+            btn.classList.remove('btn-pressed');
         };
 
-        btn.addEventListener('touchend', removePressed);
-        btn.addEventListener('touchcancel', () => btn.classList.remove('btn-pressed'));
+        btn.addEventListener('touchend', clearPressed);
+        btn.addEventListener('touchcancel', clearPressed);
+        btn.addEventListener('mouseleave', clearPressed);
+    });
+
+    document.querySelectorAll('.btn-month-summary-action').forEach(btn => {
+        if (btn.dataset.summaryTouchInit) return;
+        btn.dataset.summaryTouchInit = 'true';
+
+        btn.addEventListener('touchstart', () => {
+            btn.classList.add('btn-pressed');
+        }, { passive: true });
+
+        const clearSummaryPressed = () => {
+            btn.classList.remove('btn-pressed');
+        };
+
+        btn.addEventListener('touchend', clearSummaryPressed);
+        btn.addEventListener('touchcancel', clearSummaryPressed);
+        btn.addEventListener('mouseleave', clearSummaryPressed);
     });
 }
 
@@ -1786,6 +1802,7 @@ window.changeMonth = function(direction) {
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
         document.activeElement.blur();
     }
+    document.querySelectorAll('.btn-month-nav').forEach(btn => btn.classList.remove('btn-pressed'));
     if (!activeMonthKey || activeMonthKey === 'NONE') {
         activeMonthKey = getInitialMonthKey();
     }
