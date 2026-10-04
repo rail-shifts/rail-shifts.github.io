@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=4.4">
+    <link rel="stylesheet" href="style.css?v=4.5">
 </head>
 <body>
 
@@ -91,9 +91,12 @@
                     <polyline points="365,315 365,365 408,365" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
                     <circle cx="365" cy="365" r="6.5" fill="#00d2ff"/>
                 </svg>
-                <div class="logo-text" style="text-align: right;">
-                    <h1>יומן משמרות</h1>
-                    <span>רכבת ישראל</span>
+                <div class="logo-text">
+                    <h1 class="logo-title">RailShift</h1>
+                    <div id="headerLiveStatus" class="header-live-status">
+                        <span class="pulse-dot"></span>
+                        <span id="headerShiftDuration">00:00:00</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,19 +116,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="header-progress-container" id="headerProgressWrap">
-            <div class="header-progress-fill fill-green" id="headerProgressFill"></div>
-        </div>
     </header>
-
-    <div id="activeShiftFloatingBar" class="active-shift-floating-bar">
-        <div id="statusIndicator" class="status-badge active">
-            <span class="pulse-dot"></span>
-            <span id="statusText">במשמרת</span>
-        </div>
-        <div class="header-live-timer" id="headerShiftDuration">00:00:00</div>
-    </div>
 
     <div id="viewClock" class="app-view">
         <div class="clock-screen-card">
@@ -662,6 +653,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=4.6"></script>
+<script type="module" src="script.js?v=4.7"></script>
 </body>
 </html>

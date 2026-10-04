@@ -1327,22 +1327,15 @@ function getActiveShift() {
 
 function updateActiveShiftUI() {
     const active = getActiveShift();
-    const statusIndicator = document.getElementById('statusIndicator');
-    const statusText = document.getElementById('statusText');
+    const liveStatus = document.getElementById('headerLiveStatus');
     const headerTimer = document.getElementById('headerShiftDuration');
-    const floatingBar = document.getElementById('activeShiftFloatingBar');
-    
-    const headerPWrap = document.getElementById('headerProgressWrap');
-    const headerPFill = document.getElementById('headerProgressFill');
 
     const btnMainAction = document.getElementById('btnMainAction');
     const mainActionLine1 = document.getElementById('mainActionTextLine1');
     const mainActionLine2 = document.getElementById('mainActionTextLine2');
 
     if (active) {
-        if (floatingBar) floatingBar.classList.add('visible');
-        if (statusIndicator) statusIndicator.className = 'status-badge active';
-        if (statusText) statusText.textContent = 'במשמרת';
+        if (liveStatus) liveStatus.classList.add('active');
 
         const [year, month, day] = (active.date || '').split('-').map(Number);
         const [sh, sm] = active.startTime.split(':').map(Number);
@@ -1361,26 +1354,14 @@ function updateActiveShiftUI() {
         const s = String(totalSec % 60).padStart(2, '0');
 
         if (headerTimer) headerTimer.textContent = h + ':' + m + ':' + s;
-        
-        let durMins = Math.floor(totalSec / 60);
-        let pct = Math.min((durMins / 720), 1); 
-
-        if (headerPWrap) headerPWrap.style.display = 'block';
-        if (headerPFill) {
-            headerPFill.style.width = (pct * 100) + '%';
-            headerPFill.className = 'header-progress-fill fill-green';
-        }
 
         if (btnMainAction) btnMainAction.className = 'btn-main-circle state-active';
         if (mainActionLine1) mainActionLine1.textContent = 'יציאה';
         if (mainActionLine2) mainActionLine2.textContent = 'ממשמרת';
 
     } else {
-        if (floatingBar) floatingBar.classList.remove('visible');
-        if (statusIndicator) statusIndicator.className = 'status-badge idle';
-        if (statusText) statusText.textContent = '';
+        if (liveStatus) liveStatus.classList.remove('active');
         if (headerTimer) headerTimer.textContent = '00:00:00';
-        if (headerPWrap) headerPWrap.style.display = 'none';
 
         if (btnMainAction) btnMainAction.className = 'btn-main-circle state-idle';
         if (mainActionLine1) mainActionLine1.textContent = 'כניסה';
