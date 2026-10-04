@@ -1731,12 +1731,104 @@ window.toggleMultiPanelMode = function() {
     }
 };
 
-window.toggleMonthAccordion = function(mk) {
-    if (activeMonthKey === mk) {
-        activeMonthKey = 'NONE'; 
-    } else {
-        activeMonthKey = mk; 
+function getInitialMonthKey() {
+    const today = new Date();
+    const currentRealMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+    if (!window.shifts || window.shifts.length === 0) return currentRealMonth;
+    const hasCurrent = window.shifts.some(s => s.date && s.date.startsWith(currentRealMonth));
+    if (hasCurrent) return currentRealMonth;
+    const sortedDates = window.shifts.map(s => s.date || '').filter(Boolean).sort().reverse();
+    if (sortedDates.length > 0) {
+        return sortedDates[0].substring(0, 7);
     }
+    return currentRealMonth;
+}
+
+window.changeMonth = function(direction) {
+    if (!activeMonthKey || activeMonthKey === 'NONE') {
+        activeMonthKey = getInitialMonthKey();
+    }
+    const [yStr, mStr] = activeMonthKey.split('-');
+    let y = parseInt(yStr, 10);
+    let m = parseInt(mStr, 10);
+    m += direction;
+    if (m > 12) {
+        m = 1;
+        y += 1;
+    } else if (m < 1) {
+        m = 12;
+        y -= 1;
+    }
+    activeMonthKey = y + '-' + String(m).padStart(2, '0');
+    renderShifts();
+};
+
+window.openMonthPickerModal = function() {
+    const modal = document.getElementById('monthPickerModal');
+    const list = document.getElementById('monthPickerList');
+    if (!modal || !list) return;
+
+    if (!activeMonthKey || activeMonthKey === 'NONE') {
+        activeMonthKey = getInitialMonthKey();
+    }
+
+    const today = new Date();
+    const currentRealMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+    const monthCounts = {};
+    (window.shifts || []).forEach(s => {
+        if (s.date) {
+            const mk = s.date.substring(0, 7);
+            monthCounts[mk] = (monthCounts[mk] || 0) + 1;
+        }
+    });
+    if (!monthCounts[currentRealMonth]) {
+        monthCounts[currentRealMonth] = 0;
+    }
+    if (!monthCounts[activeMonthKey]) {
+        monthCounts[activeMonthKey] = 0;
+    }
+
+    const sortedKeys = Object.keys(monthCounts).sort((a, b) => b.localeCompare(a));
+
+    list.innerHTML = sortedKeys.map(mk => {
+        const isActive = (mk === activeMonthKey);
+        const count = monthCounts[mk];
+        return '\
+            <button class="month-picker-item ' + (isActive ? 'active' : '') + '" onclick="selectMonth(\'' + mk + '\')">\
+                <div style="display: flex; align-items: center; gap: 8px;">\
+                    ' + (isActive ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '<span style="width: 18px; display: inline-block;"></span>') + '\
+                    <span>' + formatMonthName(mk) + '</span>\
+                </div>\
+                <span class="item-count">' + count + ' משמרות</span>\
+            </button>\
+        ';
+    }).join('');
+
+    modal.classList.add('open');
+    updateBodyScrollLock();
+};
+
+window.closeMonthPickerModal = function() {
+    const modal = document.getElementById('monthPickerModal');
+    if (modal) modal.classList.remove('open');
+    updateBodyScrollLock();
+};
+
+window.selectMonth = function(mk) {
+    activeMonthKey = mk;
+    closeMonthPickerModal();
+    renderShifts();
+};
+
+window.openActiveMonthSummary = function() {
+    if (!activeMonthKey || activeMonthKey === 'NONE') {
+        activeMonthKey = getInitialMonthKey();
+    }
+    window.openMonthlySummaryModal(activeMonthKey);
+};
+
+window.toggleMonthAccordion = function(mk) {
+    activeMonthKey = mk;
     renderShifts();
 };
 
@@ -1903,10 +1995,17 @@ function updateSelectionUI() {
 }
 
 window.selectAllShifts = function() {
-    if (selectedShiftIds.size === window.shifts.length) {
-        selectedShiftIds.clear();
+    if (!activeMonthKey || activeMonthKey === 'NONE') {
+        activeMonthKey = getInitialMonthKey();
+    }
+    const mShifts = (window.shifts || []).filter(s => (s.date || '').startsWith(activeMonthKey));
+    if (mShifts.length === 0) return;
+
+    const allSelectedInMonth = mShifts.every(s => selectedShiftIds.has(String(s.id)));
+    if (allSelectedInMonth) {
+        mShifts.forEach(s => selectedShiftIds.delete(String(s.id)));
     } else {
-        window.shifts.forEach(s => selectedShiftIds.add(String(s.id)));
+        mShifts.forEach(s => selectedShiftIds.add(String(s.id)));
     }
     updateSelectionUI();
     renderShifts();
@@ -2415,65 +2514,39 @@ function renderShifts() {
     const container = document.getElementById('shiftsContainer');
     if (!container) return;
 
+    if (!activeMonthKey || activeMonthKey === 'NONE') {
+        activeMonthKey = getInitialMonthKey();
+    }
+
     const expandedIds = Array.from(container.querySelectorAll('.shift-details.expanded'))
                             .map(el => el.closest('.shift-card').getAttribute('data-id'));
 
-    if (window.shifts.length === 0) {
+    // Filter shifts for the active month
+    const mShifts = (window.shifts || []).filter(s => (s.date || '').startsWith(activeMonthKey));
+
+    // Update navigation bar labels
+    const titleEl = document.getElementById('monthNavTitle');
+    const countEl = document.getElementById('monthNavCount');
+    if (titleEl) titleEl.textContent = formatMonthName(activeMonthKey);
+    if (countEl) countEl.textContent = '(' + mShifts.length + ')';
+
+    if (mShifts.length === 0) {
         container.innerHTML = '\
             <div class="empty-state">\
-                <p>עדיין אין משמרות מתועדות.<br>לחץ על "כניסה למשמרת" כדי להתחיל.</p>\
+                <p>אין משמרות מתועדות לחודש ' + formatMonthName(activeMonthKey) + '.<br>לחץ על "כניסה למשמרת" או "+" כדי להוסיף.</p>\
             </div>\
         ';
         return;
     }
 
     const overlappingIds = calculateOverlaps();
-    
-    let grouped = {};
-    window.shifts.forEach(s => {
-        const d = s.date || '';
-        const monthKey = d.substring(0, 7); 
-        if(!grouped[monthKey]) grouped[monthKey] = [];
-        grouped[monthKey].push(s);
-    });
-    
-    const monthKeys = Object.keys(grouped).sort((a,b) => b.localeCompare(a));
-    
-    if (activeMonthKey !== 'NONE' && (!activeMonthKey || !monthKeys.includes(activeMonthKey))) {
-        activeMonthKey = monthKeys[0] || '';
-    }
 
-    let html = '';
-    monthKeys.forEach(mk => {
-        const mShifts = grouped[mk];
-        const isOpen = (mk === activeMonthKey);
+    container.innerHTML = '\
+        <div class="shifts-list-inner">\
+            ' + mShifts.map(shift => buildShiftCardHTML(shift, overlappingIds)).join('') + '\
+        </div>\
+    ';
 
-        html += '\
-        <div class="month-accordion-wrapper ' + (isOpen ? 'open' : '') + '">\
-            <div class="month-accordion-header" onclick="toggleMonthAccordion(\'' + mk + '\')">\
-                <div class="month-header-left-actions" onclick="event.stopPropagation()">\
-                    <button class="btn-summary-modal" data-action="summary" data-month="' + mk + '" title="סיכום חודשי">\
-                        <svg viewBox="0 0 24 24">\
-                            <line x1="6" y1="20" x2="6" y2="10"></line>\
-                            <line x1="12" y1="20" x2="12" y2="4"></line>\
-                            <line x1="18" y1="20" x2="18" y2="14"></line>\
-                        </svg>\
-                        <span class="drawer-tooltip">סיכום חודשי</span>\
-                    </button>\
-                </div>\
-                <span>' + formatMonthName(mk) + ' <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(' + mShifts.length + ' משמרות)</span></span>\
-                <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>\
-            </div>\
-            <div class="month-accordion-body">\
-                <div class="shifts-list-inner">\
-                    ' + mShifts.map(shift => buildShiftCardHTML(shift, overlappingIds)).join('') + '\
-                </div>\
-            </div>\
-        </div>';
-    });
-
-    container.innerHTML = html;
-    
     expandedIds.forEach(id => {
         const card = container.querySelector('.shift-card[data-id="' + id + '"]');
         if (card) {
