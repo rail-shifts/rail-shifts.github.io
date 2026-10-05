@@ -2503,6 +2503,17 @@ function timeToMinutes(timeStr) {
     return h * 60 + m;
 }
 
+// סיווג משמרת לפי שעת כניסה בלבד, על שעון מעגלי של 24 שעות (ללא "חורים"):
+// בוקר: 03:00-09:59 | צהריים: 10:00-17:59 | לילה: 18:00-02:59
+function getShiftTypeByStart(startTime) {
+    if (!startTime || startTime.indexOf(':') === -1) return '';
+    const mins = timeToMinutes(startTime);
+    if (isNaN(mins)) return '';
+    if (mins >= 180 && mins < 600) return 'morning';
+    if (mins >= 600 && mins < 1080) return 'noon';
+    return 'night';
+}
+
 function calculateFullPremTimes(startStr, endStr) {
     if (!startStr) return { start: '', end: '' };
     const sMins = timeToMinutes(startStr);
@@ -2684,23 +2695,8 @@ function buildShiftCardHTML(shift, overlappingIds) {
 
     let shiftTypeClass = '';
     if (hasStart) {
-        if (hasEnd && shift.startTime === '06:00' && shift.endTime === '18:00') {
-            shiftTypeClass = 'type-morning';
-        } else if (hasEnd && (shift.startTime === '18:00' && shift.endTime === '06:00' || (shift.startTime === '18:00' && shift.endTime === '23:59'))) {
-            shiftTypeClass = 'type-night';
-        } else {
-            const startMins = timeToMinutes(shift.startTime);
-            const endMins = hasEnd ? timeToMinutes(shift.endTime) : -1;
-            const realEndMins = (endMins !== -1 && endMins < startMins) ? endMins + 1440 : endMins;
-
-            if (startMins >= 180 && startMins <= 600 && (realEndMins === -1 || realEndMins <= 1050)) {
-                shiftTypeClass = 'type-morning';
-            } else if (startMins > 600 && startMins <= 1080 && (realEndMins === -1 || realEndMins <= 1350)) {
-                shiftTypeClass = 'type-noon';
-            } else if (startMins >= 1080 && startMins <= 1439) {
-                shiftTypeClass = 'type-night';
-            }
-        }
+        const sType = getShiftTypeByStart(shift.startTime);
+        if (sType) shiftTypeClass = 'type-' + sType;
     }
 
     let morningSvg = '<g fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 14h18M7 14a5 5 0 0 1 10 0" stroke="url(#combined-grad-' + shiftIdStr + ')"/><path d="M12 3v4M6.34 5.34l2.12 2.12M17.66 5.34l-2.12 2.12M3.5 10h3M20.5 10h-3" stroke="url(#sun-grad-' + shiftIdStr + ')"/><path d="M5 18h14M8 21h8" stroke="url(#morning-grad-' + shiftIdStr + ')"/></g>';
@@ -2991,10 +2987,10 @@ function matchesShiftSearch(shift, rawQuery) {
     let isNight = 'לילה'.startsWith(qNorm) && qNorm.length >= 2;
 
     if (shift.startTime && (isMorning || isNoon || isNight)) {
-        const h = Number(shift.startTime.split(':')[0]) || 0;
-        if (isMorning && h >= 4 && h < 12) return true;
-        if (isNoon && h >= 12 && h < 18) return true;
-        if (isNight && (h >= 18 || h < 4)) return true;
+        const sType = getShiftTypeByStart(shift.startTime);
+        if (isMorning && sType === 'morning') return true;
+        if (isNoon && sType === 'noon') return true;
+        if (isNight && sType === 'night') return true;
     }
 
     // 3. חיפוש תאריכים מתמשך בזמן אמת (2, 2., 2.9, 02/09, 2/9/26, 2026-09-02)
