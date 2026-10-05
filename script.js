@@ -1144,6 +1144,55 @@ function setupNaltCustomInputHandlers(type) {
     const customInput = document.getElementById('customNalt' + type);
     if (!select || !customInput) return;
 
+    let isDeleting = false;
+    customInput.addEventListener('keydown', (e) => {
+        isDeleting = (e.key === 'Backspace' || e.key === 'Delete');
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            customInput.blur();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            customInput.value = '';
+            commitCustomValue();
+        }
+    });
+
+    customInput.addEventListener('input', (e) => {
+        if (isDeleting) return;
+
+        const raw = customInput.value;
+        const digits = raw.replace(/\D/g, '').slice(0, 4);
+
+        if (!digits) {
+            customInput.value = '';
+            return;
+        }
+
+        if (digits.length === 1) {
+            customInput.value = digits;
+        } else if (digits.length === 2) {
+            let h = parseInt(digits, 10);
+            if (h > 23) h = 23;
+            customInput.value = String(h).padStart(2, '0') + ':';
+        } else if (digits.length === 3) {
+            let h = parseInt(digits.slice(0, 2), 10);
+            if (h > 23) h = 23;
+            const m1 = digits.slice(2, 3);
+            customInput.value = String(h).padStart(2, '0') + ':' + m1;
+        } else if (digits.length >= 4) {
+            let h = parseInt(digits.slice(0, 2), 10);
+            if (h > 23) h = 23;
+            let m = parseInt(digits.slice(2, 4), 10);
+            if (m > 59) m = 59;
+            customInput.value = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+            setTimeout(() => {
+                if (document.activeElement === customInput) {
+                    customInput.blur();
+                }
+            }, 300);
+        }
+    });
+
     function commitCustomValue() {
         const raw = customInput.value.trim();
         const mins = parseInputToMinutes(raw);
@@ -1171,16 +1220,6 @@ function setupNaltCustomInputHandlers(type) {
     }
 
     customInput.addEventListener('blur', commitCustomValue);
-    customInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            customInput.blur();
-        } else if (e.key === 'Escape') {
-            e.preventDefault();
-            customInput.value = '';
-            commitCustomValue();
-        }
-    });
 }
 
 function setupGlobalInteractions() {
@@ -3304,6 +3343,9 @@ window.openShiftModal = function(shiftId) {
 };
 
 window.closeModal = function() {
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+    }
     document.getElementById('shiftModal').classList.remove('open');
 };
 
@@ -3345,6 +3387,21 @@ function initBackdropScrollPrevention() {
             }
         }
     }, true);
+
+    // Dismiss active input focus on scroll or tap outside to prevent iOS Shake-to-Undo dialog
+    window.addEventListener('scroll', () => {
+        if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+            document.activeElement.blur();
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchstart', (e) => {
+        if (document.activeElement && 
+            (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') &&
+            !e.target.closest('input, textarea, select')) {
+            document.activeElement.blur();
+        }
+    }, { passive: true });
 }
 
 initBackdropScrollPrevention();

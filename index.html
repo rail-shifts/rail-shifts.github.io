@@ -531,7 +531,7 @@
                                 <option value="270">4:30 (270 דק׳)</option>
                                 <option value="custom">אחר...</option>
                             </select>
-                            <input type="text" id="customNaltStart" class="form-control custom-nalt-input" placeholder="שעה או דקות (למשל 0:50)">
+                            <input type="text" id="customNaltStart" class="form-control custom-nalt-input" placeholder="00:00 (למשל 12:34)" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
@@ -547,7 +547,7 @@
                                 <option value="270">4:30 (270 דק׳)</option>
                                 <option value="custom">אחר...</option>
                             </select>
-                            <input type="text" id="customNaltEnd" class="form-control custom-nalt-input" placeholder="שעה או דקות (למשל 0:50)">
+                            <input type="text" id="customNaltEnd" class="form-control custom-nalt-input" placeholder="00:00 (למשל 12:34)" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -705,6 +705,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=5.8"></script>
+<script type="module" src="script.js?v=5.9"></script>
 </body>
 </html>
