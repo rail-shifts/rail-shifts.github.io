@@ -1453,28 +1453,29 @@ header {
 
 .btn-wheel-select {
     display: block;
-    width: 130px;
-    margin: 4px auto 0 auto;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: rgba(0, 229, 255, 0.15);
-    border: 1px solid var(--accent-cyan);
-    color: var(--accent-cyan);
-    font-size: 0.95rem;
+    width: 100%;
+    margin: 12px 0 0 0;
+    padding: 13px 20px;
+    border-radius: 14px;
+    background: var(--accent-blue);
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
     text-align: center;
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.35);
 }
 
 .btn-wheel-select:hover {
-    background: var(--accent-cyan);
-    color: #060b16;
+    background: #1a94ff;
+    box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
 }
 
 .btn-wheel-select:active {
-    transform: scale(0.94);
+    transform: scale(0.97);
 }
 
 .month-accordion-wrapper {
@@ -2592,40 +2593,66 @@ select.form-control option {
 
 .btn-dialog-action {
     flex: 1;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 0.95rem;
+    padding: 13px 16px;
+    border-radius: 14px;
+    font-size: 0.98rem;
     font-weight: 700;
+    font-family: inherit;
     border: none;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+    text-align: center;
 }
 .btn-dialog-action:active {
-    transform: scale(0.96);
+    transform: scale(0.97);
 }
 
 .btn-dialog-confirm {
     background: var(--accent-blue);
     color: #fff;
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.35);
+}
+.btn-dialog-confirm:hover {
+    background: #1a94ff;
+    box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
+}
+
+.btn-dialog-danger {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+.btn-dialog-danger:hover {
+    background: #dc2626;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
 }
 
 .btn-dialog-cancel {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.07);
     color: var(--text-main);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.btn-dialog-cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .btn-error-close {
     width: 100%;
     background: var(--accent-blue);
     color: #fff;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 0.95rem;
+    padding: 13px 20px;
+    border-radius: 14px;
+    font-size: 0.98rem;
     font-weight: 700;
+    font-family: inherit;
     border: none;
     cursor: pointer;
     margin-top: 6px;
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.35);
+    transition: transform 0.12s ease, background 0.15s ease;
+}
+.btn-error-close:active {
+    transform: scale(0.97);
 }
 
 .full-prem-row {

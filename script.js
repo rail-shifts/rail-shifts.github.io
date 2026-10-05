@@ -1568,8 +1568,9 @@ function showSmartAlertDialog(title, message, confirmText, cancelText, onConfirm
     const actionsContainer = document.getElementById('smartAlertActions');
     actionsContainer.innerHTML = '';
 
+    const isDanger = (title && title.includes('מחיק')) || (confirmText && (confirmText.includes('מחק') || confirmText.includes('מחיק')));
     const btnConfirm = document.createElement('button');
-    btnConfirm.className = 'btn-dialog-action btn-dialog-confirm';
+    btnConfirm.className = 'btn-dialog-action ' + (isDanger ? 'btn-dialog-danger' : 'btn-dialog-confirm');
     btnConfirm.textContent = confirmText;
     btnConfirm.onclick = () => {
         closeSmartAlert();
