@@ -1671,19 +1671,21 @@ function handleLiveEnd() {
     let endMins = eh * 60 + em;
 
     if (isSameDay) {
-        if (endMins <= startMins) endMins += 1440;
+        if (endMins < startMins) endMins += 1440;
     } else {
         const shiftDateObj = new Date(shiftDateStr);
         const currDateObj = new Date(currentDateStr);
         const dayDiff = Math.round((currDateObj - shiftDateObj) / (1000 * 60 * 60 * 24));
         if (dayDiff > 0) {
             endMins += (dayDiff * 1440);
+        } else if (endMins < startMins) {
+            endMins += 1440;
         }
     }
 
     const durationMins = endMins - startMins;
 
-    if (isSameDay && (durationMins === 0 || active.startTime === timeStr)) {
+    if (durationMins === 0 || active.startTime === timeStr) {
         const targetId = active.id;
         window.shifts = window.shifts.filter(s => String(s.id) !== String(targetId));
         autoSortShiftsArray(window.shifts);
@@ -1699,7 +1701,7 @@ function handleLiveEnd() {
         return;
     }
 
-    if (isSameDay && durationMins > 0 && durationMins < 180) {
+    if (durationMins > 0 && durationMins < 180) {
         const hoursFormatted = Math.floor(durationMins / 60);
         const minsFormatted = durationMins % 60;
         const durStr = hoursFormatted > 0 ? hoursFormatted + ' שעות ו-' + minsFormatted + ' דק׳' : minsFormatted + ' דק׳';
@@ -2373,7 +2375,19 @@ window.handleCardClick = function(event, id) {
 
 function updateSelectionUI() {
     const countText = document.getElementById('selectedCountText');
-    countText.textContent = selectedShiftIds.size + ' נבחרו';
+    if (countText) {
+        countText.textContent = selectedShiftIds.size + ' נבחרו';
+    }
+
+    const btnToggle = document.getElementById('btnSelectAllToggle');
+    if (btnToggle) {
+        if (!activeMonthKey || activeMonthKey === 'NONE') {
+            activeMonthKey = getInitialMonthKey();
+        }
+        const mShifts = (window.shifts || []).filter(s => (s.date || '').startsWith(activeMonthKey));
+        const allSelected = mShifts.length > 0 && mShifts.every(s => selectedShiftIds.has(String(s.id)));
+        btnToggle.textContent = allSelected ? 'בטל בחירה' : 'בחר הכל';
+    }
 }
 
 window.selectAllShifts = function() {
@@ -2399,7 +2413,7 @@ window.deleteSelectedShifts = function() {
     showSmartAlertDialog(
         'מחיקת משמרות',
         'האם אתה בטוח שברצונך למחוק ' + selectedShiftIds.size + ' משמרות שנבחרו? פעולה זו אינה הפיכה.',
-        'מחק הכל',
+        'מחק',
         'ביטול',
         () => {
             const idsToDelete = Array.from(selectedShiftIds);
