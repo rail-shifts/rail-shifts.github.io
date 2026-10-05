@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=5.0">
+    <link rel="stylesheet" href="style.css?v=5.1">
 </head>
 <body>
 
@@ -374,7 +374,7 @@
 
 <div id="statusBubbleToast" class="status-bubble-toast"></div>
 
-<!-- Modal for Month Picker -->
+<!-- Modal for Month Picker (iOS Wheel Style) -->
 <div class="modal-overlay" id="monthPickerModal" onclick="if(event.target === this) closeMonthPickerModal()">
     <div class="modal-sheet month-picker-sheet">
         <div class="modal-header month-picker-header">
@@ -398,7 +398,16 @@
             </div>
             <div class="month-picker-header-spacer"></div>
         </div>
-        <div class="month-picker-modal-content" id="monthPickerList"></div>
+
+        <!-- iOS Wheel Picker Container -->
+        <div class="ios-wheel-container">
+            <div class="ios-wheel-highlight"></div>
+            <div class="ios-wheel-scroller" id="monthWheelScroller" onscroll="onWheelScroll()">
+                <!-- Dynamic Month Items -->
+            </div>
+        </div>
+
+        <button class="btn-wheel-select" onclick="confirmWheelMonth()">בחר חודש</button>
     </div>
 </div>
 
@@ -691,6 +700,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=5.4"></script>
+<script type="module" src="script.js?v=5.5"></script>
 </body>
 </html>

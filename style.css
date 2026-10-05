@@ -1377,53 +1377,91 @@ header {
     flex-shrink: 0;
 }
 
-.month-picker-modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 52vh;
-    overflow-y: auto;
-    padding: 2px 2px 6px;
+/* iOS Wheel Roller Picker */
+.ios-wheel-container {
+    position: relative;
+    height: 190px; /* 5 items visible: 38px each */
+    overflow: hidden;
+    margin: 8px 0 12px;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
 }
 
-.month-picker-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 14px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 600;
-    transition: all 0.15s ease;
-    text-align: right;
-    width: 100%;
+.ios-wheel-highlight {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    right: 8px;
+    height: 38px;
+    transform: translateY(-50%);
+    background: rgba(0, 229, 255, 0.08);
+    border-top: 1px solid rgba(0, 229, 255, 0.35);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.35);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.ios-wheel-scroller {
+    height: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 76px 0; /* 2 items empty space at top and bottom */
     box-sizing: border-box;
 }
 
-.month-picker-item:hover {
-    background: rgba(0, 229, 255, 0.08);
-    border-color: rgba(0, 229, 255, 0.3);
+.ios-wheel-scroller::-webkit-scrollbar {
+    display: none;
 }
 
-.month-picker-item.active {
-    background: rgba(0, 229, 255, 0.12);
-    border-color: var(--accent-cyan);
+.ios-wheel-item {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+    scroll-snap-stop: normal;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    opacity: 0.45;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s, color 0.2s, transform 0.2s, font-weight 0.2s;
+    transform: scale(0.92);
+}
+
+.ios-wheel-item.selected {
     color: var(--accent-cyan);
+    font-size: 1.15rem;
+    font-weight: 800;
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+.btn-wheel-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(0, 229, 255, 0.15);
+    border: 1px solid var(--accent-cyan);
+    color: var(--accent-cyan);
+    font-size: 0.95rem;
     font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
 }
 
-.month-picker-name {
-    font-size: 0.92rem;
+.btn-wheel-select:hover {
+    background: var(--accent-cyan);
+    color: #060b16;
 }
 
-.month-picker-check {
-    color: var(--accent-cyan);
-    flex-shrink: 0;
+.btn-wheel-select:active {
+    transform: scale(0.96);
 }
 
 .month-accordion-wrapper {

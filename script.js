@@ -1885,12 +1885,14 @@ window.changePickerYear = function(dir) {
     renderMonthPickerContent();
 };
 
+let wheelActiveMonthKey = null;
+
 function renderMonthPickerContent() {
-    const list = document.getElementById('monthPickerList');
+    const scroller = document.getElementById('monthWheelScroller');
     const headerTitle = document.getElementById('monthPickerYearTitle');
     const btnYearPrev = document.getElementById('btnPickerYearPrev');
     const btnYearNext = document.getElementById('btnPickerYearNext');
-    if (!list) return;
+    if (!scroller) return;
 
     const earliest = getEarliestMonthKey();
     const latest = getLatestMonthKey();
@@ -1902,44 +1904,117 @@ function renderMonthPickerContent() {
     if (btnYearPrev) btnYearPrev.classList.toggle('nav-disabled', pickerSelectedYear <= earliestYear);
     if (btnYearNext) btnYearNext.classList.toggle('nav-disabled', pickerSelectedYear >= latestYear);
 
-    const monthCounts = {};
-    (window.shifts || []).forEach(s => {
-        if (s.date) {
-            const mk = s.date.substring(0, 7);
-            monthCounts[mk] = (monthCounts[mk] || 0) + 1;
-        }
-    });
-
     // 12 החודשים של השנה הנבחרת
     let monthsHtml = '';
+    const availableMonths = [];
     for (let m = 12; m >= 1; m--) {
         const mKey = pickerSelectedYear + '-' + String(m).padStart(2, '0');
         const isOutOfRange = (mKey < earliest || mKey > latest);
-        if (isOutOfRange) continue; // לא מציגים חודשים מחוץ לטווח המורשה
+        if (isOutOfRange) continue;
 
-        const isActive = (mKey === activeMonthKey);
-
+        availableMonths.push(mKey);
         monthsHtml += '\
-            <button class="month-picker-item ' + (isActive ? 'active' : '') + '" onclick="selectMonth(\'' + mKey + '\')">\
-                <span class="month-picker-name">' + formatMonthOnlyName(mKey) + '</span>\
-                ' + (isActive ? '<svg class="month-picker-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>' : '') + '\
-            </button>\
+            <div class="ios-wheel-item" data-key="' + mKey + '" onclick="clickWheelItem(\'' + mKey + '\')">\
+                ' + formatMonthOnlyName(mKey) + '\
+            </div>\
         ';
     }
 
-    list.innerHTML = monthsHtml;
+    scroller.innerHTML = monthsHtml;
+
+    // קביעת החודש הנבחר הראשוני
+    if (availableMonths.includes(activeMonthKey)) {
+        wheelActiveMonthKey = activeMonthKey;
+    } else {
+        wheelActiveMonthKey = availableMonths[0] || null;
+    }
+
+    // גלילה חלקה למרכז החודש הנבחר
+    setTimeout(() => {
+        scrollToWheelMonth(wheelActiveMonthKey, false);
+        updateWheelSelectedClass();
+    }, 50);
 }
+
+function scrollToWheelMonth(mKey, smooth = true) {
+    const scroller = document.getElementById('monthWheelScroller');
+    if (!scroller) return;
+    const targetItem = scroller.querySelector(`.ios-wheel-item[data-key="${mKey}"]`);
+    if (!targetItem) return;
+
+    const itemTop = targetItem.offsetTop;
+    const scrollerCenter = scroller.clientHeight / 2;
+    const itemHeight = targetItem.clientHeight;
+    const scrollTarget = itemTop - scrollerCenter + (itemHeight / 2);
+
+    scroller.scrollTo({
+        top: scrollTarget,
+        behavior: smooth ? 'smooth' : 'auto'
+    });
+}
+
+window.clickWheelItem = function(mKey) {
+    wheelActiveMonthKey = mKey;
+    scrollToWheelMonth(mKey, true);
+    updateWheelSelectedClass();
+};
+
+let wheelScrollTimeout = null;
+window.onWheelScroll = function() {
+    clearTimeout(wheelScrollTimeout);
+    updateWheelSelectedClass();
+    wheelScrollTimeout = setTimeout(() => {
+        snapToClosestWheelItem();
+    }, 120);
+};
+
+function updateWheelSelectedClass() {
+    const scroller = document.getElementById('monthWheelScroller');
+    if (!scroller) return;
+
+    const items = scroller.querySelectorAll('.ios-wheel-item');
+    const scrollerRect = scroller.getBoundingClientRect();
+    const centerY = scrollerRect.top + (scrollerRect.height / 2);
+
+    let closestItem = null;
+    let minDistance = Infinity;
+
+    items.forEach(item => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.top + (itemRect.height / 2);
+        const dist = Math.abs(centerY - itemCenter);
+
+        if (dist < minDistance) {
+            minDistance = dist;
+            closestItem = item;
+        }
+    });
+
+    items.forEach(item => item.classList.remove('selected'));
+    if (closestItem) {
+        closestItem.classList.add('selected');
+        wheelActiveMonthKey = closestItem.getAttribute('data-key');
+    }
+}
+
+function snapToClosestWheelItem() {
+    if (wheelActiveMonthKey) {
+        scrollToWheelMonth(wheelActiveMonthKey, true);
+    }
+}
+
+window.confirmWheelMonth = function() {
+    if (wheelActiveMonthKey) {
+        activeMonthKey = wheelActiveMonthKey;
+        closeMonthPickerModal();
+        renderShifts();
+    }
+};
 
 window.closeMonthPickerModal = function() {
     const modal = document.getElementById('monthPickerModal');
     if (modal) modal.classList.remove('open');
     updateBodyScrollLock();
-};
-
-window.selectMonth = function(mk) {
-    activeMonthKey = mk;
-    closeMonthPickerModal();
-    renderShifts();
 };
 
 window.openActiveMonthSummary = function() {
