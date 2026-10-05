@@ -1706,7 +1706,7 @@ function handleLiveEnd() {
         const minsFormatted = durationMins % 60;
         const durStr = hoursFormatted > 0 ? hoursFormatted + ' שעות ו-' + minsFormatted + ' דק׳' : minsFormatted + ' דק׳';
 
-        showSmartAlertDialog('משמרת קצרה מהרגיל', 'משמרת זו קצרה מהרגיל ותימשך כ-' + durStr + '. האם אתה בטוח שברצונך לסיים ולשמור אותה?', 'שמור משמרת', 'ביטול', () => {
+        showSmartAlertDialog('משמרת קצרה מהרגיל', 'משמרת זו קצרה מהרגיל ונמשכה כ-' + durStr + '. האם אתה בטוח שברצונך לסיים ולשמור אותה?', 'שמור משמרת', 'ביטול', () => {
             active.endTime = timeStr;
             if (active.fullPrem && active.startTime !== timeStr) {
                 applyFullPremToShift(active);
@@ -2408,7 +2408,10 @@ window.selectAllShifts = function() {
 };
 
 window.deleteSelectedShifts = function() {
-    if (selectedShiftIds.size === 0) return;
+    if (selectedShiftIds.size === 0) {
+        showStatusBubbleToast('לא נבחרו משמרות');
+        return;
+    }
     
     showSmartAlertDialog(
         'מחיקת משמרות',
