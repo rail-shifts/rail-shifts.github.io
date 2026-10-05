@@ -1452,9 +1452,11 @@ header {
 }
 
 .btn-wheel-select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
+    display: block;
+    width: 130px;
+    margin: 4px auto 0 auto;
+    padding: 8px 16px;
+    border-radius: 20px;
     background: rgba(0, 229, 255, 0.15);
     border: 1px solid var(--accent-cyan);
     color: var(--accent-cyan);
@@ -1463,6 +1465,7 @@ header {
     font-family: inherit;
     cursor: pointer;
     transition: all 0.15s ease;
+    text-align: center;
 }
 
 .btn-wheel-select:hover {
@@ -1471,7 +1474,7 @@ header {
 }
 
 .btn-wheel-select:active {
-    transform: scale(0.96);
+    transform: scale(0.94);
 }
 
 .month-accordion-wrapper {
