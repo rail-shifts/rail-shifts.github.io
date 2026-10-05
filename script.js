@@ -1693,6 +1693,12 @@ function formatMonthName(mk) {
     return months[parseInt(m, 10) - 1] + ' ' + y;
 }
 
+function formatMonthOnlyName(mk) {
+    const [, m] = mk.split('-');
+    const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+    return months[parseInt(m, 10) - 1];
+}
+
 window.showErrorDialog = function(msg, title = 'שגיאה בנתוני המשמרת') {
     document.getElementById('errorDialogTitle').textContent = title;
     document.getElementById('errorDialogMessage').textContent = msg;
@@ -1912,15 +1918,11 @@ function renderMonthPickerContent() {
         if (isOutOfRange) continue; // לא מציגים חודשים מחוץ לטווח המורשה
 
         const isActive = (mKey === activeMonthKey);
-        const count = monthCounts[mKey] || 0;
 
         monthsHtml += '\
             <button class="month-picker-item ' + (isActive ? 'active' : '') + '" onclick="selectMonth(\'' + mKey + '\')">\
-                <div style="display: flex; align-items: center; gap: 8px;">\
-                    ' + (isActive ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '<span style="width: 18px; display: inline-block;"></span>') + '\
-                    <span>' + formatMonthName(mKey) + '</span>\
-                </div>\
-                <span class="item-count">' + count + ' משמרות</span>\
+                <span class="month-picker-name">' + formatMonthOnlyName(mKey) + '</span>\
+                ' + (isActive ? '<svg class="month-picker-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>' : '') + '\
             </button>\
         ';
     }
