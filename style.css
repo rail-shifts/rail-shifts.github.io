@@ -1046,34 +1046,38 @@ header {
 }
 
 .btn-toolbar {
-    padding: 5px 11px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 700;
+    font-family: inherit;
     border: none;
     cursor: pointer;
-    transition: transform 0.12s, opacity 0.12s, background-color 0.12s;
+    transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.12s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
 .btn-toolbar:active {
-    transform: scale(0.92);
+    transform: scale(0.94);
 }
 
 .btn-toolbar-select {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .btn-toolbar-delete {
-    background: var(--accent-red);
+    background: #ef4444;
     color: #fff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
 }
 
 .btn-toolbar-save {
-    background: var(--accent-green);
+    background: var(--accent-blue);
     color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 136, 255, 0.35);
 }
 
 /* Month Navigation Bar (Single Month View) - Clean Integrated Header */
@@ -2185,15 +2189,16 @@ header {
 }
 
 .btn-card-edit {
-    border-color: rgba(0, 210, 255, 0.4);
-    color: var(--accent-cyan);
-    background: rgba(0, 210, 255, 0.08);
+    border-color: rgba(0, 136, 255, 0.35);
+    color: #60a5fa;
+    background: rgba(0, 136, 255, 0.08);
     font-weight: 700;
 }
 
 .btn-card-edit:hover {
-    background: rgba(0, 210, 255, 0.15);
-    border-color: var(--accent-cyan);
+    background: rgba(0, 136, 255, 0.16);
+    border-color: var(--accent-blue);
+    color: #93c5fd;
 }
 
 .btn-secondary:active, button:active, .admin-action-btn:active {

@@ -1467,16 +1467,20 @@ function updateActiveShiftUI() {
     if (active) {
         if (liveStatus) liveStatus.classList.add('active');
 
-        const [year, month, day] = (active.date || '').split('-').map(Number);
-        const [sh, sm] = active.startTime.split(':').map(Number);
         let totalSec = 0;
-        if (year && month && day) {
-            const startEpoch = new Date(year, month - 1, day, sh, sm, 0).getTime();
-            totalSec = Math.max(0, Math.floor((Date.now() - startEpoch) / 1000));
+        if (active.startTimestamp && (Date.now() - active.startTimestamp) >= 0 && (Date.now() - active.startTimestamp) < 14 * 3600 * 1000) {
+            totalSec = Math.floor((Date.now() - active.startTimestamp) / 1000);
         } else {
-            const now = new Date();
-            totalSec = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) - (sh * 3600 + sm * 60);
-            if (totalSec < 0) totalSec += 86400;
+            const [year, month, day] = (active.date || '').split('-').map(Number);
+            const [sh, sm] = active.startTime.split(':').map(Number);
+            if (year && month && day) {
+                const startEpoch = new Date(year, month - 1, day, sh, sm, 0).getTime();
+                totalSec = Math.max(0, Math.floor((Date.now() - startEpoch) / 1000));
+            } else {
+                const now = new Date();
+                totalSec = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) - (sh * 3600 + sm * 60);
+                if (totalSec < 0) totalSec += 86400;
+            }
         }
 
         const h = String(Math.floor(totalSec / 3600)).padStart(2, '0');
@@ -1608,6 +1612,7 @@ function handleLiveStart() {
 
     const newShift = {
         id: 'shift_' + Date.now(),
+        startTimestamp: Date.now(),
         siddur: '',
         date: dateStr,
         startTime: timeStr,
@@ -1679,13 +1684,13 @@ function handleLiveEnd() {
     const durationMins = endMins - startMins;
 
     if (isSameDay && (durationMins === 0 || active.startTime === timeStr)) {
-        showSmartAlertDialog('זמנים זהים זוהו', 'שעת הכניסה ושעת היציאה זהות (משמרת באורך 0 זמן). האם ברצונך לבטל ולמחוק משמרת זו?', 'אישור (מחיקה)', 'ביטול', () => {
-            const targetId = active.id;
-            window.shifts = window.shifts.filter(s => String(s.id) !== String(targetId));
-            autoSortShiftsArray(window.shifts);
-            deleteShiftFromCloudAndLocal(targetId);
-            if (currentView === 'history') renderShifts();
-        }, () => {});
+        const targetId = active.id;
+        window.shifts = window.shifts.filter(s => String(s.id) !== String(targetId));
+        autoSortShiftsArray(window.shifts);
+        deleteShiftFromCloudAndLocal(targetId);
+        updateActiveShiftUI();
+        if (currentView === 'history') renderShifts();
+        showStatusBubbleToast('המשמרת בוטלה');
         return;
     }
 
@@ -1699,7 +1704,7 @@ function handleLiveEnd() {
         const minsFormatted = durationMins % 60;
         const durStr = hoursFormatted > 0 ? hoursFormatted + ' שעות ו-' + minsFormatted + ' דק׳' : minsFormatted + ' דק׳';
 
-        showSmartAlertDialog('משמרת קצרה מהרגיל', 'משמרת זו קצרה מהרגיל ותימשך כ-' + durStr + '. האם אתה בטוח שברצונך לסיים ולשמור אותה?', 'אישור (שמירה)', 'ביטול', () => {
+        showSmartAlertDialog('משמרת קצרה מהרגיל', 'משמרת זו קצרה מהרגיל ותימשך כ-' + durStr + '. האם אתה בטוח שברצונך לסיים ולשמור אותה?', 'שמור משמרת', 'ביטול', () => {
             active.endTime = timeStr;
             if (active.fullPrem && active.startTime !== timeStr) {
                 applyFullPremToShift(active);
