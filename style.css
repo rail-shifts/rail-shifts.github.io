@@ -1305,6 +1305,58 @@ header {
 .btn-search-clear:hover {
     color: #ffffff;
 }
+.btn-month-nav.nav-disabled,
+.btn-picker-year-nav.nav-disabled {
+    opacity: 0.18 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    transform: none !important;
+}
+
+.month-picker-year-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 3px 8px;
+}
+
+.month-picker-year-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+    padding: 0 4px;
+}
+
+.btn-picker-year-nav {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.1s;
+    outline: none;
+    padding: 0;
+}
+
+.btn-picker-year-nav:hover {
+    color: #ffffff;
+}
+
+.btn-picker-year-nav:active {
+    color: var(--accent-cyan);
+    transform: scale(0.9);
+}
+
 .month-picker-modal-content {
     display: flex;
     flex-direction: column;

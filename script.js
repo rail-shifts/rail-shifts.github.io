@@ -1782,6 +1782,38 @@ function getInitialMonthKey() {
     return currentRealMonth;
 }
 
+function getEarliestMonthKey() {
+    const today = new Date();
+    const currentRealMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+    if (!window.shifts || window.shifts.length === 0) return currentRealMonth;
+    const sortedDates = window.shifts.map(s => s.date || '').filter(Boolean).sort();
+    if (sortedDates.length > 0) {
+        const earliest = sortedDates[0].substring(0, 7);
+        return earliest <= currentRealMonth ? earliest : currentRealMonth;
+    }
+    return currentRealMonth;
+}
+
+function getLatestMonthKey() {
+    const today = new Date();
+    return today.getFullYear() + '-12';
+}
+
+function updateMonthNavButtonsState() {
+    const prevBtn = document.getElementById('btnPrevMonth');
+    const nextBtn = document.getElementById('btnNextMonth');
+    if (!prevBtn || !nextBtn) return;
+
+    const earliest = getEarliestMonthKey();
+    const latest = getLatestMonthKey();
+
+    const isAtEarliest = (activeMonthKey <= earliest);
+    const isAtLatest = (activeMonthKey >= latest);
+
+    prevBtn.classList.toggle('nav-disabled', isAtEarliest);
+    nextBtn.classList.toggle('nav-disabled', isAtLatest);
+}
+
 window.changeMonth = function(direction) {
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
         document.activeElement.blur();
@@ -1790,6 +1822,14 @@ window.changeMonth = function(direction) {
     if (!activeMonthKey || activeMonthKey === 'NONE') {
         activeMonthKey = getInitialMonthKey();
     }
+
+    const earliest = getEarliestMonthKey();
+    const latest = getLatestMonthKey();
+
+    // בדיקת גבולות מוקדמת
+    if (direction < 0 && activeMonthKey <= earliest) return;
+    if (direction > 0 && activeMonthKey >= latest) return;
+
     const [yStr, mStr] = activeMonthKey.split('-');
     let y = parseInt(yStr, 10);
     let m = parseInt(mStr, 10);
@@ -1801,21 +1841,61 @@ window.changeMonth = function(direction) {
         m = 12;
         y -= 1;
     }
-    activeMonthKey = y + '-' + String(m).padStart(2, '0');
+    const newKey = y + '-' + String(m).padStart(2, '0');
+
+    // וידוא שהחודש החדש בתוך הטווח
+    if (newKey < earliest || newKey > latest) return;
+
+    activeMonthKey = newKey;
     renderShifts();
 };
 
+let pickerSelectedYear = null;
+
 window.openMonthPickerModal = function() {
     const modal = document.getElementById('monthPickerModal');
-    const list = document.getElementById('monthPickerList');
-    if (!modal || !list) return;
+    if (!modal) return;
 
     if (!activeMonthKey || activeMonthKey === 'NONE') {
         activeMonthKey = getInitialMonthKey();
     }
 
-    const today = new Date();
-    const currentRealMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+    const [curY] = activeMonthKey.split('-');
+    pickerSelectedYear = parseInt(curY, 10);
+
+    renderMonthPickerContent();
+    modal.classList.add('open');
+    updateBodyScrollLock();
+};
+
+window.changePickerYear = function(dir) {
+    const earliestYear = parseInt(getEarliestMonthKey().split('-')[0], 10);
+    const latestYear = parseInt(getLatestMonthKey().split('-')[0], 10);
+
+    const targetYear = pickerSelectedYear + dir;
+    if (targetYear < earliestYear || targetYear > latestYear) return;
+
+    pickerSelectedYear = targetYear;
+    renderMonthPickerContent();
+};
+
+function renderMonthPickerContent() {
+    const list = document.getElementById('monthPickerList');
+    const headerTitle = document.getElementById('monthPickerYearTitle');
+    const btnYearPrev = document.getElementById('btnPickerYearPrev');
+    const btnYearNext = document.getElementById('btnPickerYearNext');
+    if (!list) return;
+
+    const earliest = getEarliestMonthKey();
+    const latest = getLatestMonthKey();
+    const earliestYear = parseInt(earliest.split('-')[0], 10);
+    const latestYear = parseInt(latest.split('-')[0], 10);
+
+    if (headerTitle) headerTitle.textContent = pickerSelectedYear;
+
+    if (btnYearPrev) btnYearPrev.classList.toggle('nav-disabled', pickerSelectedYear <= earliestYear);
+    if (btnYearNext) btnYearNext.classList.toggle('nav-disabled', pickerSelectedYear >= latestYear);
+
     const monthCounts = {};
     (window.shifts || []).forEach(s => {
         if (s.date) {
@@ -1823,32 +1903,30 @@ window.openMonthPickerModal = function() {
             monthCounts[mk] = (monthCounts[mk] || 0) + 1;
         }
     });
-    if (!monthCounts[currentRealMonth]) {
-        monthCounts[currentRealMonth] = 0;
-    }
-    if (!monthCounts[activeMonthKey]) {
-        monthCounts[activeMonthKey] = 0;
-    }
 
-    const sortedKeys = Object.keys(monthCounts).sort((a, b) => b.localeCompare(a));
+    // 12 החודשים של השנה הנבחרת
+    let monthsHtml = '';
+    for (let m = 12; m >= 1; m--) {
+        const mKey = pickerSelectedYear + '-' + String(m).padStart(2, '0');
+        const isOutOfRange = (mKey < earliest || mKey > latest);
+        if (isOutOfRange) continue; // לא מציגים חודשים מחוץ לטווח המורשה
 
-    list.innerHTML = sortedKeys.map(mk => {
-        const isActive = (mk === activeMonthKey);
-        const count = monthCounts[mk];
-        return '\
-            <button class="month-picker-item ' + (isActive ? 'active' : '') + '" onclick="selectMonth(\'' + mk + '\')">\
+        const isActive = (mKey === activeMonthKey);
+        const count = monthCounts[mKey] || 0;
+
+        monthsHtml += '\
+            <button class="month-picker-item ' + (isActive ? 'active' : '') + '" onclick="selectMonth(\'' + mKey + '\')">\
                 <div style="display: flex; align-items: center; gap: 8px;">\
                     ' + (isActive ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '<span style="width: 18px; display: inline-block;"></span>') + '\
-                    <span>' + formatMonthName(mk) + '</span>\
+                    <span>' + formatMonthName(mKey) + '</span>\
                 </div>\
                 <span class="item-count">' + count + ' משמרות</span>\
             </button>\
         ';
-    }).join('');
+    }
 
-    modal.classList.add('open');
-    updateBodyScrollLock();
-};
+    list.innerHTML = monthsHtml;
+}
 
 window.closeMonthPickerModal = function() {
     const modal = document.getElementById('monthPickerModal');
@@ -2646,8 +2724,9 @@ function matchesShiftSearch(shift, rawQuery) {
         if (shift.instructorStartTime && shift.instructorEndTime) return true;
     }
 
-    // הערות (הע, הער, הערה, הערות)
-    if (('הערות'.startsWith(qNorm) || 'הערה'.startsWith(qNorm)) && qNorm.length >= 3) {
+    // הערות (ה, הע, הער, הערה, הערות)
+    const isNotesMatch = ['הערות', 'הערה'].some(w => w.startsWith(qNorm) || qNorm.startsWith(w));
+    if (isNotesMatch) {
         if (shift.notes && shift.notes.trim()) return true;
     }
 
@@ -2739,11 +2818,12 @@ function renderShifts() {
         mShifts = mShifts.filter(s => matchesShiftSearch(s, currentShiftSearchQuery));
     }
 
-    // Update navigation bar labels
+    // Update navigation bar labels and buttons state
     const titleEl = document.getElementById('monthNavTitle');
     const countEl = document.getElementById('monthNavCount');
     if (titleEl) titleEl.textContent = formatMonthName(activeMonthKey);
     if (countEl) countEl.textContent = '(' + mShifts.length + ')';
+    updateMonthNavButtonsState();
 
     if (mShifts.length === 0) {
         if (currentShiftSearchQuery) {
