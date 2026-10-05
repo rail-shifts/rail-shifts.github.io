@@ -38,7 +38,8 @@ window.getNaltFieldValue = function(type) {
     const customInput = document.getElementById('customNalt' + type);
     if (!select) return 0;
     if (select.value === 'custom') {
-        return parseInputToMinutes(customInput ? customInput.value : '');
+        const raw = customInput ? (customInput.dataset.savedVal || customInput.value) : '';
+        return typeof parseInputToMinutes === 'function' ? parseInputToMinutes(raw) : 0;
     }
     return Number(select.value) || 0;
 };
@@ -49,18 +50,33 @@ window.setNaltFieldUI = function(type, mins) {
     if (!select) return;
     
     mins = Number(mins) || 0;
+    const customOpt = document.getElementById('optNaltCustom' + type);
+
     if (PRESET_NALT_MINUTES.includes(mins)) {
         select.value = String(mins);
+        if (customOpt) {
+            customOpt.textContent = '';
+            customOpt.style.display = 'none';
+        }
         if (customInput) {
             customInput.style.display = 'none';
             customInput.value = '';
+            delete customInput.dataset.savedVal;
         }
+        select.style.display = 'block';
     } else {
-        select.value = 'custom';
+        const formatted = formatMinutesToDisplay(mins);
         if (customInput) {
-            customInput.style.display = 'block';
-            customInput.value = formatMinutesToDisplay(mins);
+            customInput.dataset.savedVal = formatted;
+            customInput.value = formatted;
+            customInput.style.display = 'none';
         }
+        if (customOpt) {
+            customOpt.textContent = formatted;
+            customOpt.style.display = '';
+        }
+        select.value = 'custom';
+        select.style.display = 'block';
     }
 };
 
@@ -1110,14 +1126,80 @@ window.handleManualPremChange = function() {
 window.handleNaltSelectChange = function(type) {
     const select = document.getElementById('selectNalt' + type);
     const customInput = document.getElementById('customNalt' + type);
-    if (select.value === 'custom') {
+    const customOpt = document.getElementById('optNaltCustom' + type);
+    if (!select || !customInput) return;
+
+    if (select.value === '__manual__') {
+        select.style.display = 'none';
         customInput.style.display = 'block';
-        customInput.focus();
-    } else {
+        customInput.value = customInput.dataset.savedVal || '';
+        setTimeout(() => {
+            customInput.focus();
+            customInput.select();
+        }, 10);
+    } else if (select.value !== 'custom') {
         customInput.style.display = 'none';
         customInput.value = '';
+        delete customInput.dataset.savedVal;
+        if (customOpt) {
+            customOpt.textContent = '';
+            customOpt.style.display = 'none';
+        }
     }
 };
+
+function setupNaltCustomInputHandlers(type) {
+    const select = document.getElementById('selectNalt' + type);
+    const customInput = document.getElementById('customNalt' + type);
+    const customOpt = document.getElementById('optNaltCustom' + type);
+    if (!select || !customInput) return;
+
+    function commitCustomValue() {
+        const raw = customInput.value.trim();
+        const mins = parseInputToMinutes(raw);
+
+        if (!raw || mins <= 0) {
+            select.value = '0';
+            if (customOpt) {
+                customOpt.textContent = '';
+                customOpt.style.display = 'none';
+            }
+            customInput.value = '';
+            delete customInput.dataset.savedVal;
+        } else if (PRESET_NALT_MINUTES.includes(mins)) {
+            select.value = String(mins);
+            if (customOpt) {
+                customOpt.textContent = '';
+                customOpt.style.display = 'none';
+            }
+            customInput.value = '';
+            delete customInput.dataset.savedVal;
+        } else {
+            const formatted = formatMinutesToDisplay(mins);
+            customInput.dataset.savedVal = formatted;
+            customInput.value = formatted;
+            if (customOpt) {
+                customOpt.textContent = formatted;
+                customOpt.style.display = '';
+            }
+            select.value = 'custom';
+        }
+        customInput.style.display = 'none';
+        select.style.display = 'block';
+    }
+
+    customInput.addEventListener('blur', commitCustomValue);
+    customInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            customInput.blur();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            customInput.value = '';
+            commitCustomValue();
+        }
+    });
+}
 
 function setupGlobalInteractions() {
     const drawerItems = document.querySelectorAll('.tools-popup-drawer .btn-drawer-item, .month-accordion-header .btn-summary-modal');
@@ -2005,6 +2087,205 @@ window.confirmWheelMonth = function() {
 window.closeMonthPickerModal = function() {
     const modal = document.getElementById('monthPickerModal');
     if (modal) modal.classList.remove('open');
+    updateBodyScrollLock();
+};
+
+// ===== iOS 24h Time Picker Controller =====
+let currentActiveTimeFieldId = null;
+let timePickerActiveHour = 7;
+let timePickerActiveMinute = 0;
+let timeWheelRendered = false;
+
+function ensureTimeWheelItemsRendered() {
+    if (timeWheelRendered) return;
+    const hoursScroller = document.getElementById('timeWheelHoursScroller');
+    const minutesScroller = document.getElementById('timeWheelMinutesScroller');
+    if (!hoursScroller || !minutesScroller) return;
+
+    let hoursHtml = '';
+    for (let h = 0; h < 24; h++) {
+        const val = String(h).padStart(2, '0');
+        hoursHtml += '<div class="ios-wheel-item" data-val="' + h + '" onclick="clickTimeWheelItem(\'hours\', ' + h + ')">' + val + '</div>';
+    }
+    hoursScroller.innerHTML = hoursHtml;
+
+    let minutesHtml = '';
+    for (let m = 0; m < 60; m++) {
+        const val = String(m).padStart(2, '0');
+        minutesHtml += '<div class="ios-wheel-item" data-val="' + m + '" onclick="clickTimeWheelItem(\'minutes\', ' + m + ')">' + val + '</div>';
+    }
+    minutesScroller.innerHTML = minutesHtml;
+
+    timeWheelRendered = true;
+}
+
+window.openTimePickerModal = function(fieldId, titleText) {
+    currentActiveTimeFieldId = fieldId;
+    const targetInput = document.getElementById(fieldId);
+    if (!targetInput) return;
+
+    const titleEl = document.getElementById('timePickerTitle');
+    if (titleEl) titleEl.textContent = titleText || 'בחירת שעה';
+
+    let curVal = (targetInput.value || '').trim();
+    let initH = 7;
+    let initM = 0;
+
+    if (curVal && curVal.includes(':')) {
+        const parts = curVal.split(':');
+        const h = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        if (!isNaN(h)) initH = Math.max(0, Math.min(23, h));
+        if (!isNaN(m)) initM = Math.max(0, Math.min(59, m));
+    } else {
+        if (fieldId === 'fieldEndTime') {
+            const startVal = document.getElementById('fieldStartTime')?.value;
+            if (startVal && startVal.includes(':')) {
+                const startH = parseInt(startVal.split(':')[0], 10);
+                initH = (startH + 8) % 24;
+            } else {
+                initH = 15;
+            }
+        } else if (fieldId === 'fieldStartTime') {
+            initH = 7;
+        } else if (fieldId.startsWith('fieldPrem') || fieldId.startsWith('fieldInstructor')) {
+            const baseField = fieldId.includes('End') ? 'fieldEndTime' : 'fieldStartTime';
+            const baseVal = document.getElementById(baseField)?.value;
+            if (baseVal && baseVal.includes(':')) {
+                initH = parseInt(baseVal.split(':')[0], 10) || 7;
+                initM = parseInt(baseVal.split(':')[1], 10) || 0;
+            }
+        }
+    }
+
+    timePickerActiveHour = initH;
+    timePickerActiveMinute = initM;
+
+    ensureTimeWheelItemsRendered();
+
+    const modal = document.getElementById('timePickerModal');
+    if (modal) modal.classList.add('open');
+
+    updateTimeWheelSelectedClasses();
+    updateTimePickerPreview();
+
+    setTimeout(() => {
+        const hoursScroller = document.getElementById('timeWheelHoursScroller');
+        const minutesScroller = document.getElementById('timeWheelMinutesScroller');
+        if (hoursScroller) hoursScroller.scrollTop = timePickerActiveHour * 38;
+        if (minutesScroller) minutesScroller.scrollTop = timePickerActiveMinute * 38;
+        updateTimeWheelSelectedClasses();
+    }, 25);
+
+    updateBodyScrollLock();
+};
+
+window.clickTimeWheelItem = function(col, val) {
+    const scroller = col === 'hours' ? document.getElementById('timeWheelHoursScroller') : document.getElementById('timeWheelMinutesScroller');
+    if (!scroller) return;
+    scroller.scrollTo({ top: val * 38, behavior: 'smooth' });
+    if (col === 'hours') {
+        timePickerActiveHour = val;
+    } else {
+        timePickerActiveMinute = val;
+    }
+    updateTimeWheelSelectedClasses();
+    updateTimePickerPreview();
+};
+
+window.onTimeWheelScroll = function(col) {
+    const scroller = col === 'hours' ? document.getElementById('timeWheelHoursScroller') : document.getElementById('timeWheelMinutesScroller');
+    if (!scroller) return;
+
+    const maxIdx = col === 'hours' ? 23 : 59;
+    const rawIdx = Math.round(scroller.scrollTop / 38);
+    const idx = Math.max(0, Math.min(maxIdx, rawIdx));
+
+    if (col === 'hours') {
+        timePickerActiveHour = idx;
+    } else {
+        timePickerActiveMinute = idx;
+    }
+
+    updateTimeWheelSelectedClasses();
+    updateTimePickerPreview();
+};
+
+function updateTimeWheelSelectedClasses() {
+    const hoursScroller = document.getElementById('timeWheelHoursScroller');
+    const minutesScroller = document.getElementById('timeWheelMinutesScroller');
+    if (hoursScroller) {
+        const items = hoursScroller.querySelectorAll('.ios-wheel-item');
+        items.forEach((item, i) => {
+            if (i === timePickerActiveHour) item.classList.add('selected');
+            else item.classList.remove('selected');
+        });
+    }
+    if (minutesScroller) {
+        const items = minutesScroller.querySelectorAll('.ios-wheel-item');
+        items.forEach((item, i) => {
+            if (i === timePickerActiveMinute) item.classList.add('selected');
+            else item.classList.remove('selected');
+        });
+    }
+}
+
+function updateTimePickerPreview() {
+    const preview = document.getElementById('timePickerPreview');
+    if (preview) {
+        const hStr = String(timePickerActiveHour).padStart(2, '0');
+        const mStr = String(timePickerActiveMinute).padStart(2, '0');
+        preview.textContent = hStr + ':' + mStr;
+    }
+}
+
+window.confirmTimePicker = function() {
+    if (!currentActiveTimeFieldId) {
+        closeTimePickerModal();
+        return;
+    }
+    const targetInput = document.getElementById(currentActiveTimeFieldId);
+    if (targetInput) {
+        const hStr = String(timePickerActiveHour).padStart(2, '0');
+        const mStr = String(timePickerActiveMinute).padStart(2, '0');
+        targetInput.value = hStr + ':' + mStr;
+
+        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+        targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+        if (typeof validateModalRealtime === 'function') validateModalRealtime(true);
+        if (typeof handleModalTimeChangeForFullPrem === 'function') handleModalTimeChangeForFullPrem();
+        if (typeof handleManualPremChange === 'function' && currentActiveTimeFieldId.startsWith('fieldPrem')) {
+            handleManualPremChange();
+        }
+    }
+    closeTimePickerModal();
+};
+
+window.clearTimePickerValue = function() {
+    if (!currentActiveTimeFieldId) {
+        closeTimePickerModal();
+        return;
+    }
+    const targetInput = document.getElementById(currentActiveTimeFieldId);
+    if (targetInput) {
+        targetInput.value = '';
+        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+        targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+        if (typeof validateModalRealtime === 'function') validateModalRealtime(true);
+        if (typeof handleModalTimeChangeForFullPrem === 'function') handleModalTimeChangeForFullPrem();
+        if (typeof handleManualPremChange === 'function' && currentActiveTimeFieldId.startsWith('fieldPrem')) {
+            handleManualPremChange();
+        }
+    }
+    closeTimePickerModal();
+};
+
+window.closeTimePickerModal = function() {
+    const modal = document.getElementById('timePickerModal');
+    if (modal) modal.classList.remove('open');
+    currentActiveTimeFieldId = null;
     updateBodyScrollLock();
 };
 
@@ -3237,4 +3518,7 @@ function initBackdropScrollPrevention() {
 
 initBackdropScrollPrevention();
 setupGlobalInteractions();
+setupNaltCustomInputHandlers('Start');
+setupNaltCustomInputHandlers('End');
+ensureTimeWheelItemsRendered();
 window.navigateTo(currentView, false);
