@@ -1963,9 +1963,6 @@ let wheelScrollTimeout = null;
 window.onWheelScroll = function() {
     clearTimeout(wheelScrollTimeout);
     updateWheelSelectedClass();
-    wheelScrollTimeout = setTimeout(() => {
-        snapToClosestWheelItem();
-    }, 120);
 };
 
 function updateWheelSelectedClass() {
@@ -1994,12 +1991,6 @@ function updateWheelSelectedClass() {
     if (closestItem) {
         closestItem.classList.add('selected');
         wheelActiveMonthKey = closestItem.getAttribute('data-key');
-    }
-}
-
-function snapToClosestWheelItem() {
-    if (wheelActiveMonthKey) {
-        scrollToWheelMonth(wheelActiveMonthKey, true);
     }
 }
 
