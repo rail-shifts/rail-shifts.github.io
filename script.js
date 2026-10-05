@@ -68,7 +68,7 @@ window.setNaltFieldUI = function(type, mins) {
             customInput.value = formatted;
             customInput.style.display = 'none';
         }
-        if (customOpt) customOpt.textContent = formatted + ' (מותאם)';
+        if (customOpt) customOpt.textContent = formatted + ' (' + mins + ' דק׳)';
         select.value = 'custom';
         select.style.display = 'block';
     }
@@ -1204,7 +1204,7 @@ function setupNaltCustomInputHandlers(type) {
             const formatted = formatMinutesToDisplay(mins);
             customInput.dataset.savedVal = formatted;
             customInput.value = formatted;
-            if (customOpt) customOpt.textContent = formatted + ' (מותאם)';
+            if (customOpt) customOpt.textContent = formatted + ' (' + mins + ' דק׳)';
             select.value = 'custom';
         }
         customInput.style.display = 'none';
