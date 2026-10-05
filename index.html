@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=5.7">
+    <link rel="stylesheet" href="style.css?v=5.8">
 </head>
 <body>
 
@@ -637,7 +637,6 @@
                 <p style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 6px;">סקיצת הגדרות עתידיות</p>
                 <p style="font-size: 0.85rem;">כאן יופיעו בעתיד הגדרות תצוגה, התראות והעדפות אישיות.</p>
             </div>
-            <button class="btn-secondary" onclick="closeSettingsModal()">סגור</button>
         </div>
     </div>
 </div>
@@ -698,8 +697,8 @@
             <span class="perm-toggle-label" id="permLabelLeft">משתמש רגיל</span>
         </div>
         <div class="perm-modal-actions">
-            <button class="btn-secondary" onclick="closePermModal()">ביטול</button>
-            <button class="btn-secondary" style="background: rgba(0,210,255,0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;" onclick="savePermChange()">שמור</button>
+            <button class="btn-dialog-action btn-dialog-cancel" onclick="closePermModal()">ביטול</button>
+            <button class="btn-dialog-action btn-dialog-confirm" onclick="savePermChange()">שמור</button>
         </div>
     </div>
 </div>

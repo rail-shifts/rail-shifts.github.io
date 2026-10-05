@@ -1619,29 +1619,35 @@ header {
 
 .btn-export-full {
     width: 100%;
-    background: rgba(0, 210, 255, 0.15);
-    border: 1px solid var(--accent-cyan);
-    color: var(--accent-cyan);
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 0.95rem;
+    background: var(--accent-blue);
+    border: none;
+    color: #ffffff;
+    padding: 13px 20px;
+    border-radius: 14px;
+    font-size: 0.98rem;
     font-weight: 700;
+    font-family: inherit;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: transform 0.1s ease, background 0.2s;
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.35);
+    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
 
+.btn-export-full:hover {
+    background: #1a94ff;
+    box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
+}
+
 .btn-export-full:active,
 .btn-export-full.active-touch {
-    transform: scale(0.96);
-    background: rgba(0, 210, 255, 0.35);
+    transform: scale(0.97);
 }
 
 .btn-export-full.is-loading {
@@ -2486,21 +2492,27 @@ select.form-control option {
 
 .btn-save-modal {
     width: 100%;
-    background: linear-gradient(135deg, var(--accent-blue), #0066cc);
+    background: var(--accent-blue);
     color: white;
-    padding: 10px; 
-    border-radius: 12px;
-    font-size: 0.92rem; 
+    padding: 13px 20px;
+    border-radius: 14px;
+    font-size: 1rem;
     font-weight: 700;
+    font-family: inherit;
     border: none;
     cursor: pointer;
-    margin-top: 4px; 
-    transition: transform 0.1s ease, opacity 0.1s ease;
+    margin-top: 6px;
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.35);
+    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-save-modal:hover {
+    background: #1a94ff;
+    box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
 }
 
 .btn-save-modal:active {
     transform: scale(0.97);
-    opacity: 0.85;
 }
 
 .empty-state {
@@ -2951,11 +2963,7 @@ select.form-control option {
 }
 .perm-modal-actions {
     display: flex;
-    gap: 8px;
-}
-.perm-modal-actions button {
-    flex: 1;
-    padding: 10px;
-    font-size: 0.85rem;
+    gap: 10px;
+    margin-top: 6px;
 }
 
