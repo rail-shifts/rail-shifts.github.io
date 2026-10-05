@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=5.4">
+    <link rel="stylesheet" href="style.css?v=5.5">
 </head>
 <body>
 
@@ -411,49 +411,6 @@
     </div>
 </div>
 
-<!-- Modal for Time Picker (iOS Wheel Style 24h) -->
-<div class="modal-overlay time-picker-overlay" id="timePickerModal" onclick="if(event.target === this) closeTimePickerModal()">
-    <div class="modal-sheet time-picker-sheet">
-        <div class="modal-header time-picker-header">
-            <button class="btn-close" onclick="closeTimePickerModal()" title="סגור">
-                <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </button>
-            <div class="time-picker-title-group">
-                <span class="time-picker-title" id="timePickerTitle">בחירת שעה</span>
-                <span class="time-picker-preview-badge" id="timePickerPreview">00:00</span>
-            </div>
-            <button class="btn-time-clear" id="btnTimePickerClear" onclick="clearTimePickerValue()" title="איפוס שעה">איפוס</button>
-        </div>
-
-        <div class="ios-time-columns-labels">
-            <span class="ios-time-col-header">שעות</span>
-            <span class="ios-time-col-header-sep"></span>
-            <span class="ios-time-col-header">דקות</span>
-        </div>
-
-        <div class="ios-wheel-container ios-time-wheel-container">
-            <div class="ios-wheel-highlight"></div>
-            <div class="ios-time-columns">
-                <!-- עמודת שעות (שמאל) -->
-                <div class="ios-time-column">
-                    <div class="ios-wheel-scroller" id="timeWheelHoursScroller" onscroll="onTimeWheelScroll('hours')"></div>
-                </div>
-
-                <div class="ios-time-colon">:</div>
-
-                <!-- עמודת דקות (ימין) -->
-                <div class="ios-time-column">
-                    <div class="ios-wheel-scroller" id="timeWheelMinutesScroller" onscroll="onTimeWheelScroll('minutes')"></div>
-                </div>
-            </div>
-        </div>
-
-        <button class="btn-wheel-select" onclick="confirmTimePicker()">אישור</button>
-    </div>
-</div>
-
 <!-- Modal for Monthly Summary -->
 <div class="modal-overlay" id="monthlySummaryModal">
     <div class="modal-sheet">
@@ -532,10 +489,7 @@
                     <div class="form-group">
                         <label class="form-label">שעת כניסה</label>
                         <div class="input-wrapper">
-                            <input type="text" id="fieldStartTime" class="form-control time-input-field" placeholder="--:--" readonly inputmode="none" onclick="openTimePickerModal('fieldStartTime', 'שעת כניסה')" onchange="validateModalRealtime(true); handleModalTimeChangeForFullPrem();" oninput="validateModalRealtime(false); handleModalTimeChangeForFullPrem();">
-                            <svg class="time-field-clock-icon" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                            </svg>
+                            <input type="time" id="fieldStartTime" class="form-control" onchange="validateModalRealtime(true); handleModalTimeChangeForFullPrem();" oninput="validateModalRealtime(false); handleModalTimeChangeForFullPrem();">
                             <svg class="field-error-icon" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
@@ -544,10 +498,7 @@
                     <div class="form-group">
                         <label class="form-label">שעת יציאה</label>
                         <div class="input-wrapper">
-                            <input type="text" id="fieldEndTime" class="form-control time-input-field" placeholder="--:--" readonly inputmode="none" onclick="openTimePickerModal('fieldEndTime', 'שעת יציאה')" onchange="validateModalRealtime(true); handleModalTimeChangeForFullPrem();" oninput="validateModalRealtime(false); handleModalTimeChangeForFullPrem();">
-                            <svg class="time-field-clock-icon" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                            </svg>
+                            <input type="time" id="fieldEndTime" class="form-control" onchange="validateModalRealtime(true); handleModalTimeChangeForFullPrem();" oninput="validateModalRealtime(false); handleModalTimeChangeForFullPrem();">
                             <svg class="field-error-icon" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
@@ -578,8 +529,7 @@
                                 <option value="90">1:30 (90 דק׳)</option>
                                 <option value="120">2:00 (120 דק׳)</option>
                                 <option value="270">4:30 (270 דק׳)</option>
-                                <option value="custom" id="optNaltCustomStart" style="display: none;"></option>
-                                <option value="__manual__">אחר...</option>
+                                <option value="custom">אחר...</option>
                             </select>
                             <input type="text" id="customNaltStart" class="form-control custom-nalt-input" placeholder="שעה או דקות (למשל 0:50)">
                         </div>
@@ -595,8 +545,7 @@
                                 <option value="90">1:30 (90 דק׳)</option>
                                 <option value="120">2:00 (120 דק׳)</option>
                                 <option value="270">4:30 (270 דק׳)</option>
-                                <option value="custom" id="optNaltCustomEnd" style="display: none;"></option>
-                                <option value="__manual__">אחר...</option>
+                                <option value="custom">אחר...</option>
                             </select>
                             <input type="text" id="customNaltEnd" class="form-control custom-nalt-input" placeholder="שעה או דקות (למשל 0:50)">
                         </div>
@@ -615,10 +564,7 @@
                     <div class="form-group">
                         <label class="form-label">משעה</label>
                         <div class="input-wrapper">
-                            <input type="text" id="fieldPremStart" class="form-control time-input-field" placeholder="--:--" readonly inputmode="none" onclick="openTimePickerModal('fieldPremStart', 'פרמיה - משעה')" onchange="handleManualPremChange(); validateModalRealtime(true);" oninput="handleManualPremChange(); validateModalRealtime(false);">
-                            <svg class="time-field-clock-icon" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                            </svg>
+                            <input type="time" id="fieldPremStart" class="form-control" onchange="handleManualPremChange(); validateModalRealtime(true);" oninput="handleManualPremChange(); validateModalRealtime(false);">
                             <svg class="field-error-icon" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
@@ -627,10 +573,7 @@
                     <div class="form-group">
                         <label class="form-label">עד שעה</label>
                         <div class="input-wrapper">
-                            <input type="text" id="fieldPremEnd" class="form-control time-input-field" placeholder="--:--" readonly inputmode="none" onclick="openTimePickerModal('fieldPremEnd', 'פרמיה - עד שעה')" onchange="handleManualPremChange(); validateModalRealtime(true);" oninput="handleManualPremChange(); validateModalRealtime(false);">
-                            <svg class="time-field-clock-icon" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                            </svg>
+                            <input type="time" id="fieldPremEnd" class="form-control" onchange="handleManualPremChange(); validateModalRealtime(true);" oninput="handleManualPremChange(); validateModalRealtime(false);">
                             <svg class="field-error-icon" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
@@ -651,19 +594,13 @@
                     <div class="form-group">
                         <label class="form-label">משעה</label>
                         <div class="input-wrapper">
-                            <input type="text" id="fieldInstructorStart" class="form-control time-input-field" placeholder="--:--" readonly inputmode="none" onclick="openTimePickerModal('fieldInstructorStart', 'הדרכה - משעה')" onchange="validateModalRealtime(true)" oninput="validateModalRealtime(false)">
-                            <svg class="time-field-clock-icon" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                            </svg>
+                            <input type="time" id="fieldInstructorStart" class="form-control" onchange="validateModalRealtime(true)" oninput="validateModalRealtime(false)">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">עד שעה</label>
                         <div class="input-wrapper">
-                            <input type="text" id="fieldInstructorEnd" class="form-control time-input-field" placeholder="--:--" readonly inputmode="none" onclick="openTimePickerModal('fieldInstructorEnd', 'הדרכה - עד שעה')" onchange="validateModalRealtime(true)" oninput="validateModalRealtime(false)">
-                            <svg class="time-field-clock-icon" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                            </svg>
+                            <input type="time" id="fieldInstructorEnd" class="form-control" onchange="validateModalRealtime(true)" oninput="validateModalRealtime(false)">
                         </div>
                     </div>
                 </div>
@@ -768,6 +705,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=5.7"></script>
+<script type="module" src="script.js?v=5.8"></script>
 </body>
 </html>
