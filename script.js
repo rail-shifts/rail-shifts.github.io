@@ -37,7 +37,7 @@ window.getNaltFieldValue = function(type) {
     const select = document.getElementById('selectNalt' + type);
     const customInput = document.getElementById('customNalt' + type);
     if (!select) return 0;
-    if (select.value === 'custom') {
+    if (select.value === 'custom' || select.value === 'custom_val') {
         const raw = customInput ? (customInput.dataset.savedVal || customInput.value) : '';
         return typeof parseInputToMinutes === 'function' ? parseInputToMinutes(raw) : 0;
     }
@@ -51,8 +51,10 @@ window.setNaltFieldUI = function(type, mins) {
     
     mins = Number(mins) || 0;
     const customOpt = select.querySelector('option[value="custom"]');
+    let customValOpt = select.querySelector('option[value="custom_val"]');
 
     if (PRESET_NALT_MINUTES.includes(mins)) {
+        if (customValOpt) customValOpt.remove();
         select.value = String(mins);
         if (customOpt) customOpt.textContent = 'אחר...';
         if (customInput) {
@@ -63,13 +65,23 @@ window.setNaltFieldUI = function(type, mins) {
         select.style.display = 'block';
     } else {
         const formatted = formatMinutesToDisplay(mins);
+        if (!customValOpt) {
+            customValOpt = document.createElement('option');
+            customValOpt.value = 'custom_val';
+            if (customOpt) {
+                select.insertBefore(customValOpt, customOpt);
+            } else {
+                select.appendChild(customValOpt);
+            }
+        }
+        customValOpt.textContent = formatted + ' (' + mins + ' דק׳)';
         if (customInput) {
             customInput.dataset.savedVal = formatted;
             customInput.value = formatted;
             customInput.style.display = 'none';
         }
-        if (customOpt) customOpt.textContent = formatted + ' (' + mins + ' דק׳)';
-        select.value = 'custom';
+        if (customOpt) customOpt.textContent = 'אחר...';
+        select.value = 'custom_val';
         select.style.display = 'block';
     }
 };
@@ -1127,7 +1139,14 @@ window.handleNaltSelectChange = function(type) {
         customInput.style.display = 'block';
         customInput.value = customInput.dataset.savedVal || '';
         customInput.focus();
+        setTimeout(() => {
+            try { customInput.select(); } catch (_) {}
+        }, 50);
     } else {
+        const customValOpt = select.querySelector('option[value="custom_val"]');
+        if (customValOpt && select.value !== 'custom_val') {
+            customValOpt.remove();
+        }
         customInput.style.display = 'none';
         customInput.value = '';
         delete customInput.dataset.savedVal;
@@ -1158,30 +1177,30 @@ function setupNaltCustomInputHandlers(type) {
         if (isDeleting) return;
 
         const raw = customInput.value;
-        const digits = raw.replace(/\D/g, '').slice(0, 4);
+        if (raw.includes(':')) {
+            const parts = raw.split(':');
+            let h = parts[0].replace(/\D/g, '').slice(0, 2);
+            let m = parts[1].replace(/\D/g, '').slice(0, 2);
+            if (h.length === 2 && parseInt(h, 10) > 23) h = '23';
+            if (m.length === 2 && parseInt(m, 10) > 59) m = '59';
+            customInput.value = (h ? h : '') + ':' + m;
+            return;
+        }
 
+        const digits = raw.replace(/\D/g, '').slice(0, 4);
         if (!digits) {
             customInput.value = '';
             return;
         }
 
-        if (digits.length === 1) {
-            customInput.value = digits;
-        } else if (digits.length === 2) {
-            let h = parseInt(digits, 10);
-            if (h > 23) h = 23;
-            customInput.value = String(h).padStart(2, '0') + ':';
-        } else if (digits.length === 3) {
-            let h = parseInt(digits.slice(0, 2), 10);
-            if (h > 23) h = 23;
-            const m1 = digits.slice(2, 3);
-            customInput.value = String(h).padStart(2, '0') + ':' + m1;
-        } else if (digits.length >= 4) {
+        if (digits.length >= 4) {
             let h = parseInt(digits.slice(0, 2), 10);
             if (h > 23) h = 23;
             let m = parseInt(digits.slice(2, 4), 10);
             if (m > 59) m = 59;
             customInput.value = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+        } else {
+            customInput.value = digits;
         }
     });
 
@@ -1189,13 +1208,16 @@ function setupNaltCustomInputHandlers(type) {
         const raw = customInput.value.trim();
         const mins = parseInputToMinutes(raw);
         const customOpt = select.querySelector('option[value="custom"]');
+        let customValOpt = select.querySelector('option[value="custom_val"]');
 
         if (!raw || mins <= 0) {
+            if (customValOpt) customValOpt.remove();
             select.value = '0';
             if (customOpt) customOpt.textContent = 'אחר...';
             customInput.value = '';
             delete customInput.dataset.savedVal;
         } else if (PRESET_NALT_MINUTES.includes(mins)) {
+            if (customValOpt) customValOpt.remove();
             select.value = String(mins);
             if (customOpt) customOpt.textContent = 'אחר...';
             customInput.value = '';
@@ -1204,8 +1226,18 @@ function setupNaltCustomInputHandlers(type) {
             const formatted = formatMinutesToDisplay(mins);
             customInput.dataset.savedVal = formatted;
             customInput.value = formatted;
-            if (customOpt) customOpt.textContent = formatted + ' (' + mins + ' דק׳)';
-            select.value = 'custom';
+            if (!customValOpt) {
+                customValOpt = document.createElement('option');
+                customValOpt.value = 'custom_val';
+                if (customOpt) {
+                    select.insertBefore(customValOpt, customOpt);
+                } else {
+                    select.appendChild(customValOpt);
+                }
+            }
+            customValOpt.textContent = formatted + ' (' + mins + ' דק׳)';
+            select.value = 'custom_val';
+            if (customOpt) customOpt.textContent = 'אחר...';
         }
         customInput.style.display = 'none';
         select.style.display = 'block';
@@ -1707,10 +1739,22 @@ function parseInputToMinutes(val) {
         const cleaned = str.replace(',', '.');
         return Math.round(parseFloat(cleaned) * 60) || 0;
     }
+    const cleanDigits = str.replace(/\D/g, '');
+    if (cleanDigits.length === 3) {
+        const h = parseInt(cleanDigits[0], 10);
+        const m = parseInt(cleanDigits.slice(1, 3), 10);
+        return h * 60 + m;
+    }
+    if (cleanDigits.length === 4) {
+        const h = parseInt(cleanDigits.slice(0, 2), 10);
+        const m = parseInt(cleanDigits.slice(2, 4), 10);
+        return h * 60 + m;
+    }
     const num = parseFloat(str);
     if (isNaN(num)) return 0;
     return num <= 12 ? Math.round(num * 60) : Math.round(num);
 }
+window.parseInputToMinutes = parseInputToMinutes;
 
 window.formatMinutesToHM = function(mins) {
     if (!mins || mins <= 0) return '0 שעות';

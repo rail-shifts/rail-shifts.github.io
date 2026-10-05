@@ -676,7 +676,7 @@
         const select = document.getElementById('selectNalt' + type);
         const customInput = document.getElementById('customNalt' + type);
         if (!select) return 0;
-        if (select.value === 'custom') {
+        if (select.value === 'custom' || select.value === 'custom_val') {
             const raw = customInput ? (customInput.dataset.savedVal || customInput.value) : '';
             return typeof parseInputToMinutes === 'function' ? parseInputToMinutes(raw) : 0;
         }
@@ -705,6 +705,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=6.1"></script>
+<script type="module" src="script.js?v=6.2"></script>
 </body>
 </html>
