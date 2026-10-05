@@ -1126,10 +1126,7 @@ window.handleNaltSelectChange = function(type) {
         select.style.display = 'none';
         customInput.style.display = 'block';
         customInput.value = customInput.dataset.savedVal || '';
-        setTimeout(() => {
-            customInput.focus();
-            customInput.select();
-        }, 10);
+        customInput.focus();
     } else {
         customInput.style.display = 'none';
         customInput.value = '';
@@ -1185,11 +1182,6 @@ function setupNaltCustomInputHandlers(type) {
             let m = parseInt(digits.slice(2, 4), 10);
             if (m > 59) m = 59;
             customInput.value = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
-            setTimeout(() => {
-                if (document.activeElement === customInput) {
-                    customInput.blur();
-                }
-            }, 300);
         }
     });
 
@@ -3387,21 +3379,6 @@ function initBackdropScrollPrevention() {
             }
         }
     }, true);
-
-    // Dismiss active input focus on scroll or tap outside to prevent iOS Shake-to-Undo dialog
-    window.addEventListener('scroll', () => {
-        if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
-            document.activeElement.blur();
-        }
-    }, { passive: true });
-
-    document.addEventListener('touchstart', (e) => {
-        if (document.activeElement && 
-            (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') &&
-            !e.target.closest('input, textarea, select')) {
-            document.activeElement.blur();
-        }
-    }, { passive: true });
 }
 
 initBackdropScrollPrevention();
