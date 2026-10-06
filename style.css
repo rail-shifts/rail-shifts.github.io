@@ -2720,56 +2720,98 @@ select.form-control option {
 
 @media print {
     @page {
-        size: A4;
-        margin: 10mm;
+        size: A4 portrait;
+        margin: 8mm 10mm;
     }
-    body { 
-        background: #ffffff !important; 
-        color: #000000 !important; 
-        padding: 0 !important; 
-        margin: 0 !important;
-        display: block !important;
-    }
-    .app-container, .bottom-nav-wrapper, header, .modal-overlay, .error-dialog-overlay, .menu-backdrop, .tools-drawer-backdrop { 
-        display: none !important; 
-    }
-    #printArea { 
-        display: block !important; 
-        width: 100% !important; 
-        direction: rtl !important; 
-        background: #ffffff !important; 
+    html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
         padding: 0 !important;
         margin: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        display: block !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
-    .print-header { 
+    body > *:not(#printArea) {
+        display: none !important;
+    }
+    #printArea {
+        display: block !important;
+        width: 100% !important;
+        direction: rtl !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    .print-header {
         font-family: 'Assistant', sans-serif;
-        font-size: 20px; font-weight: 800; 
-        border-bottom: 2px solid #132247; 
-        padding-bottom: 6px; margin-bottom: 12px; 
-        text-align: center; color: #132247;
+        font-size: 19px;
+        font-weight: 800;
+        border-bottom: 2px solid #132247;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #132247;
+        background: transparent !important;
     }
     .print-summary-box {
-        display: flex; justify-content: space-around; 
-        background: #f8fafc; padding: 10px; 
-        border-radius: 8px; margin-bottom: 15px;
+        display: flex;
+        justify-content: space-around;
+        background: #f8fafc !important;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 12px;
         border: 1px solid #cbd5e1;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
-    .print-summary-item { text-align: center; font-family: 'Assistant', sans-serif; }
-    .print-summary-title { font-size: 12px; color: #475569; font-weight: 700; }
-    .print-summary-val { font-size: 15px; font-weight: 800; color: #0f172a; margin-top: 2px; }
-    .print-table { 
-        width: 100% !important; 
-        border-collapse: collapse !important; 
-        font-family: 'Assistant', sans-serif; 
-        font-size: 11.5px !important; 
+    .print-summary-item {
+        text-align: center;
+        font-family: 'Assistant', sans-serif;
     }
-    .print-table th, .print-table td { 
-        border: 1px solid #cbd5e1 !important; 
-        padding: 6px 8px !important; 
-        text-align: right !important; 
+    .print-summary-title {
+        font-size: 11.5px;
+        color: #475569;
+        font-weight: 700;
     }
-    .print-table th { background-color: #f1f5f9 !important; color: #1e293b !important; font-weight: 700; }
-    .print-table tr:nth-child(even) { background-color: #f8fafc !important; }
+    .print-summary-val {
+        font-size: 14.5px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 2px;
+        font-family: 'Inter', sans-serif;
+    }
+    .print-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-family: 'Assistant', sans-serif;
+        font-size: 11px !important;
+        page-break-inside: auto !important;
+    }
+    .print-table th, .print-table td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 5px 7px !important;
+        text-align: right !important;
+    }
+    .print-table th {
+        background-color: #f1f5f9 !important;
+        color: #1e293b !important;
+        font-weight: 700;
+    }
+    .print-table tr:nth-child(even) {
+        background-color: #f8fafc !important;
+    }
+    .print-table td:nth-child(3) {
+        text-align: center !important;
+        direction: ltr !important;
+        font-family: 'Inter', sans-serif;
+    }
 }
 
 /* ===== Admin User Cards ===== */

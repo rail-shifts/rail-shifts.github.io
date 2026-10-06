@@ -1037,10 +1037,11 @@ window.openMonthlySummaryModal = function(mk) {
     if (exportBtn) {
         exportBtn.setAttribute('data-month', mk);
         exportBtn.onclick = function() {
-            printMonthReport(mk);
+            window.printMonthReport(mk);
         };
     }
 
+    window.buildMonthPrintReport(mk);
     document.getElementById('monthlySummaryModal').classList.add('open');
 };
 
@@ -2239,10 +2240,20 @@ window.toggleMonthAccordion = function(mk) {
     renderShifts();
 };
 
-window.printMonthReport = function(mk) {
-    const mShifts = window.shifts.filter(s => s.date && s.date.startsWith(mk)).reverse(); 
-    if(mShifts.length === 0) return;
-    
+window.buildMonthPrintReport = function(mk) {
+    const printDiv = document.getElementById('printArea');
+    if (!printDiv) return;
+
+    const mShifts = (window.shifts || [])
+        .filter(s => s.date && s.date.startsWith(mk))
+        .slice()
+        .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+    if (mShifts.length === 0) {
+        printDiv.innerHTML = '';
+        return;
+    }
+
     let totWorkMins = 0;
     let totPremMins = 0;
     let totNaltMins = 0;
@@ -2250,20 +2261,20 @@ window.printMonthReport = function(mk) {
 
     mShifts.forEach(s => {
          let wMins = 0;
-         if(s.startTime && s.endTime) {
+         if (s.startTime && s.endTime) {
              wMins = window.calculateDurationMinutes(s.startTime, s.endTime);
              totWorkMins += wMins;
          }
          let pMins = 0;
-         if(s.premStartTime && s.premEndTime) {
+         if (s.premStartTime && s.premEndTime) {
              pMins = window.calculateDurationMinutes(s.premStartTime, s.premEndTime);
              totPremMins += pMins;
          }
          const naltMins = (Number(s.naltStartMinutes)||0) + (Number(s.naltEndMinutes)||0);
          totNaltMins += naltMins;
 
-         const dateParts = s.date.split('-');
-         const dFmt = dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0];
+         const dateParts = (s.date || '').split('-');
+         const dFmt = dateParts.length === 3 ? (dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0]) : (s.date || '-');
          
          tableRows += '\
             <tr>\
@@ -2278,7 +2289,6 @@ window.printMonthReport = function(mk) {
     });
 
     const monthName = formatMonthName(mk);
-    const printDiv = document.getElementById('printArea');
     printDiv.innerHTML = '\
         <div class="print-header">רכבת ישראל - סיכום משמרות לחודש ' + monthName + '</div>\
         <div class="print-summary-box">\
@@ -2311,26 +2321,10 @@ window.printMonthReport = function(mk) {
             </tbody>\
         </table>\
     ';
+};
 
-    const btn = document.getElementById('modalExportBtn');
-    let originalHTML = '';
-    if (btn) {
-        originalHTML = btn.innerHTML;
-        btn.classList.add('is-loading');
-        btn.innerHTML = '<svg class="svg-icon rotating" width="18" height="18" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> <span>מייצר דוח...</span>';
-    }
-
-    const restoreBtn = () => {
-        if (btn && originalHTML) {
-            btn.classList.remove('is-loading');
-            btn.innerHTML = originalHTML;
-        }
-        window.removeEventListener('afterprint', restoreBtn);
-    };
-
-    window.addEventListener('afterprint', restoreBtn, { once: true });
-    setTimeout(restoreBtn, 4000);
-
+window.printMonthReport = function(mk) {
+    window.buildMonthPrintReport(mk);
     window.print();
 };
 
