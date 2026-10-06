@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mishmarot-v12';
+const CACHE_NAME = 'mishmarot-v11';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -31,7 +31,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
