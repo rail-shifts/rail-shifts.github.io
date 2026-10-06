@@ -1365,6 +1365,30 @@ function setupGlobalInteractions() {
         btn.addEventListener('touchcancel', clearSummaryPressed);
         btn.addEventListener('mouseleave', clearSummaryPressed);
     });
+
+    if (!window._globalButtonTouchInit) {
+        window._globalButtonTouchInit = true;
+        let activeTouchTarget = null;
+
+        const clearGlobalTouchActive = () => {
+            if (activeTouchTarget) {
+                activeTouchTarget.classList.remove('btn-touch-active');
+                activeTouchTarget = null;
+            }
+            document.querySelectorAll('.btn-touch-active').forEach(b => b.classList.remove('btn-touch-active'));
+        };
+
+        document.addEventListener('touchstart', (e) => {
+            const btn = e.target.closest('button, .btn-toolbar, .btn-dialog-action, .btn-secondary, .btn-wheel-select, .btn-save-modal, .btn-drawer-item, .admin-perm-btn');
+            if (!btn || btn.disabled) return;
+            activeTouchTarget = btn;
+            btn.classList.add('btn-touch-active');
+        }, { passive: true });
+
+        document.addEventListener('touchend', clearGlobalTouchActive, { passive: true });
+        document.addEventListener('touchcancel', clearGlobalTouchActive, { passive: true });
+        document.addEventListener('touchmove', clearGlobalTouchActive, { passive: true });
+    }
 }
 
 window.handleToolAction = function(type) {

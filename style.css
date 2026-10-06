@@ -687,7 +687,8 @@ header {
     }
 }
 
-.btn-drawer-item:active {
+.btn-drawer-item:active,
+.btn-drawer-item.btn-touch-active {
     transform: scale(0.97);
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.12);
@@ -1056,9 +1057,11 @@ header {
     transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.12s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    touch-action: manipulation;
 }
 
-.btn-toolbar:active {
+.btn-toolbar:active,
+.btn-toolbar.btn-touch-active {
     transform: scale(0.94);
 }
 
@@ -1483,7 +1486,8 @@ header {
     box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
 }
 
-.btn-wheel-select:active {
+.btn-wheel-select:active,
+.btn-wheel-select.btn-touch-active {
     transform: scale(0.97);
 }
 
@@ -2191,6 +2195,7 @@ header {
     align-items: center;
     justify-content: center;
     transition: transform 0.1s ease, background-color 0.1s ease, opacity 0.1s ease;
+    touch-action: manipulation;
 }
 
 .btn-secondary:hover {
@@ -2198,7 +2203,12 @@ header {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.btn-secondary:active, button:active, .admin-action-btn:active {
+.btn-secondary:active,
+.btn-secondary.btn-touch-active,
+button:active,
+button.btn-touch-active,
+.admin-action-btn:active,
+.admin-action-btn.btn-touch-active {
     transform: scale(0.95);
     opacity: 0.8;
 }
@@ -2513,7 +2523,8 @@ select.form-control option {
     box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
 }
 
-.btn-save-modal:active {
+.btn-save-modal:active,
+.btn-save-modal.btn-touch-active {
     transform: scale(0.97);
 }
 
@@ -2616,8 +2627,10 @@ select.form-control option {
     cursor: pointer;
     transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
     text-align: center;
+    touch-action: manipulation;
 }
-.btn-dialog-action:active {
+.btn-dialog-action:active,
+.btn-dialog-action.btn-touch-active {
     transform: scale(0.97);
 }
 
@@ -2897,7 +2910,8 @@ select.form-control option {
     transform: scale(1.15);
     opacity: 0.85;
 }
-.admin-perm-btn:active {
+.admin-perm-btn:active,
+.admin-perm-btn.btn-touch-active {
     transform: scale(0.95);
 }
 
