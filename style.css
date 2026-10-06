@@ -2738,6 +2738,9 @@ select.form-control option {
     body > *:not(#printArea) {
         display: none !important;
     }
+    body::before {
+        display: none !important;
+    }
     #printArea {
         display: block !important;
         width: 100% !important;
