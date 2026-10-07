@@ -576,7 +576,7 @@ header {
     border-radius: 50%;
     background: var(--accent-blue);
     border: none;
-    box-shadow: 0 6px 18px rgba(0, 136, 255, 0.45);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -594,7 +594,7 @@ header {
 @media (hover: hover) and (pointer: fine) {
     .btn-nav-action:hover {
         background: #1a94ff;
-        box-shadow: 0 8px 22px rgba(0, 136, 255, 0.6);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
     }
 }
 
@@ -602,7 +602,7 @@ header {
 .btn-nav-action.pressed {
     transform: translateY(-8px) scale(0.92);
     background: #1a94ff;
-    box-shadow: 0 3px 12px rgba(0, 136, 255, 0.55);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .svg-nav-action-plus {
@@ -630,14 +630,14 @@ header {
     fill: currentColor;
     width: 27px;
     height: 27px;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.2s, filter 0.2s;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.2s;
     pointer-events: none;
 }
 
 .nav-tab.active svg {
     fill: #1a94ff;
     transform: scale(1.16);
-    filter: drop-shadow(0 2px 5px rgba(0, 136, 255, 0.5));
+    filter: none;
 }
 
 .tools-drawer-wrap {
