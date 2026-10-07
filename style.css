@@ -538,13 +538,13 @@ header {
     border-radius: 9999px; 
     border: 1px solid var(--border-color);
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    padding: 0 18px;
+    padding: 0 20px;
     touch-action: none; 
     user-select: none;
-    width: 220px; 
-    height: 54px;
-    min-height: 54px;
-    max-height: 54px;
+    width: 235px; 
+    height: 58px;
+    min-height: 58px;
+    max-height: 58px;
     box-sizing: border-box;
 }
 
@@ -570,8 +570,8 @@ header {
 }
 
 .btn-nav-action {
-    width: 50px;
-    height: 50px;
+    width: 54px;
+    height: 54px;
     border-radius: 50%;
     background: var(--accent-blue);
     border: none;
@@ -582,7 +582,7 @@ header {
     cursor: pointer;
     flex-shrink: 0;
     margin: 0 6px;
-    transform: translateY(-7px);
+    transform: translateY(-8px);
     z-index: 10;
     position: relative;
     padding: 0;
@@ -599,14 +599,14 @@ header {
 
 .btn-nav-action:active,
 .btn-nav-action.pressed {
-    transform: translateY(-5px) scale(0.92);
+    transform: translateY(-6px) scale(0.92);
     background: #1a94ff;
     box-shadow: 0 3px 12px rgba(0, 136, 255, 0.55);
 }
 
 .svg-nav-action-plus {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     stroke: #ffffff;
     stroke-width: 2.8;
     stroke-linecap: round;
@@ -626,15 +626,15 @@ header {
 
 .nav-tab svg {
     fill: currentColor;
-    width: 25px;
-    height: 25px;
+    width: 27px;
+    height: 27px;
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.2s, filter 0.2s;
     pointer-events: none;
 }
 
 .nav-tab.active svg {
     fill: var(--accent-blue);
-    transform: scale(1.18);
+    transform: scale(1.16);
     filter: drop-shadow(0 0 8px rgba(0, 136, 255, 0.5));
 }
 
