@@ -536,12 +536,12 @@ header {
     position: relative;
     background: var(--bg-card);
     border-radius: 50px; 
-    border: 1px solid rgba(0, 210, 255, 0.22);
+    border: 1px solid var(--border-color);
     box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     padding: 5px;
     touch-action: none; 
     user-select: none;
-    width: 192px; 
+    width: 215px; 
 }
 
 .nav-indicator {
@@ -549,8 +549,8 @@ header {
     top: 5px; 
     bottom: 5px;
     right: 5px;
-    background: rgba(0, 210, 255, 0.14);
-    border: 1px solid rgba(0, 210, 255, 0.25);
+    background: rgba(0, 210, 255, 0.12);
+    border: 1px solid rgba(0, 210, 255, 0.2);
     border-radius: 40px; 
     z-index: 1;
     pointer-events: none; 
@@ -574,13 +574,21 @@ header {
     -webkit-tap-highlight-color: transparent;
 }
 
+.nav-tab[data-target="clock"] {
+    padding: 7px 10px 7px 0;
+}
+
+.nav-tab[data-target="history"] {
+    padding: 7px 0 7px 10px;
+}
+
 .btn-nav-action {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: linear-gradient(145deg, #16243d, #101827);
-    border: 1px solid rgba(0, 210, 255, 0.35);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 210, 255, 0.2);
+    background: linear-gradient(145deg, #1d3567, #132247);
+    border: 2px solid rgba(0, 210, 255, 0.5);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65), 0 0 14px rgba(0, 210, 255, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
