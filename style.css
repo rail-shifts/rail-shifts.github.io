@@ -574,6 +574,14 @@ header {
     -webkit-tap-highlight-color: transparent;
 }
 
+.nav-tab[data-target="clock"] {
+    padding: 7px 17px 7px 0;
+}
+
+.nav-tab[data-target="history"] {
+    padding: 7px 0 7px 17px;
+}
+
 .btn-nav-action {
     width: 48px;
     height: 48px;
