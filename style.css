@@ -2806,6 +2806,7 @@ select.form-control option {
         background-color: #f1f5f9 !important;
         border: 1px solid #cbd5e1 !important;
         border-top: 2px solid #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
         padding: 6px 7px !important;
     }
     .print-table tfoot td.print-total-val {
@@ -2817,6 +2818,7 @@ select.form-control option {
         background-color: #f1f5f9 !important;
         border: 1px solid #cbd5e1 !important;
         border-top: 2px solid #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
         padding: 6px 7px !important;
     }
 }
