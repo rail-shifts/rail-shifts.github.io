@@ -2291,20 +2291,6 @@ window.buildMonthPrintReport = function(mk) {
     const monthName = formatMonthName(mk);
     printDiv.innerHTML = '\
         <div class="print-header">רכבת ישראל - סיכום משמרות לחודש ' + monthName + '</div>\
-        <div class="print-summary-box">\
-            <div class="print-summary-item">\
-                <div class="print-summary-title">סה"כ שעות עבודה</div>\
-                <div class="print-summary-val">' + window.formatMinutesToHM(totWorkMins) + '</div>\
-            </div>\
-            <div class="print-summary-item">\
-                <div class="print-summary-title">סה"כ שעות פרמיה</div>\
-                <div class="print-summary-val">' + window.formatMinutesToHM(totPremMins) + '</div>\
-            </div>\
-            <div class="print-summary-item">\
-                <div class="print-summary-title">סה"כ זמן נל"ת</div>\
-                <div class="print-summary-val">' + window.formatMinutesToHM(totNaltMins) + '</div>\
-            </div>\
-        </div>\
         <table class="print-table">\
             <thead>\
                 <tr>\
@@ -2319,6 +2305,16 @@ window.buildMonthPrintReport = function(mk) {
             <tbody>\
                 ' + tableRows + '\
             </tbody>\
+            <tfoot>\
+                <tr class="print-summary-row">\
+                    <td class="print-empty-cell"></td>\
+                    <td class="print-empty-cell"></td>\
+                    <td class="print-total-label">סיכום שעות</td>\
+                    <td class="print-total-val">' + window.formatMinutesToHM(totWorkMins) + '</td>\
+                    <td class="print-total-val">' + window.formatMinutesToHM(totPremMins) + '</td>\
+                    <td class="print-total-val">' + window.formatMinutesToHM(totNaltMins) + '</td>\
+                </tr>\
+            </tfoot>\
         </table>\
     ';
 };
