@@ -561,11 +561,12 @@ header {
     justify-content: center;
     padding: 0;
     color: var(--text-muted);
+    opacity: 0.45;
     z-index: 2;
     cursor: pointer;
     background: transparent;
     border: none;
-    transition: color 0.2s;
+    transition: color 0.2s ease, opacity 0.2s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -621,21 +622,22 @@ header {
 }
 
 .nav-tab.active {
-    color: var(--accent-blue);
+    color: var(--accent-cyan);
+    opacity: 1;
 }
 
 .nav-tab svg {
     fill: currentColor;
     width: 27px;
     height: 27px;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.2s, filter 0.2s;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.2s;
     pointer-events: none;
 }
 
 .nav-tab.active svg {
-    fill: var(--accent-blue);
+    fill: var(--accent-cyan);
     transform: scale(1.16);
-    filter: drop-shadow(0 0 8px rgba(0, 136, 255, 0.5));
+    filter: none;
 }
 
 .tools-drawer-wrap {
