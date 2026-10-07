@@ -1946,8 +1946,6 @@ window.closeErrorDialog = function() {
 };
 
 window.toggleSelectionMode = function() {
-    if (isSortingMode) toggleSortingMode();
-
     isSelectionMode = !isSelectionMode;
     selectedShiftIds.clear();
     
@@ -1956,14 +1954,14 @@ window.toggleSelectionMode = function() {
     const container = document.getElementById('shiftsContainer');
 
     if (isSelectionMode) {
-        btn.classList.add('active-mode');
-        toolbar.classList.add('active');
-        container.classList.add('mode-selection');
+        if (btn) btn.classList.add('active-mode');
+        if (toolbar) toolbar.classList.add('active');
+        if (container) container.classList.add('mode-selection');
         showStatusBubbleToast("מצב בחירה פעיל");
     } else {
-        btn.classList.remove('active-mode');
-        toolbar.classList.remove('active');
-        container.classList.remove('mode-selection');
+        if (btn) btn.classList.remove('active-mode');
+        if (toolbar) toolbar.classList.remove('active');
+        if (container) container.classList.remove('mode-selection');
         showStatusBubbleToast("מצב בחירה כבוי");
     }
     
@@ -1972,26 +1970,7 @@ window.toggleSelectionMode = function() {
 };
 
 window.toggleSortingMode = function() {
-    if (isSelectionMode) toggleSelectionMode();
-
-    isSortingMode = !isSortingMode;
-    const btn = document.getElementById('btnToggleSorting');
-    const toolbar = document.getElementById('sortingToolbar');
-    const container = document.getElementById('shiftsContainer');
-
-    if (isSortingMode) {
-        btn.classList.add('active-mode');
-        toolbar.classList.add('active');
-        container.classList.add('mode-sorting');
-        showStatusBubbleToast("מיון משמרות פעיל");
-    } else {
-        btn.classList.remove('active-mode');
-        toolbar.classList.remove('active');
-        container.classList.remove('mode-sorting');
-        showStatusBubbleToast("מיון משמרות כבוי");
-    }
-
-    renderShifts();
+    isSortingMode = false;
 };
 
 window.toggleMultiPanelMode = function() {

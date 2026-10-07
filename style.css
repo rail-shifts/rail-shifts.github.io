@@ -357,24 +357,6 @@ header {
     opacity: 1;
 }
 
-.tools-drawer-backdrop {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(11, 19, 41, 0.65);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 2800;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    touch-action: none;
-    overscroll-behavior: contain;
-}
-
-.tools-drawer-backdrop.open {
-    display: block;
-    opacity: 1;
-}
 
 .user-dropdown-menu {
     position: fixed;
@@ -642,196 +624,7 @@ header {
     filter: none;
 }
 
-.tools-drawer-wrap {
-    position: absolute;
-    right: 8px;
-    display: none;
-}
 
-.btn-tools-main {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(11, 19, 41, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, color 0.2s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.btn-tools-main svg {
-    width: 22px;
-    height: 22px;
-    fill: currentColor;
-    opacity: 0.45;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s, fill 0.2s;
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .btn-tools-main:hover {
-        border-color: rgba(255, 255, 255, 0.22);
-    }
-    .btn-tools-main:hover svg {
-        opacity: 0.8;
-    }
-}
-
-.btn-tools-main:active {
-    transform: scale(0.92);
-    color: #1a94ff;
-}
-
-.btn-tools-main:active svg {
-    opacity: 1;
-}
-
-.tools-drawer-wrap.open .btn-tools-main {
-    color: #1a94ff;
-    border-color: rgba(26, 148, 255, 0.45);
-}
-
-.tools-drawer-wrap.open .btn-tools-main svg {
-    transform: rotate(45deg) scale(1.1);
-    opacity: 1;
-}
-
-.tools-popup-drawer {
-    position: absolute;
-    bottom: 58px;
-    right: 0;
-    min-width: 150px;
-    background: rgba(11, 19, 41, 0.94);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.85);
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    opacity: 0;
-    transform: translateY(8px) scale(0.97);
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 950;
-}
-
-.tools-drawer-wrap.open .tools-popup-drawer {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
-}
-
-.btn-drawer-item {
-    width: 100%;
-    height: 36px;
-    border-radius: 9px;
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    padding: 0 10px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-}
-
-@media (hover: hover) {
-    .btn-drawer-item:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-        color: #fff;
-    }
-    .btn-drawer-item:hover .drawer-item-label {
-        color: #fff;
-    }
-    .btn-drawer-item.active-mode:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-}
-
-.btn-drawer-item:active,
-.btn-drawer-item.btn-touch-active {
-    transform: scale(0.97);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.12);
-}
-
-.btn-drawer-item svg {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-    flex-shrink: 0;
-    pointer-events: none;
-    transition: fill 0.2s ease, filter 0.2s ease;
-}
-
-.drawer-item-label {
-    font-size: 0.86rem;
-    font-weight: 700;
-    color: var(--text-main);
-    white-space: nowrap;
-    pointer-events: none;
-    transition: color 0.2s ease;
-}
-
-.btn-drawer-item.active-mode {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.btn-drawer-item.active-mode svg {
-    fill: var(--accent-cyan);
-    filter: drop-shadow(0 0 6px rgba(0, 210, 255, 0.8));
-}
-
-.btn-drawer-item.active-mode .drawer-item-label {
-    color: #fff;
-}
-
-.tools-popup-drawer .drawer-tooltip {
-    display: none;
-}
-
-.drawer-tooltip {
-    position: absolute;
-    right: 50px;
-    top: 50%;
-    transform: translateY(-50%) translateX(6px);
-    background: rgba(11, 19, 41, 0.98);
-    border: 1px solid var(--accent-cyan);
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 10px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s ease, transform 0.15s ease;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.7);
-    z-index: 1000;
-}
-
-.drawer-tooltip.show {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-}
 
 .status-bubble-toast {
     position: fixed;
@@ -1074,94 +867,89 @@ header {
     fill: #34d399;
 }
 
-.selection-toolbar {
+/* Sticky Selection Toolbar (slides under monthNavBar) */
+.selection-sticky-bar {
     display: none;
-    background: var(--bg-card);
+    position: sticky;
+    top: calc(56px + env(safe-area-inset-top, 0px));
+    z-index: 1000;
+    background: rgba(11, 19, 41, 0.94);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-radius: 40px;
-    padding: 5px 12px 5px 8px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow), 0 8px 24px rgba(0, 0, 0, 0.45);
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    width: fit-content;
-    min-width: 250px;
-    max-width: 320px;
-    pointer-events: auto;
-    margin-bottom: 0;
-    animation: floatingToolbarSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0 -12px 12px -12px;
+    padding: 8px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    animation: stickySelectionSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes floatingToolbarSlideUp {
+@keyframes stickySelectionSlideDown {
     from {
         opacity: 0;
-        transform: translateY(10px) scale(0.96);
+        transform: translateY(-8px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
-.selection-toolbar.active {
-    display: flex;
+.selection-sticky-bar.active {
+    display: block;
 }
 
-.floating-toolbar-count {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--accent-cyan);
-    white-space: nowrap;
-    letter-spacing: -0.2px;
-    padding-right: 4px;
-}
-
-.toolbar-buttons {
+.selection-sticky-content {
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    max-width: 480px;
+    margin: 0 auto;
 }
 
-.btn-toolbar {
+.selection-count-text {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+}
+
+.selection-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-selection-action {
     padding: 6px 14px;
-    border-radius: 20px;
+    border-radius: 18px;
     font-size: 0.82rem;
     font-weight: 700;
     font-family: inherit;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-main);
     cursor: pointer;
-    transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.12s ease;
+    transition: transform 0.12s ease, opacity 0.12s ease, background 0.15s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     touch-action: manipulation;
 }
 
-.btn-toolbar:active,
-.btn-toolbar.btn-touch-active {
+.btn-selection-action:active {
     transform: scale(0.94);
 }
 
-.btn-toolbar-select {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-main);
-    border: 1px solid var(--border-color);
-}
-
-.btn-toolbar-select:hover {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-.btn-toolbar-delete {
+.btn-selection-delete {
     background: #ef4444;
+    border-color: #ef4444;
     color: #fff;
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
 }
 
-.btn-toolbar-save {
+.btn-selection-done {
     background: var(--accent-blue);
+    border-color: var(--accent-blue);
     color: #fff;
     box-shadow: 0 2px 8px rgba(0, 136, 255, 0.35);
 }
@@ -1274,13 +1062,67 @@ header {
     transition: transform 0.2s;
 }
 
-.btn-month-summary-action {
+/* Month Action Buttons & Side Groups */
+.month-nav-group-side {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 2;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.month-nav-group-right {
+    margin-left: 0;
+}
+
+.month-nav-group-left {
+    margin-right: 0;
+}
+
+.btn-month-action {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 8px;
+    color: var(--accent-blue);
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: transform 0.15s ease, opacity 0.15s ease, color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
     flex-shrink: 0;
 }
 
+.btn-month-action svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+
+.btn-month-action:active {
+    transform: scale(0.9);
+}
+
+#btnToggleMultiPanel,
+#btnToggleSelection {
+    color: var(--text-muted);
+    opacity: 0.65;
+}
+
+#btnToggleMultiPanel.active-mode,
+#btnToggleSelection.active-mode {
+    color: var(--accent-blue);
+    opacity: 1;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 6px rgba(0, 136, 255, 0.45));
+}
+
 .btn-month-search-action {
-    flex-shrink: 0;
-    margin-right: auto; /* Pushes to far left in RTL */
     position: relative;
     overflow: hidden;
 }
@@ -1321,18 +1163,33 @@ header {
     pointer-events: none;
 }
 
-/* Integrated Search Field in Center (Between buttons) */
+.month-nav-bar.is-searching #btnMonthSummary {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    width: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.month-nav-bar.is-searching .month-nav-group-left {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Integrated Search Field in Center (Expands comfortably across the bar) */
 .month-search-center {
     position: absolute;
-    left: 48px;
-    right: 48px;
+    left: 8px;
+    right: 44px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 20px;
     padding: 0 12px;
     height: 36px;
@@ -1341,6 +1198,7 @@ header {
     visibility: hidden;
     pointer-events: none;
     transition: opacity 0.2s ease, visibility 0.2s ease, border-color 0.2s ease;
+    z-index: 5;
 }
 
 .month-nav-bar.is-searching .month-search-center {
@@ -1350,9 +1208,9 @@ header {
 }
 
 .month-search-center:focus-within {
-    border-color: var(--accent-cyan);
-    background: rgba(0, 229, 255, 0.05);
-    box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+    border-color: var(--accent-blue);
+    background: rgba(0, 136, 255, 0.08);
+    box-shadow: 0 0 12px rgba(0, 136, 255, 0.25);
 }
 
 .shift-search-input {
