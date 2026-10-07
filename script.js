@@ -836,6 +836,24 @@ if (bottomNav) {
     });
 }
 
+window.refreshApp = async function() {
+    const icon = document.querySelector('.rail-icon-svg');
+    if (icon) icon.classList.add('refreshing');
+
+    if ('serviceWorker' in navigator) {
+        try {
+            const reg = await navigator.serviceWorker.getRegistration();
+            if (reg) await reg.update();
+        } catch (e) {
+            console.warn('SW update check notice:', e);
+        }
+    }
+
+    setTimeout(() => {
+        window.location.href = window.location.origin + window.location.pathname;
+    }, 250);
+};
+
 window.handleNavClick = function(target) {
     const wrap = document.getElementById('toolsDrawerWrap');
     if (wrap && wrap.classList.contains('open')) {
@@ -2224,8 +2242,9 @@ window.closeMonthPickerModal = function() {
 
 // ===== Desktop 24h Time Input Support (Only on non-touch desktop) =====
 function setupDesktop24hTimeInputs() {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || ('ontouchstart' in window && window.innerWidth <= 768);
-    if (isMobile) return; // Keep 100% native Apple time picker on iOS/Android
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const isMobileOrTablet = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || isTouchDevice;
+    if (isMobileOrTablet) return; // Keep 100% native Apple time picker on iOS/iPadOS/Android
 
     const timeIds = [
         'fieldStartTime', 'fieldEndTime', 
