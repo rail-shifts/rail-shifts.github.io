@@ -191,6 +191,81 @@
             background: #1f6feb !important;
         }
 
+        /* Quick Tools: Newline Helper */
+        .quick-tools-box {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.08) 0%, rgba(18, 24, 38, 0.95) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .quick-tools-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .quick-tools-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-tools-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .quick-tools-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-newline {
+            background: linear-gradient(135deg, #0096c7 0%, #023e8a 100%);
+            color: #ffffff;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 700;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 150, 199, 0.25);
+            transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-newline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 229, 255, 0.4);
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-newline:active {
+            transform: translateY(0);
+        }
+
+        .btn-newline.copied {
+            background: #2ea043 !important;
+            border-color: #3fb950 !important;
+            box-shadow: 0 2px 12px rgba(46, 160, 67, 0.4) !important;
+        }
+
         .no-results {
             text-align: center;
             padding: 30px;
@@ -203,6 +278,16 @@
         @media (max-width: 768px) {
             body {
                 padding: 16px 12px 50px;
+            }
+
+            .quick-tools-actions {
+                flex-direction: column;
+            }
+
+            .btn-newline {
+                width: 100%;
+                padding: 12px 16px;
+                font-size: 0.95rem;
             }
 
             .row {
@@ -241,6 +326,28 @@
         <h1 class="page-title">מדריך פקודות Git</h1>
         <p class="page-subtitle">מדריך מהיר לשליטה ב-Git ו-GitHub • למחשב ולטלפון</p>
     </header>
+
+    <!-- כלי עזר: ירידת שורה להעתקה -->
+    <section class="quick-tools-box">
+        <div class="quick-tools-header">
+            <span class="quick-tools-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 10 4 15 9 20"></polyline>
+                    <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+                </svg>
+                כלי עזר: ירידת שורה (Line Break / Enter)
+            </span>
+            <span class="quick-tools-desc">מעתיק תו ירידת שורה ללוח בלחיצה אחת — הדבק (Paste) בצ'אט בטאבלט או בנייד כדי לרדת שורה בלי לשלוח את ההודעה</span>
+        </div>
+        <div class="quick-tools-actions">
+            <button class="btn-newline" id="btnCopySingleNewline" data-lines="1">
+                <span>העתק שורה אחת ↵</span>
+            </button>
+            <button class="btn-newline" id="btnCopyDoubleNewline" data-lines="2">
+                <span>העתק 2 שורות (רווח פסקה) ↵↵</span>
+            </button>
+        </div>
+    </section>
 
     <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -454,21 +561,60 @@
     <div class="no-results" id="noResults">לא נמצאו פקודות התואמות לחיפוש שלך</div>
 
     <script>
+        // Universal copy helper with fallback for iPad / mobile browsers
+        function copyText(text, btn, successText = 'הועתק! ✓') {
+            const handleSuccess = () => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<span>${successText}</span>`;
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.classList.remove('copied');
+                }, 1400);
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(handleSuccess).catch(() => {
+                    fallbackCopy(text, handleSuccess);
+                });
+            } else {
+                fallbackCopy(text, handleSuccess);
+            }
+        }
+
+        function fallbackCopy(text, cb) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '0';
+            ta.setAttribute('readonly', '');
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                document.execCommand('copy');
+                if (cb) cb();
+            } catch (err) {
+                alert('העתקה נכשלה: ' + err);
+            }
+            document.body.removeChild(ta);
+        }
+
+        // Newline helper buttons
+        document.getElementById('btnCopySingleNewline')?.addEventListener('click', function() {
+            copyText('\n', this, 'שורה אחת הועתקה! ✓');
+        });
+
+        document.getElementById('btnCopyDoubleNewline')?.addEventListener('click', function() {
+            copyText('\n\n', this, '2 שורות הועתקו! ✓');
+        });
+
         // Copy command handling
         document.querySelectorAll('.btn-copy').forEach(btn => {
             btn.addEventListener('click', () => {
-                const cmd = btn.getAttribute('data-cmd');
-                navigator.clipboard.writeText(cmd).then(() => {
-                    const orig = btn.textContent;
-                    btn.textContent = 'הועתק! ✓';
-                    btn.classList.add('copied');
-                    setTimeout(() => {
-                        btn.textContent = orig;
-                        btn.classList.remove('copied');
-                    }, 1400);
-                }).catch(err => {
-                    alert('העתקה נכשלה: ' + err);
-                });
+                const cmd = btn.getAttribute('data-cmd') || '';
+                copyText(cmd, btn, 'הועתק! ✓');
             });
         });
 
