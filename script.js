@@ -719,13 +719,16 @@ let navStartY = 0;
 let navCurrentOffsetPx = 0;
 let navHasMoved = false;
 
+function getIndicatorDimensions() {
+    if (!bottomNav) return { width: 83, dist: 92 };
+    const innerWidth = bottomNav.clientWidth - 10;
+    const indicatorWidth = Math.round(innerWidth / 2) - 4;
+    const dist = innerWidth - indicatorWidth;
+    return { width: indicatorWidth, dist: dist };
+}
+
 function getNavDistance() {
-    const clockTab = document.querySelector('.nav-tab[data-target="clock"]');
-    const historyTab = document.querySelector('.nav-tab[data-target="history"]');
-    if (!clockTab || !historyTab) return 0;
-    const clockRect = clockTab.getBoundingClientRect();
-    const historyRect = historyTab.getBoundingClientRect();
-    return Math.abs(clockRect.left - historyRect.left);
+    return getIndicatorDimensions().dist;
 }
 
 if (bottomNav) {
@@ -840,6 +843,10 @@ window.refreshApp = async function() {
     const icon = document.querySelector('.rail-icon-svg');
     if (icon) icon.classList.add('refreshing');
 
+    try {
+        sessionStorage.setItem('railway_active_view', 'clock');
+    } catch (e) {}
+
     if ('serviceWorker' in navigator) {
         try {
             const reg = await navigator.serviceWorker.getRegistration();
@@ -865,15 +872,12 @@ window.handleNavClick = function(target) {
 };
 
 function updateIndicatorPosition(animate = true) {
-    if (!navIndicator) return;
-    const clockTab = document.querySelector('.nav-tab[data-target="clock"]');
-    if (!clockTab) return;
+    if (!navIndicator || !bottomNav) return;
+    const { width, dist } = getIndicatorDimensions();
     
-    const tabWidth = clockTab.offsetWidth;
-    navIndicator.style.width = tabWidth + 'px';
+    navIndicator.style.width = width + 'px';
     navIndicator.style.transition = animate ? 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.2s' : 'none';
     
-    const dist = getNavDistance();
     if (currentView === 'history') {
         navIndicator.style.transform = 'translateX(-' + dist + 'px)'; 
     } else {
