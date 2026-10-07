@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, getDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, getDoc, enableIndexedDbPersistence, disableNetwork, enableNetwork } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDNq260cSPIXAgbLdYAAU1pvpB-mnHRiZw",
@@ -2323,8 +2323,31 @@ window.buildMonthPrintReport = function(mk) {
     ';
 };
 
-window.printMonthReport = function(mk) {
+window.printMonthReport = async function(mk) {
     window.buildMonthPrintReport(mk);
+
+    try {
+        if (typeof disableNetwork === 'function' && db) {
+            await disableNetwork(db);
+        }
+    } catch (e) {
+        console.warn('Firestore disableNetwork notice:', e);
+    }
+
+    const restoreNetwork = () => {
+        try {
+            if (typeof enableNetwork === 'function' && db) {
+                enableNetwork(db);
+            }
+        } catch (e) {
+            console.warn('Firestore enableNetwork notice:', e);
+        }
+        window.removeEventListener('afterprint', restoreNetwork);
+    };
+
+    window.addEventListener('afterprint', restoreNetwork, { once: true });
+    setTimeout(restoreNetwork, 3000);
+
     window.print();
 };
 
