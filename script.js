@@ -716,8 +716,17 @@ let isNavDragging = false;
 let navTouchActive = false; 
 let navStartX = 0;
 let navStartY = 0;
-let navCurrentOffsetPercent = 0;
+let navCurrentOffsetPx = 0;
 let navHasMoved = false;
+
+function getNavDistance() {
+    const clockTab = document.querySelector('.nav-tab[data-target="clock"]');
+    const historyTab = document.querySelector('.nav-tab[data-target="history"]');
+    if (!clockTab || !historyTab) return 0;
+    const clockRect = clockTab.getBoundingClientRect();
+    const historyRect = historyTab.getBoundingClientRect();
+    return Math.abs(clockRect.left - historyRect.left);
+}
 
 if (bottomNav) {
     bottomNav.addEventListener('touchstart', (e) => {
@@ -730,18 +739,25 @@ if (bottomNav) {
             return;
         }
 
+        const target = e.target;
+        if (target.closest('#btnNavAddShift')) {
+            navTouchActive = false;
+            isNavDragging = false;
+            return;
+        }
+
         navTouchActive = true;
         navHasMoved = false;
         navStartX = e.touches[0].clientX;
         navStartY = e.touches[0].clientY;
         
-        const target = e.target;
         const isValidTouchStart = target.closest('.nav-indicator') || target.closest('.nav-tab');
         
         if (isValidTouchStart && bottomNav.contains(target)) {
             isNavDragging = true;
-            navIndicator.style.transition = 'none';
-            navCurrentOffsetPercent = (currentView === 'history') ? 100 : 0;
+            if (navIndicator) navIndicator.style.transition = 'none';
+            const dist = getNavDistance();
+            navCurrentOffsetPx = (currentView === 'history') ? dist : 0;
         } else {
             isNavDragging = false;
         }
@@ -759,13 +775,13 @@ if (bottomNav) {
         if (!isNavDragging) return;
         if (e.cancelable) e.preventDefault();
         
-        const navRect = bottomNav.getBoundingClientRect();
-        const movePercent = (-deltaX / (navRect.width / 2)) * 100;
+        const dist = getNavDistance();
+        if (dist === 0) return;
         
-        let newOffset = navCurrentOffsetPercent + movePercent;
-        newOffset = Math.max(0, Math.min(100, newOffset));
+        let newOffset = navCurrentOffsetPx - deltaX;
+        newOffset = Math.max(0, Math.min(dist, newOffset));
         
-        navIndicator.style.transform = 'translateX(-' + newOffset + '%)';
+        if (navIndicator) navIndicator.style.transform = 'translateX(-' + newOffset + 'px)';
     }, { passive: false });
 
     bottomNav.addEventListener('touchend', (e) => {
@@ -781,11 +797,10 @@ if (bottomNav) {
             isNavDragging = false;
             const touch = e.changedTouches[0];
             const deltaX = touch.clientX - navStartX;
-            const navRect = bottomNav.getBoundingClientRect();
-            const movePercent = (-deltaX / (navRect.width / 2)) * 100;
-            let finalOffset = navCurrentOffsetPercent + movePercent;
+            const dist = getNavDistance();
+            let finalOffset = navCurrentOffsetPx - deltaX;
 
-            if (finalOffset > 55) {
+            if (finalOffset > dist * 0.5) {
                 window.navigateTo('history', false); 
             } else {
                 window.navigateTo('clock', false); 
@@ -812,12 +827,18 @@ window.handleNavClick = function(target) {
 
 function updateIndicatorPosition(animate = true) {
     if (!navIndicator) return;
-    navIndicator.style.transition = animate ? 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)' : 'none';
+    const clockTab = document.querySelector('.nav-tab[data-target="clock"]');
+    if (!clockTab) return;
     
+    const tabWidth = clockTab.offsetWidth;
+    navIndicator.style.width = tabWidth + 'px';
+    navIndicator.style.transition = animate ? 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.2s' : 'none';
+    
+    const dist = getNavDistance();
     if (currentView === 'history') {
-        navIndicator.style.transform = 'translateX(-100%)'; 
+        navIndicator.style.transform = 'translateX(-' + dist + 'px)'; 
     } else {
-        navIndicator.style.transform = 'translateX(0%)'; 
+        navIndicator.style.transform = 'translateX(0px)'; 
     }
 }
 
