@@ -99,15 +99,15 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px 12px;
-    background: rgba(11, 19, 41, 0.88);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(19, 34, 71, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 0;
     border-top: none;
     border-left: none;
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     position: fixed;
     top: 0;
     left: 0;
@@ -534,12 +534,12 @@ header {
     display: flex;
     align-items: center;
     position: relative;
-    background: rgba(11, 19, 41, 0.88);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(19, 34, 71, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 9999px; 
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
     padding: 0 20px;
     touch-action: none; 
     user-select: none;
@@ -652,11 +652,11 @@ header {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: rgba(11, 19, 41, 0.88);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    background: rgba(19, 34, 71, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
     color: var(--text-muted);
     display: flex;
     align-items: center;
@@ -676,7 +676,7 @@ header {
 
 @media (hover: hover) and (pointer: fine) {
     .btn-tools-main:hover {
-        border-color: rgba(255, 255, 255, 0.16);
+        border-color: rgba(255, 255, 255, 0.18);
     }
     .btn-tools-main:hover svg {
         opacity: 0.8;
@@ -694,7 +694,7 @@ header {
 
 .tools-drawer-wrap.open .btn-tools-main {
     color: #1a94ff;
-    border-color: rgba(26, 148, 255, 0.4);
+    border-color: rgba(26, 148, 255, 0.45);
 }
 
 .tools-drawer-wrap.open .btn-tools-main svg {
@@ -707,10 +707,10 @@ header {
     bottom: 58px;
     right: 0;
     min-width: 150px;
-    background: rgba(11, 19, 41, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(19, 34, 71, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 14px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.85);
     padding: 5px;
