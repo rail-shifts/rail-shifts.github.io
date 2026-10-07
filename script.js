@@ -720,11 +720,20 @@ let navCurrentOffsetPx = 0;
 let navHasMoved = false;
 
 function getIndicatorDimensions() {
-    if (!bottomNav) return { width: 83, dist: 92 };
+    if (!bottomNav) return { width: 66, dist: 116 };
+    const clockTab = bottomNav.querySelector('.nav-tab[data-target="clock"]');
+    const historyTab = bottomNav.querySelector('.nav-tab[data-target="history"]');
+    if (clockTab && historyTab && clockTab.offsetWidth > 0) {
+        const tabWidth = clockTab.offsetWidth;
+        const clockRect = clockTab.getBoundingClientRect();
+        const historyRect = historyTab.getBoundingClientRect();
+        const dist = Math.abs(clockRect.right - historyRect.right);
+        return { width: tabWidth, dist: dist };
+    }
     const innerWidth = bottomNav.clientWidth - 10;
-    const indicatorWidth = Math.round(innerWidth / 2) - 4;
-    const dist = innerWidth - indicatorWidth;
-    return { width: indicatorWidth, dist: dist };
+    const tabWidth = Math.floor((innerWidth - 52) / 2);
+    const dist = innerWidth - tabWidth;
+    return { width: tabWidth, dist: dist };
 }
 
 function getNavDistance() {
