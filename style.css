@@ -99,15 +99,15 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px 12px;
-    background: rgba(19, 34, 71, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(11, 19, 41, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 0;
     border-top: none;
     border-left: none;
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     position: fixed;
     top: 0;
     left: 0;
@@ -534,12 +534,10 @@ header {
     display: flex;
     align-items: center;
     position: relative;
-    background: rgba(19, 34, 71, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: var(--bg-card);
     border-radius: 9999px; 
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     padding: 0 20px;
     touch-action: none; 
     user-select: none;
@@ -652,11 +650,9 @@ header {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: rgba(19, 34, 71, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     color: var(--text-muted);
     display: flex;
     align-items: center;
@@ -707,10 +703,8 @@ header {
     bottom: 58px;
     right: 0;
     min-width: 150px;
-    background: rgba(19, 34, 71, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 14px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.85);
     padding: 5px;
@@ -722,8 +716,6 @@ header {
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 950;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
 
 .tools-drawer-wrap.open .tools-popup-drawer {
