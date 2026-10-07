@@ -534,9 +534,11 @@ header {
     display: flex;
     align-items: center;
     position: relative;
-    background: var(--bg-card);
+    background: rgba(11, 19, 41, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 9999px; 
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     padding: 0 20px;
     touch-action: none; 
@@ -650,15 +652,17 @@ header {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    background: rgba(11, 19, 41, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     color: var(--text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, color 0.2s;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -666,16 +670,36 @@ header {
     width: 22px;
     height: 22px;
     fill: currentColor;
-    transition: transform 0.3s ease;
+    opacity: 0.45;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s, fill 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn-tools-main:hover {
+        border-color: rgba(255, 255, 255, 0.16);
+    }
+    .btn-tools-main:hover svg {
+        opacity: 0.8;
+    }
+}
+
+.btn-tools-main:active {
+    transform: scale(0.92);
+    color: #1a94ff;
+}
+
+.btn-tools-main:active svg {
+    opacity: 1;
 }
 
 .tools-drawer-wrap.open .btn-tools-main {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.18);
+    color: #1a94ff;
+    border-color: rgba(26, 148, 255, 0.4);
 }
 
 .tools-drawer-wrap.open .btn-tools-main svg {
-    transform: rotate(45deg);
+    transform: rotate(45deg) scale(1.1);
+    opacity: 1;
 }
 
 .tools-popup-drawer {
@@ -683,8 +707,10 @@ header {
     bottom: 58px;
     right: 0;
     min-width: 150px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: rgba(11, 19, 41, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.85);
     padding: 5px;
