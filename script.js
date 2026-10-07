@@ -755,6 +755,11 @@ if (bottomNav) {
         
         if (isValidTouchStart && bottomNav.contains(target)) {
             isNavDragging = true;
+            const actionBtn = document.getElementById('btnNavAddShift');
+            if (actionBtn) {
+                actionBtn.style.pointerEvents = 'none';
+                actionBtn.classList.remove('pressed');
+            }
             if (navIndicator) navIndicator.style.transition = 'none';
             const dist = getNavDistance();
             navCurrentOffsetPx = (currentView === 'history') ? dist : 0;
@@ -788,6 +793,16 @@ if (bottomNav) {
         if (!navTouchActive) return;
         navTouchActive = false;
         
+        const actionBtn = document.getElementById('btnNavAddShift');
+        if (actionBtn) {
+            actionBtn.style.pointerEvents = '';
+            actionBtn.classList.remove('pressed');
+            actionBtn.blur();
+        }
+        if (document.activeElement && document.activeElement.blur) {
+            document.activeElement.blur();
+        }
+        
         if (!navHasMoved) {
             isNavDragging = false;
             return; 
@@ -811,6 +826,12 @@ if (bottomNav) {
     bottomNav.addEventListener('touchcancel', () => {
         navTouchActive = false;
         isNavDragging = false;
+        const actionBtn = document.getElementById('btnNavAddShift');
+        if (actionBtn) {
+            actionBtn.style.pointerEvents = '';
+            actionBtn.classList.remove('pressed');
+            actionBtn.blur();
+        }
         updateIndicatorPosition(true);
     });
 }
