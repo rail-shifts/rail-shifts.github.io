@@ -2307,9 +2307,7 @@ window.buildMonthPrintReport = function(mk) {
             </tbody>\
             <tfoot>\
                 <tr class="print-summary-row">\
-                    <td class="print-empty-cell"></td>\
-                    <td class="print-empty-cell"></td>\
-                    <td class="print-total-label">סה\"כ</td>\
+                    <td colspan="3" class="print-total-label">סה\"כ</td>\
                     <td class="print-total-val">' + window.formatMinutesToHM(totWorkMins) + '</td>\
                     <td class="print-total-val">' + window.formatMinutesToHM(totPremMins) + '</td>\
                     <td class="print-total-val">' + window.formatMinutesToHM(totNaltMins) + '</td>\

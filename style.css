@@ -2772,13 +2772,19 @@ select.form-control option {
     }
     .print-table th, .print-table td {
         border: 1px solid #cbd5e1 !important;
-        padding: 5px 7px !important;
+        padding: 6px 8px !important;
         text-align: right !important;
     }
     .print-table th {
         background-color: #f1f5f9 !important;
         color: #1e293b !important;
         font-weight: 700;
+    }
+    .print-table th:nth-child(3),
+    .print-table th:nth-child(4),
+    .print-table th:nth-child(5),
+    .print-table th:nth-child(6) {
+        text-align: center !important;
     }
     .print-table tbody tr:nth-child(even) {
         background-color: #f8fafc !important;
@@ -2788,38 +2794,41 @@ select.form-control option {
         direction: ltr !important;
         font-family: 'Inter', sans-serif;
     }
+    .print-table tbody td:nth-child(4),
+    .print-table tbody td:nth-child(5),
+    .print-table tbody td:nth-child(6) {
+        text-align: center !important;
+        font-family: 'Inter', sans-serif;
+    }
     .print-table tfoot {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-    }
-    .print-table tfoot td.print-empty-cell {
-        border: none !important;
-        background: transparent !important;
     }
     .print-table tfoot td.print-total-label {
         font-family: 'Assistant', sans-serif !important;
         direction: rtl !important;
         text-align: center !important;
-        font-size: 11.5px !important;
+        font-size: 12px !important;
         font-weight: 800 !important;
-        color: #0f172a !important;
+        color: #132247 !important;
         background-color: #f1f5f9 !important;
         border: 1px solid #cbd5e1 !important;
-        border-top: 2px solid #0f172a !important;
-        border-bottom: 2px solid #0f172a !important;
-        padding: 6px 7px !important;
+        border-top: 2px solid #132247 !important;
+        border-bottom: 2px solid #132247 !important;
+        padding: 7px 8px !important;
+        letter-spacing: 0.5px;
     }
     .print-table tfoot td.print-total-val {
         font-family: 'Inter', sans-serif !important;
-        text-align: right !important;
-        font-size: 11.5px !important;
+        text-align: center !important;
+        font-size: 12px !important;
         font-weight: 800 !important;
-        color: #0f172a !important;
+        color: #132247 !important;
         background-color: #f1f5f9 !important;
         border: 1px solid #cbd5e1 !important;
-        border-top: 2px solid #0f172a !important;
-        border-bottom: 2px solid #0f172a !important;
-        padding: 6px 7px !important;
+        border-top: 2px solid #132247 !important;
+        border-bottom: 2px solid #132247 !important;
+        padding: 7px 8px !important;
     }
 }
 
