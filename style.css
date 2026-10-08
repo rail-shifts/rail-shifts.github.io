@@ -1211,6 +1211,12 @@ header {
 }
 
 /* 3. Multi-panel 3D Layers Accordion Animation */
+.layer-top,
+.layer-bottom {
+    fill: var(--bg-primary);
+    stroke: currentColor;
+}
+
 @keyframes stackExpandTop {
     0%, 100% {
         transform: translateY(0);
