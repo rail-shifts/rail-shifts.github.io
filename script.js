@@ -1954,7 +1954,11 @@ window.toggleSelectionMode = function() {
     const container = document.getElementById('shiftsContainer');
 
     if (isSelectionMode) {
-        if (btn) btn.classList.add('active-mode');
+        if (btn) {
+            btn.classList.add('active-mode');
+            btn.classList.add('animating-check');
+            setTimeout(() => btn.classList.remove('animating-check'), 400);
+        }
         if (toolbar) toolbar.classList.add('active');
         if (container) container.classList.add('mode-selection');
         showStatusBubbleToast("מצב בחירה פעיל");
@@ -1978,6 +1982,8 @@ window.toggleMultiPanelMode = function() {
     const btn = document.getElementById('btnToggleMultiPanel');
     if (btn) {
         btn.classList.toggle('active-mode', isMultiPanelMode);
+        btn.classList.add('animating-cards');
+        setTimeout(() => btn.classList.remove('animating-cards'), 450);
     }
 
     if (isMultiPanelMode) {
@@ -2273,6 +2279,11 @@ function setupDesktop24hTimeInputs() {
 }
 
 window.openActiveMonthSummary = function() {
+    const btn = document.getElementById('btnMonthSummary');
+    if (btn) {
+        btn.classList.add('animating-bars');
+        setTimeout(() => btn.classList.remove('animating-bars'), 500);
+    }
     if (!activeMonthKey || activeMonthKey === 'NONE') {
         activeMonthKey = getInitialMonthKey();
     }

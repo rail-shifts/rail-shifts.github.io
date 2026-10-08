@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=8.8">
+    <link rel="stylesheet" href="style.css?v=8.9">
 </head>
 <body>
 
@@ -163,9 +163,9 @@
                 </button>
                 <button class="btn-month-action btn-month-summary-action" id="btnMonthSummary" onclick="openActiveMonthSummary(); this.blur();" title="סיכום חודשי">
                     <svg viewBox="0 0 24 24" fill="currentColor">
-                        <rect x="3.5" y="13" width="4.5" height="8" rx="2.25"/>
-                        <rect x="9.75" y="4" width="4.5" height="17" rx="2.25"/>
-                        <rect x="16" y="9" width="4.5" height="12" rx="2.25"/>
+                        <rect class="summary-bar bar-1" x="3.5" y="13" width="4.5" height="8" rx="2.25"/>
+                        <rect class="summary-bar bar-2" x="9.75" y="4" width="4.5" height="17" rx="2.25"/>
+                        <rect class="summary-bar bar-3" x="16" y="9" width="4.5" height="12" rx="2.25"/>
                     </svg>
                 </button>
             </div>
@@ -203,14 +203,15 @@
             <!-- Left Actions Group (Multi-panel & Selection/Edit) -->
             <div class="month-nav-group-side month-nav-group-left">
                 <button class="btn-month-action" id="btnToggleMultiPanel" onclick="toggleMultiPanelMode(); this.blur();" title="ריבוי פאנלים">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6zm0 10a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <path class="panel-card-back" d="M8 4h10a2 2 0 0 1 2 2v10"/>
+                        <rect class="panel-card-front" x="4" y="8" width="12" height="12" rx="2.5"/>
                     </svg>
                 </button>
                 <button class="btn-month-action" id="btnToggleSelection" onclick="toggleSelectionMode(); this.blur();" title="מצב בחירה ועריכה">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 11l3 3L22 4"/>
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        <path class="box-path" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        <path class="check-path" d="M9 11l3 3L22 4"/>
                     </svg>
                 </button>
             </div>
@@ -683,6 +684,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=8.0"></script>
+<script type="module" src="script.js?v=8.1"></script>
 </body>
 </html>
