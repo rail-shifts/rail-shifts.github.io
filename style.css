@@ -1517,13 +1517,14 @@ body.month-summary-open .month-nav-bar {
     opacity: 1 !important;
 }
 
-.month-nav-bar.is-searching .btn-month-search-action .icon-search-magnifier {
+.btn-month-search-action.search-has-morphed-close .icon-search-magnifier {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.6) rotate(90deg);
     color: var(--accent-blue);
+    pointer-events: none;
 }
 
-.month-nav-bar.is-searching .btn-month-search-action .icon-search-close {
+.btn-month-search-action.search-has-morphed-close .icon-search-close {
     opacity: 1 !important;
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
     color: var(--accent-red) !important;

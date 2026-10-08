@@ -3090,12 +3090,22 @@ window.toggleShiftSearch = function() {
     if (isSearching) {
         closeShiftSearch();
     } else {
-        if (btn) {
-            btn.classList.add('search-highlight-blue');
-        }
+        // Open search panel immediately on click
         bar.classList.add('is-searching');
         if (input) {
-            setTimeout(() => input.focus(), 120);
+            setTimeout(() => input.focus(), 80);
+        }
+
+        // Show glass in bright blue first, then morph smoothly to red X
+        if (btn) {
+            btn.classList.remove('search-has-morphed-close');
+            btn.classList.add('search-highlight-blue');
+            clearTimeout(window._searchMorphTimer);
+            window._searchMorphTimer = setTimeout(() => {
+                if (bar.classList.contains('is-searching')) {
+                    btn.classList.add('search-has-morphed-close');
+                }
+            }, 260);
         }
     }
 };
@@ -3105,8 +3115,9 @@ window.closeShiftSearch = function() {
     const btn = document.getElementById('btnSearchToggle');
     const input = document.getElementById('shiftSearchInput');
     const clearBtn = document.getElementById('btnSearchClear');
+    clearTimeout(window._searchMorphTimer);
     if (bar) bar.classList.remove('is-searching');
-    if (btn) btn.classList.remove('search-highlight-blue');
+    if (btn) btn.classList.remove('search-highlight-blue', 'search-has-morphed-close');
     if (input) input.value = '';
     if (clearBtn) clearBtn.classList.remove('visible');
     currentShiftSearchQuery = '';
