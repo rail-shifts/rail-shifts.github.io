@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=9.5">
+    <link rel="stylesheet" href="style.css?v=9.6">
 </head>
 <body>
 
@@ -170,39 +170,21 @@
                 </button>
 
                 <!-- Floating Popover for Monthly Summary (Anchored to right actions) -->
-                <div id="monthSummaryPopover" class="month-summary-popover">
+                <div id="monthSummaryPopover" class="month-summary-popover" onclick="event.stopPropagation();">
                     <div class="summary-popover-header">
                         <span class="summary-popover-title" id="summaryModalTitle">סיכום חודשי</span>
                     </div>
                     <div class="summary-popover-stats">
                         <div class="summary-popover-row stat-work">
-                            <span class="popover-stat-label">
-                                <svg class="svg-icon popover-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <polyline points="12 6 12 12 16 14"/>
-                                </svg>
-                                <span>עבודה:</span>
-                            </span>
+                            <span class="popover-stat-label">עבודה:</span>
                             <span class="popover-stat-val" id="modalWorkVal">00:00</span>
                         </div>
                         <div class="summary-popover-row stat-prem">
-                            <span class="popover-stat-label">
-                                <svg class="svg-icon popover-icon" width="14" height="14" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                                </svg>
-                                <span>פרמיה:</span>
-                            </span>
+                            <span class="popover-stat-label">פרמיה:</span>
                             <span class="popover-stat-val" id="modalPremVal">00:00</span>
                         </div>
                         <div class="summary-popover-row stat-nalt">
-                            <span class="popover-stat-label">
-                                <svg class="svg-icon popover-icon" width="14" height="14" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.76l.12.34V17z"/>
-                                    <circle fill="currentColor" cx="7.5" cy="14.5" r="1.5"/>
-                                    <circle fill="currentColor" cx="16.5" cy="14.5" r="1.5"/>
-                                </svg>
-                                <span>נל״ת:</span>
-                            </span>
+                            <span class="popover-stat-label">נל״ת:</span>
                             <span class="popover-stat-val" id="modalNaltVal">00:00</span>
                         </div>
                     </div>
@@ -271,7 +253,7 @@
                 <button class="btn-month-action" id="btnToggleSelection" onclick="toggleSelectionMode(); this.blur();" title="מצב בחירה ועריכה">
                     <svg class="svg-selection-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <path class="box-path" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                        <path class="check-path" d="M9 11l3 3L22 4"/>
+                        <path class="check-path" d="M9 11l3 3L20 6"/>
                     </svg>
                 </button>
             </div>
@@ -699,6 +681,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=8.7"></script>
+<script type="module" src="script.js?v=8.8"></script>
 </body>
 </html>

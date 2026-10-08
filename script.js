@@ -1142,9 +1142,15 @@ window.closeMonthlySummaryPopover = function() {
     const backdrop = document.getElementById('monthSummaryBackdrop');
     const btn = document.getElementById('btnMonthSummary');
 
+    if (btn) {
+        btn.classList.remove('active-mode');
+        btn.classList.remove('animating-bars');
+        void btn.offsetWidth;
+        btn.classList.add('animating-bars');
+        setTimeout(() => btn.classList.remove('animating-bars'), 500);
+    }
     if (popover) popover.classList.remove('open');
     if (backdrop) backdrop.classList.remove('open');
-    if (btn) btn.classList.remove('active-mode');
     document.body.classList.remove('month-summary-open');
 };
 

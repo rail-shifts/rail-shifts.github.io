@@ -80,7 +80,7 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-top: calc(68px + env(safe-area-inset-top, 20px));
+    padding-top: calc(56px + env(safe-area-inset-top, 0px) + 6px);
     padding-bottom: 88px;
     position: relative;
 }
@@ -887,26 +887,15 @@ header {
     pointer-events: auto;
 }
 
-/* Background blur only on main content / cards below header */
-#viewHistory::after {
-    content: '';
-    position: fixed;
-    top: calc(56px + env(safe-area-inset-top, 0px));
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(5, 10, 24, 0.45);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1040;
-    transition: opacity 0.22s ease;
+/* Background blur only on shifts list below header and month-nav-bar */
+#shiftsContainer {
+    transition: filter 0.22s ease, opacity 0.22s ease;
 }
 
-body.month-summary-open #viewHistory::after {
-    opacity: 1;
-    pointer-events: auto;
+body.month-summary-open #shiftsContainer {
+    filter: blur(4px);
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .month-summary-popover {
@@ -971,17 +960,8 @@ body.month-summary-open #viewHistory::after {
 }
 
 .popover-stat-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-.popover-icon {
-    flex-shrink: 0;
-    vertical-align: middle;
+    font-size: 0.85rem;
+    font-weight: 700;
 }
 
 .popover-stat-val {
@@ -989,15 +969,16 @@ body.month-summary-open #viewHistory::after {
     font-weight: 800;
     font-family: 'Inter', sans-serif;
     font-variant-numeric: tabular-nums;
-    color: #fff;
 }
 
-.summary-popover-row.stat-work .popover-stat-val,
-.summary-popover-row.stat-work .popover-icon { color: var(--accent-cyan); }
-.summary-popover-row.stat-prem .popover-stat-val,
-.summary-popover-row.stat-prem .popover-icon { color: var(--accent-purple); }
-.summary-popover-row.stat-nalt .popover-stat-val,
-.summary-popover-row.stat-nalt .popover-icon { color: var(--accent-taxi); }
+.summary-popover-row.stat-work .popover-stat-label,
+.summary-popover-row.stat-work .popover-stat-val { color: var(--accent-cyan); }
+
+.summary-popover-row.stat-prem .popover-stat-label,
+.summary-popover-row.stat-prem .popover-stat-val { color: var(--accent-purple); }
+
+.summary-popover-row.stat-nalt .popover-stat-label,
+.summary-popover-row.stat-nalt .popover-stat-val { color: var(--accent-taxi); }
 
 .btn-popover-export {
     width: 100%;
@@ -1335,7 +1316,7 @@ body.month-summary-open #viewHistory::after {
     transform-origin: 15px 9px;
 }
 
-/* Phase 1: Pure Stamp Animation while still inside the box */
+/* Phase 1: Pure Stamp Animation - Disappears in gray, re-appears in royal blue */
 @keyframes stampCheckmarkInitial {
     0% {
         opacity: 1;
@@ -1349,39 +1330,42 @@ body.month-summary-open #viewHistory::after {
         stroke-dashoffset: 24;
         stroke-width: 2.4;
     }
-    50% {
-        opacity: 1;
+    45% {
+        opacity: 0.9;
         transform: scale(0.65);
         stroke-dashoffset: 14;
-        stroke-width: 2.4;
+        stroke-width: 2.5;
+        stroke: var(--accent-blue);
     }
-    80% {
+    75% {
         opacity: 1;
-        transform: scale(1.15);
+        transform: scale(1.1);
         stroke-dashoffset: 0;
-        stroke-width: 2.4;
+        stroke-width: 2.5;
+        stroke: var(--accent-blue);
     }
     100% {
         opacity: 1;
         transform: scale(1);
         stroke-dashoffset: 0;
-        stroke-width: 2.4;
+        stroke-width: 2.5;
+        stroke: var(--accent-blue);
     }
 }
 
-/* Phase 2: Morph/Bloom Animation - Checkmark blooms larger and thicker, box fades out */
+/* Phase 2: Morph/Bloom Animation - Checkmark blooms larger, bolder and centered */
 @keyframes checkBloomThick {
     0% {
         transform: scale(1) translate(0, 0);
-        stroke-width: 2.4;
+        stroke-width: 2.5;
     }
     50% {
-        transform: scale(1.5) translate(-1.5px, 1.5px);
-        stroke-width: 3.3;
+        transform: scale(1.42) translate(0, 1.5px);
+        stroke-width: 3.2;
     }
     100% {
-        transform: scale(1.4) translate(-1px, 1px);
-        stroke-width: 3.1;
+        transform: scale(1.35) translate(0, 1.5px);
+        stroke-width: 3.0;
     }
 }
 
@@ -1399,8 +1383,8 @@ body.month-summary-open #viewHistory::after {
 /* Deactivating selection mode: Checkmark shrinks back, box fades back in */
 @keyframes checkShrinkBack {
     0% {
-        transform: scale(1.4) translate(-1px, 1px);
-        stroke-width: 3.1;
+        transform: scale(1.35) translate(0, 1.5px);
+        stroke-width: 3.0;
     }
     100% {
         transform: scale(1) translate(0, 0);
@@ -1420,6 +1404,12 @@ body.month-summary-open #viewHistory::after {
 }
 
 /* Active phase classes */
+#btnToggleSelection.animating-phase1 {
+    color: var(--accent-blue) !important;
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 6px rgba(0, 136, 255, 0.45));
+}
+
 #btnToggleSelection.animating-phase1 .check-path {
     animation: stampCheckmarkInitial 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
@@ -1447,8 +1437,8 @@ body.month-summary-open #viewHistory::after {
 }
 
 #btnToggleSelection.active-mode:not(.animating-phase1):not(.animating-phase2):not(.animating-check-off) .check-path {
-    transform: scale(1.4) translate(-1px, 1px);
-    stroke-width: 3.1;
+    transform: scale(1.35) translate(0, 1.5px);
+    stroke-width: 3.0;
 }
 
 /* 3. Multi-panel 3D Layers Accordion Animation */
