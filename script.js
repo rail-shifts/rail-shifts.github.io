@@ -1957,7 +1957,7 @@ window.toggleSelectionMode = function() {
         if (btn) {
             btn.classList.add('active-mode');
             btn.classList.add('animating-check');
-            setTimeout(() => btn.classList.remove('animating-check'), 400);
+            setTimeout(() => btn.classList.remove('animating-check'), 600);
         }
         if (toolbar) toolbar.classList.add('active');
         if (container) container.classList.add('mode-selection');
@@ -1983,7 +1983,7 @@ window.toggleMultiPanelMode = function() {
     if (btn) {
         btn.classList.toggle('active-mode', isMultiPanelMode);
         btn.classList.add('animating-cards');
-        setTimeout(() => btn.classList.remove('animating-cards'), 450);
+        setTimeout(() => btn.classList.remove('animating-cards'), 500);
     }
 
     if (isMultiPanelMode) {
