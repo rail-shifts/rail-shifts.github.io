@@ -1099,8 +1099,14 @@ body.month-summary-open .month-nav-bar {
     pointer-events: none; /* Blocks clicks to other nav elements, clicking them closes popover */
 }
 
+body.month-summary-open .month-nav-bar * {
+    pointer-events: none;
+}
+
 body.month-summary-open #btnMonthSummary,
-body.month-summary-open #monthSummaryPopover {
+body.month-summary-open #btnMonthSummary *,
+body.month-summary-open #monthSummaryPopover,
+body.month-summary-open #monthSummaryPopover * {
     pointer-events: auto; /* Keeps summary toggle button and popover itself interactive */
 }
 
