@@ -1248,7 +1248,7 @@ body.month-summary-open .month-nav-bar {
     background: transparent !important;
     border: none !important;
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.75);
+    color: #ffffff;
     cursor: pointer;
     padding: 0;
     outline: none;
@@ -1272,7 +1272,7 @@ body.month-summary-open .month-nav-bar {
 #btnMonthSummary,
 #btnToggleMultiPanel,
 #btnToggleSelection {
-    color: rgba(255, 255, 255, 0.75);
+    color: #ffffff;
     opacity: 1;
 }
 
