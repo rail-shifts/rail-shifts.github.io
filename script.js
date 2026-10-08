@@ -1079,38 +1079,71 @@ window.handleAuthClick = async function(event) {
 };
 
 window.openMonthlySummaryModal = function(mk) {
-    const mShifts = window.shifts.filter(s => s.date && s.date.startsWith(mk));
+    const popover = document.getElementById('monthSummaryPopover');
+    const backdrop = document.getElementById('monthSummaryBackdrop');
+    const btn = document.getElementById('btnMonthSummary');
+
+    // If already open, close it (toggle behavior)
+    if (popover && popover.classList.contains('open')) {
+        window.closeMonthlySummaryPopover();
+        return;
+    }
+
+    const mShifts = (window.shifts || []).filter(s => s.date && s.date.startsWith(mk));
     let totWorkMins = 0;
     let totPremMins = 0;
     let totNaltMins = 0;
 
     mShifts.forEach(s => {
-         if(s.startTime && s.endTime) {
+         if (s.startTime && s.endTime) {
              totWorkMins += window.calculateDurationMinutes(s.startTime, s.endTime);
          }
-         if(s.premStartTime && s.premEndTime) {
+         if (s.premStartTime && s.premEndTime) {
              totPremMins += window.calculateDurationMinutes(s.premStartTime, s.premEndTime);
          }
-         totNaltMins += (Number(s.naltStartMinutes)||0) + (Number(s.naltEndMinutes)||0);
+         totNaltMins += (Number(s.naltStartMinutes) || 0) + (Number(s.naltEndMinutes) || 0);
     });
 
-    document.getElementById('summaryModalTitle').textContent = 'סיכום חודשי - ' + formatMonthName(mk);
-    document.getElementById('modalWorkVal').textContent = window.formatMinutesToHM(totWorkMins);
-    document.getElementById('modalPremVal').textContent = window.formatMinutesToHM(totPremMins);
+    const titleEl = document.getElementById('summaryModalTitle');
+    if (titleEl) titleEl.textContent = 'סיכום חודשי - ' + formatMonthName(mk);
+
+    const workEl = document.getElementById('modalWorkVal');
+    if (workEl) workEl.textContent = window.formatMinutesToHM(totWorkMins);
+
+    const premEl = document.getElementById('modalPremVal');
+    if (premEl) premEl.textContent = window.formatMinutesToHM(totPremMins);
+
+    const naltEl = document.getElementById('modalNaltVal');
+    if (naltEl) naltEl.textContent = window.formatMinutesToHM(totNaltMins);
+
     const exportBtn = document.getElementById('modalExportBtn');
     if (exportBtn) {
         exportBtn.setAttribute('data-month', mk);
         exportBtn.onclick = function() {
+            window.closeMonthlySummaryPopover();
             window.printMonthReport(mk);
         };
     }
 
     window.buildMonthPrintReport(mk);
-    document.getElementById('monthlySummaryModal').classList.add('open');
+
+    if (popover) popover.classList.add('open');
+    if (backdrop) backdrop.classList.add('open');
+    if (btn) btn.classList.add('active-mode');
 };
 
 window.closeMonthlySummaryModal = function() {
-    document.getElementById('monthlySummaryModal').classList.remove('open');
+    window.closeMonthlySummaryPopover();
+};
+
+window.closeMonthlySummaryPopover = function() {
+    const popover = document.getElementById('monthSummaryPopover');
+    const backdrop = document.getElementById('monthSummaryBackdrop');
+    const btn = document.getElementById('btnMonthSummary');
+
+    if (popover) popover.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('open');
+    if (btn) btn.classList.remove('active-mode');
 };
 
 window.validateModalRealtime = function(isSubmit = false) {
@@ -1949,25 +1982,36 @@ window.toggleSelectionMode = function() {
     isSelectionMode = !isSelectionMode;
     selectedShiftIds.clear();
     
+    // Auto-disable multi-panel mode when entering selection mode so they don't clash
+    if (isSelectionMode && isMultiPanelMode) {
+        window.toggleMultiPanelMode();
+    }
+
     const btn = document.getElementById('btnToggleSelection');
-    const toolbar = document.getElementById('selectionToolbar');
+    const monthBar = document.getElementById('monthNavBar');
     const container = document.getElementById('shiftsContainer');
 
     if (btn) {
-        btn.classList.remove('animating-check');
+        btn.classList.remove('animating-check-on', 'animating-check-off');
         void btn.offsetWidth;
-        btn.classList.add('animating-check');
-        setTimeout(() => btn.classList.remove('animating-check'), 600);
+        if (isSelectionMode) {
+            btn.classList.add('animating-check-on');
+        } else {
+            btn.classList.add('animating-check-off');
+        }
+        setTimeout(() => {
+            btn.classList.remove('animating-check-on', 'animating-check-off');
+        }, 600);
     }
 
     if (isSelectionMode) {
         if (btn) btn.classList.add('active-mode');
-        if (toolbar) toolbar.classList.add('active');
+        if (monthBar) monthBar.classList.add('is-selection-mode');
         if (container) container.classList.add('mode-selection');
         showStatusBubbleToast("מצב בחירה פעיל");
     } else {
         if (btn) btn.classList.remove('active-mode');
-        if (toolbar) toolbar.classList.remove('active');
+        if (monthBar) monthBar.classList.remove('is-selection-mode');
         if (container) container.classList.remove('mode-selection');
         showStatusBubbleToast("מצב בחירה כבוי");
     }
@@ -1993,8 +2037,13 @@ window.toggleMultiPanelMode = function() {
 
     if (isMultiPanelMode) {
         showStatusBubbleToast("ריבוי פאנלים פעיל");
+        // Auto-expand all shift cards in current view
+        document.querySelectorAll('.shift-details').forEach(el => {
+            el.classList.add('expanded');
+        });
     } else {
         showStatusBubbleToast("ריבוי פאנלים כבוי");
+        // Auto-collapse all shift cards
         document.querySelectorAll('.shift-details.expanded').forEach(el => {
             el.classList.remove('expanded');
         });
@@ -3219,13 +3268,19 @@ function renderShifts() {
         </div>\
     ';
 
-    expandedIds.forEach(id => {
-        const card = container.querySelector('.shift-card[data-id="' + id + '"]');
-        if (card) {
-            const details = card.querySelector('.shift-details');
-            if (details) details.classList.add('expanded');
-        }
-    });
+    if (isMultiPanelMode) {
+        container.querySelectorAll('.shift-details').forEach(details => {
+            details.classList.add('expanded');
+        });
+    } else {
+        expandedIds.forEach(id => {
+            const card = container.querySelector('.shift-card[data-id="' + id + '"]');
+            if (card) {
+                const details = card.querySelector('.shift-details');
+                if (details) details.classList.add('expanded');
+            }
+        });
+    }
 
     setupDragAndDrop();
     setupGlobalInteractions();

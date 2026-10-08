@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=9.3">
+    <link rel="stylesheet" href="style.css?v=9.4">
 </head>
 <body>
 
@@ -200,6 +200,15 @@
                 </button>
             </div>
 
+            <!-- Selection Mode Elements (Integrated inside bar) -->
+            <div class="selection-nav-right" id="selectionNavRight">
+                <span id="selectedCountText" class="selection-count-text">0 נבחרו</span>
+            </div>
+            <div class="selection-nav-buttons" id="selectionNavButtons">
+                <button id="btnSelectAllToggle" class="btn-selection-nav-action" onclick="selectAllShifts(); this.blur();">בחר הכל</button>
+                <button id="btnSelectionDelete" class="btn-selection-nav-action btn-selection-nav-delete" onclick="deleteSelectedShifts(); this.blur();">מחק</button>
+            </div>
+
             <!-- Left Actions Group (Multi-panel & Selection/Edit) -->
             <div class="month-nav-group-side month-nav-group-left">
                 <button class="btn-month-action" id="btnToggleMultiPanel" onclick="toggleMultiPanelMode(); this.blur();" title="ריבוי פאנלים">
@@ -215,23 +224,11 @@
                     </svg>
                 </button>
                 <button class="btn-month-action" id="btnToggleSelection" onclick="toggleSelectionMode(); this.blur();" title="מצב בחירה ועריכה">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="svg-selection-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <path class="box-path" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                         <path class="check-path" d="M9 11l3 3L22 4"/>
                     </svg>
                 </button>
-            </div>
-        </div>
-
-        <!-- Sticky Selection Toolbar (Appears right under monthNavBar when selection mode is active) -->
-        <div id="selectionToolbar" class="selection-sticky-bar">
-            <div class="selection-sticky-content">
-                <span id="selectedCountText" class="selection-count-text">0 נבחרו</span>
-                <div class="selection-buttons">
-                    <button id="btnSelectAllToggle" class="btn-selection-action" onclick="selectAllShifts()">בחר הכל</button>
-                    <button class="btn-selection-action btn-selection-delete" onclick="deleteSelectedShifts()">מחק</button>
-                    <button class="btn-selection-action btn-selection-done" onclick="toggleSelectionMode()">סיום</button>
-                </div>
             </div>
         </div>
 
@@ -397,40 +394,38 @@
     </div>
 </div>
 
-<!-- Modal for Monthly Summary -->
-<div class="modal-overlay" id="monthlySummaryModal">
-    <div class="modal-sheet">
-        <div class="modal-header">
-            <h2 class="modal-title" id="summaryModalTitle">סיכום חודשי</h2>
-            <button class="btn-close" onclick="closeMonthlySummaryModal()">
-                <svg class="svg-icon" width="22" height="22" viewBox="0 0 24 24">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </button>
+<!-- Floating Popover for Monthly Summary -->
+<div id="monthSummaryBackdrop" class="month-summary-backdrop" onclick="closeMonthlySummaryPopover()"></div>
+<div id="monthSummaryPopover" class="month-summary-popover">
+    <div class="summary-popover-header">
+        <span class="summary-popover-title" id="summaryModalTitle">סיכום חודשי</span>
+        <button class="btn-popover-close" onclick="closeMonthlySummaryPopover()" title="סגור">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <div class="summary-popover-stats">
+        <div class="summary-popover-row stat-work">
+            <span class="popover-stat-label">⏱️ עבודה:</span>
+            <span class="popover-stat-val" id="modalWorkVal">00:00</span>
         </div>
-        <div class="summary-modal-content">
-            <div class="summary-stats-grid-modal">
-                <div class="summary-stat-block-modal stat-work">
-                    <span class="stat-label-modal">עבודה</span>
-                    <span class="stat-val-modal" id="modalWorkVal">0 שעות</span>
-                </div>
-                <div class="summary-stat-block-modal stat-prem">
-                    <span class="stat-label-modal">פרמיה</span>
-                    <span class="stat-val-modal" id="modalPremVal">0 שעות</span>
-                </div>
-                <div class="summary-stat-block-modal stat-nalt">
-                    <span class="stat-label-modal">נל״ת</span>
-                    <span class="stat-val-modal" id="modalNaltVal">0 שעות</span>
-                </div>
-            </div>
-            <button class="btn-export-full" id="modalExportBtn">
-                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24">
-                    <path d="M16 5l-4-4-4 4h3v8h2V5h3zm4 4v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h3v2H6v11h12V9h-3V7h3c1.1 0 2 .9 2 2z"/>
-                </svg>
-                <span>הפק / שתף דוח חודשי</span>
-            </button>
+        <div class="summary-popover-row stat-prem">
+            <span class="popover-stat-label">⭐ פרמיה:</span>
+            <span class="popover-stat-val" id="modalPremVal">00:00</span>
+        </div>
+        <div class="summary-popover-row stat-nalt">
+            <span class="popover-stat-label">🚗 נל״ת:</span>
+            <span class="popover-stat-val" id="modalNaltVal">00:00</span>
         </div>
     </div>
+    <button class="btn-popover-export" id="modalExportBtn">
+        <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24">
+            <path d="M16 5l-4-4-4 4h3v8h2V5h3zm4 4v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h3v2H6v11h12V9h-3V7h3c1.1 0 2 .9 2 2z"/>
+        </svg>
+        <span>הפק דוח חודשי</span>
+    </button>
 </div>
 
 <div class="modal-overlay" id="shiftModal">
@@ -690,6 +685,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=8.5"></script>
+<script type="module" src="script.js?v=8.6"></script>
 </body>
 </html>
