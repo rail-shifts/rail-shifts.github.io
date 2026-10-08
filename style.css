@@ -1248,7 +1248,7 @@ body.month-summary-open .month-nav-bar {
     background: transparent !important;
     border: none !important;
     border-radius: 8px;
-    color: var(--accent-blue);
+    color: rgba(255, 255, 255, 0.75);
     cursor: pointer;
     padding: 0;
     outline: none;
@@ -1272,15 +1272,15 @@ body.month-summary-open .month-nav-bar {
 #btnMonthSummary,
 #btnToggleMultiPanel,
 #btnToggleSelection {
-    color: var(--text-muted);
-    opacity: 0.65;
+    color: rgba(255, 255, 255, 0.75);
+    opacity: 1;
 }
 
 #btnMonthSummary.active-mode,
 #btnToggleMultiPanel.active-mode,
 #btnToggleSelection.active-mode {
-    color: var(--accent-blue);
-    opacity: 1;
+    color: var(--accent-blue) !important;
+    opacity: 1 !important;
     transform: scale(1.08);
     filter: drop-shadow(0 0 6px rgba(0, 136, 255, 0.45));
 }
