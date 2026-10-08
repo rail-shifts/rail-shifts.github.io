@@ -1248,7 +1248,7 @@ body.month-summary-open .month-nav-bar {
     background: transparent !important;
     border: none !important;
     border-radius: 8px;
-    color: #ffffff;
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0;
     outline: none;
@@ -1272,8 +1272,8 @@ body.month-summary-open .month-nav-bar {
 #btnMonthSummary,
 #btnToggleMultiPanel,
 #btnToggleSelection {
-    color: #ffffff;
-    opacity: 1;
+    color: var(--text-muted);
+    opacity: 0.65;
 }
 
 #btnMonthSummary.active-mode,
@@ -1331,18 +1331,15 @@ body.month-summary-open .month-nav-bar {
     80% { transform: scaleY(0.85); }
 }
 
-.btn-month-summary-action.animating-bars .bar-1,
-.btn-month-summary-action:active .bar-1 {
+.btn-month-summary-action.animating-bars .bar-1 {
     animation: barBounce1 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.btn-month-summary-action.animating-bars .bar-2,
-.btn-month-summary-action:active .bar-2 {
+.btn-month-summary-action.animating-bars .bar-2 {
     animation: barBounce2 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.btn-month-summary-action.animating-bars .bar-3,
-.btn-month-summary-action:active .bar-3 {
+.btn-month-summary-action.animating-bars .bar-3 {
     animation: barBounce3 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -1472,14 +1469,11 @@ body.month-summary-open .month-nav-bar {
 }
 
 #btnToggleMultiPanel.animating-cards .layer-top,
-#btnToggleMultiPanel:active .layer-top,
-#btnToggleMultiPanel.animating-cards .layer-mask-shape,
-#btnToggleMultiPanel:active .layer-mask-shape {
+#btnToggleMultiPanel.animating-cards .layer-mask-shape {
     animation: stackExpandTop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-#btnToggleMultiPanel.animating-cards .layer-bottom,
-#btnToggleMultiPanel:active .layer-bottom {
+#btnToggleMultiPanel.animating-cards .layer-bottom {
     animation: stackExpandBottom 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
