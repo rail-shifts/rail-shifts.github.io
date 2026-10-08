@@ -1953,12 +1953,13 @@ window.toggleSelectionMode = function() {
     const toolbar = document.getElementById('selectionToolbar');
     const container = document.getElementById('shiftsContainer');
 
+    if (btn) {
+        btn.classList.add('animating-check');
+        setTimeout(() => btn.classList.remove('animating-check'), 600);
+    }
+
     if (isSelectionMode) {
-        if (btn) {
-            btn.classList.add('active-mode');
-            btn.classList.add('animating-check');
-            setTimeout(() => btn.classList.remove('animating-check'), 600);
-        }
+        if (btn) btn.classList.add('active-mode');
         if (toolbar) toolbar.classList.add('active');
         if (container) container.classList.add('mode-selection');
         showStatusBubbleToast("מצב בחירה פעיל");
