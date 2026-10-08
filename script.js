@@ -3083,24 +3083,30 @@ let currentShiftSearchQuery = '';
 
 window.toggleShiftSearch = function() {
     const bar = document.getElementById('monthNavBar');
+    const btn = document.getElementById('btnSearchToggle');
     const input = document.getElementById('shiftSearchInput');
     if (!bar) return;
     const isSearching = bar.classList.contains('is-searching');
     if (isSearching) {
         closeShiftSearch();
     } else {
+        if (btn) {
+            btn.classList.add('search-highlight-blue');
+        }
         bar.classList.add('is-searching');
         if (input) {
-            setTimeout(() => input.focus(), 80);
+            setTimeout(() => input.focus(), 120);
         }
     }
 };
 
 window.closeShiftSearch = function() {
     const bar = document.getElementById('monthNavBar');
+    const btn = document.getElementById('btnSearchToggle');
     const input = document.getElementById('shiftSearchInput');
     const clearBtn = document.getElementById('btnSearchClear');
     if (bar) bar.classList.remove('is-searching');
+    if (btn) btn.classList.remove('search-highlight-blue');
     if (input) input.value = '';
     if (clearBtn) clearBtn.classList.remove('visible');
     currentShiftSearchQuery = '';
