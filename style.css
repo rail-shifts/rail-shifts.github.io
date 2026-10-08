@@ -1007,9 +1007,13 @@ body.month-summary-open #shiftsContainer {
 
 /* Integrated Selection Nav Bar Elements */
 .selection-nav-right {
-    display: none;
+    display: flex;
     align-items: center;
     z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .selection-count-text {
@@ -1021,7 +1025,7 @@ body.month-summary-open #shiftsContainer {
 }
 
 .selection-nav-buttons {
-    display: none;
+    display: flex;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -1029,6 +1033,10 @@ body.month-summary-open #shiftsContainer {
     align-items: center;
     gap: 8px;
     z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
 }
 
 .btn-selection-nav-action {
@@ -1273,19 +1281,7 @@ body.month-summary-open .month-nav-bar {
 }
 
 /* Month Navigation Bar in Selection Mode */
-.month-nav-bar.is-selection-mode .month-nav-center-group,
-.month-nav-bar.is-selection-mode .month-nav-group-right,
-.month-nav-bar.is-selection-mode #btnToggleMultiPanel {
-    display: none !important;
-}
-
-.month-nav-bar.is-selection-mode .selection-nav-right {
-    display: flex;
-}
-
-.month-nav-bar.is-selection-mode .selection-nav-buttons {
-    display: flex;
-}
+/* Handled smoothly above with opacity and visibility transitions */
 
 /* Optical size balance for selection checkbox */
 .svg-selection-toggle {
@@ -1375,6 +1371,10 @@ body.month-summary-open .month-nav-bar {
 }
 
 /* After stamp animation finishes, morph to X smoothly */
+.btn-month-selection-action.has-morphed-close {
+    opacity: 1 !important;
+}
+
 .btn-month-selection-action.has-morphed-close .icon-selection-box {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.6) rotate(90deg);
@@ -1382,8 +1382,10 @@ body.month-summary-open .month-nav-bar {
 }
 
 .btn-month-selection-action.has-morphed-close .icon-selection-close {
-    opacity: 1;
+    opacity: 1 !important;
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    color: var(--accent-red) !important;
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.45));
 }
 
 /* Stamp Animation when clicking selection button */
@@ -2064,6 +2066,7 @@ body.month-summary-open .month-nav-bar {
     display: none;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .mode-selection .select-checkbox-container {

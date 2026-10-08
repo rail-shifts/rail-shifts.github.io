@@ -2032,7 +2032,6 @@ window.toggleSelectionMode = function() {
     }
     
     updateSelectionUI();
-    renderShifts();
 };
 
 window.toggleSortingMode = function() {
@@ -2506,7 +2505,6 @@ window.handleCardClick = function(event, id) {
             selectedShiftIds.add(stringId);
         }
         updateSelectionUI();
-        if (currentView === 'history') renderShifts();
     } else {
         const cardEl = event.currentTarget.closest('.shift-card');
         const detailsEl = cardEl.querySelector('.shift-details');
@@ -2547,6 +2545,14 @@ function updateSelectionUI() {
         const allSelected = mShifts.length > 0 && mShifts.every(s => selectedShiftIds.has(String(s.id)));
         btnToggle.textContent = allSelected ? 'בטל בחירה' : 'בחר הכל';
     }
+
+    // Direct DOM class sync to avoid rebuilding entire shift cards list
+    document.querySelectorAll('.shift-card').forEach(card => {
+        const id = card.getAttribute('data-id');
+        if (id) {
+            card.classList.toggle('selected-for-delete', selectedShiftIds.has(String(id)));
+        }
+    });
 }
 
 window.selectAllShifts = function() {
@@ -2563,7 +2569,6 @@ window.selectAllShifts = function() {
         mShifts.forEach(s => selectedShiftIds.add(String(s.id)));
     }
     updateSelectionUI();
-    renderShifts();
 };
 
 window.deleteSelectedShifts = function() {
@@ -2956,13 +2961,6 @@ function buildShiftCardHTML(shift, overlappingIds) {
                         <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>\
                     </svg>\
                 </div>\
-                <div class="select-checkbox-container">\
-                    <div class="custom-checkbox">\
-                        <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24">\
-                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>\
-                        </svg>\
-                    </div>\
-                </div>\
                 <div class="shift-content-block">\
                     <div class="shift-row-main">\
                         <div class="shift-date-box">\
@@ -2983,10 +2981,17 @@ function buildShiftCardHTML(shift, overlappingIds) {
                             ' + (hasPrem ? '<span class="tag tag-prem">' + premSvgIcon + ' פרמיה</span>' : '') + '\
                             ' + (hasInstructor ? '<span class="tag tag-instructor">' + instructorSvgIcon + ' הדרכה</span>' : '') + '\
                             ' + (hasNotes ? '<span class="tag tag-notes" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
+                            ' + (isOverlap ? '<span class="tag tag-overlap">כפילות</span>' : '') + '\
                         </div>\
                         <div class="badges-group-left">\
+                            <div class="select-checkbox-container">\
+                                <div class="custom-checkbox">\
+                                    <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24">\
+                                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>\
+                                    </svg>\
+                                </div>\
+                            </div>\
                             ' + (isComplete ? '<span class="tag tag-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
-                            ' + (isOverlap ? '<span class="tag tag-overlap">כפילות</span>' : '') + '\
                         </div>\
                     </div>\
                 </div>\
