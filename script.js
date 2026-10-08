@@ -1954,6 +1954,8 @@ window.toggleSelectionMode = function() {
     const container = document.getElementById('shiftsContainer');
 
     if (btn) {
+        btn.classList.remove('animating-check');
+        void btn.offsetWidth;
         btn.classList.add('animating-check');
         setTimeout(() => btn.classList.remove('animating-check'), 600);
     }
@@ -1983,6 +1985,8 @@ window.toggleMultiPanelMode = function() {
     const btn = document.getElementById('btnToggleMultiPanel');
     if (btn) {
         btn.classList.toggle('active-mode', isMultiPanelMode);
+        btn.classList.remove('animating-cards');
+        void btn.offsetWidth;
         btn.classList.add('animating-cards');
         setTimeout(() => btn.classList.remove('animating-cards'), 500);
     }
