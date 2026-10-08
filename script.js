@@ -2984,6 +2984,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
                             ' + (isOverlap ? '<span class="tag tag-overlap">כפילות</span>' : '') + '\
                         </div>\
                         <div class="badges-group-left">\
+                            ' + (isComplete ? '<span class="tag tag-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                             <div class="select-checkbox-container">\
                                 <div class="custom-checkbox">\
                                     <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24">\
@@ -2991,7 +2992,6 @@ function buildShiftCardHTML(shift, overlappingIds) {
                                     </svg>\
                                 </div>\
                             </div>\
-                            ' + (isComplete ? '<span class="tag tag-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                         </div>\
                     </div>\
                 </div>\
