@@ -1130,6 +1130,7 @@ window.openMonthlySummaryModal = function(mk) {
     if (popover) popover.classList.add('open');
     if (backdrop) backdrop.classList.add('open');
     if (btn) btn.classList.add('active-mode');
+    document.body.classList.add('month-summary-open');
 };
 
 window.closeMonthlySummaryModal = function() {
@@ -1144,6 +1145,7 @@ window.closeMonthlySummaryPopover = function() {
     if (popover) popover.classList.remove('open');
     if (backdrop) backdrop.classList.remove('open');
     if (btn) btn.classList.remove('active-mode');
+    document.body.classList.remove('month-summary-open');
 };
 
 window.validateModalRealtime = function(isSubmit = false) {
@@ -1992,32 +1994,47 @@ window.toggleSelectionMode = function() {
     const container = document.getElementById('shiftsContainer');
 
     if (btn) {
-        btn.classList.remove('animating-check-on', 'animating-check-off');
+        btn.classList.remove('animating-phase1', 'animating-phase2', 'animating-check-off');
         void btn.offsetWidth;
-        if (isSelectionMode) {
-            btn.classList.add('animating-check-on');
-        } else {
-            btn.classList.add('animating-check-off');
-        }
-        setTimeout(() => {
-            btn.classList.remove('animating-check-on', 'animating-check-off');
-        }, 600);
     }
 
     if (isSelectionMode) {
-        if (btn) btn.classList.add('active-mode');
-        if (monthBar) monthBar.classList.add('is-selection-mode');
-        if (container) container.classList.add('mode-selection');
-        showStatusBubbleToast("מצב בחירה פעיל");
+        // Phase 1: Keep bar normal, run the signature stamp animation inside the box
+        if (btn) {
+            btn.classList.add('animating-phase1');
+        }
+
+        setTimeout(() => {
+            // Phase 2: Morph the bar to selection mode, bloom the checkmark, fade out the box
+            if (!isSelectionMode) return; // Guard against quick double-tap
+            if (btn) {
+                btn.classList.remove('animating-phase1');
+                void btn.offsetWidth;
+                btn.classList.add('animating-phase2', 'active-mode');
+            }
+            if (monthBar) monthBar.classList.add('is-selection-mode');
+            if (container) container.classList.add('mode-selection');
+            showStatusBubbleToast("מצב בחירה פעיל");
+            updateSelectionUI();
+            renderShifts();
+
+            setTimeout(() => {
+                if (btn) btn.classList.remove('animating-phase2');
+            }, 450);
+        }, 450);
     } else {
-        if (btn) btn.classList.remove('active-mode');
+        // Exiting selection mode immediately
+        if (btn) {
+            btn.classList.remove('active-mode');
+            btn.classList.add('animating-check-off');
+            setTimeout(() => btn.classList.remove('animating-check-off'), 400);
+        }
         if (monthBar) monthBar.classList.remove('is-selection-mode');
         if (container) container.classList.remove('mode-selection');
         showStatusBubbleToast("מצב בחירה כבוי");
+        updateSelectionUI();
+        renderShifts();
     }
-    
-    updateSelectionUI();
-    renderShifts();
 };
 
 window.toggleSortingMode = function() {
