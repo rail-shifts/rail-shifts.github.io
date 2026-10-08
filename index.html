@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=9.6">
+    <link rel="stylesheet" href="style.css?v=9.7">
 </head>
 <body>
 
@@ -250,10 +250,14 @@
                         <polygon class="layer-top" points="12 3.5 3 8.5 12 13.5 21 8.5 12 3.5"/>
                     </svg>
                 </button>
-                <button class="btn-month-action" id="btnToggleSelection" onclick="toggleSelectionMode(); this.blur();" title="מצב בחירה ועריכה">
-                    <svg class="svg-selection-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <button class="btn-month-action btn-month-selection-action" id="btnToggleSelection" onclick="toggleSelectionMode(); this.blur();" title="מצב בחירה ועריכה">
+                    <svg class="icon-selection-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <path class="box-path" d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                         <path class="check-path" d="M9 11l3 3L20 6"/>
+                    </svg>
+                    <svg class="icon-selection-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
             </div>
@@ -681,6 +685,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=8.8"></script>
+<script type="module" src="script.js?v=8.9"></script>
 </body>
 </html>

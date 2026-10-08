@@ -1079,6 +1079,42 @@ body.month-summary-open #shiftsContainer {
     min-height: 48px;
     box-shadow: none;
     user-select: none;
+    z-index: 100;
+}
+
+body.month-summary-open .month-nav-bar {
+    z-index: 2700; /* Stays above the full-screen backdrop so popover and header are clickable */
+}
+
+/* Center Group & Buttons Transitions - Smooth fade like search */
+.month-nav-center-group,
+.month-nav-group-right,
+#btnToggleMultiPanel {
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.month-nav-bar.is-selection-mode .month-nav-center-group,
+.month-nav-bar.is-selection-mode .month-nav-group-right,
+.month-nav-bar.is-selection-mode #btnToggleMultiPanel {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.selection-nav-right,
+.selection-nav-buttons {
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.month-nav-bar.is-selection-mode .selection-nav-right,
+.month-nav-bar.is-selection-mode .selection-nav-buttons {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .month-nav-center-group {
@@ -1309,14 +1345,51 @@ body.month-summary-open #shiftsContainer {
     animation: barBounce3 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* 2. Selection Checkmark 2-Phase Stamp & Bloom Animation */
+/* Selection Action Button with Dual Icons (Box Checkmark & Rotating Close X) */
+.btn-month-selection-action {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-month-selection-action .icon-selection-box,
+.btn-month-selection-action .icon-selection-close {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.btn-month-selection-action .icon-selection-box {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+.btn-month-selection-action .icon-selection-close {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6) rotate(-90deg);
+    color: var(--accent-red);
+}
+
+/* When in selection mode: box fades out and X rotates in smoothly */
+.month-nav-bar.is-selection-mode .btn-month-selection-action .icon-selection-box {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6) rotate(90deg);
+    pointer-events: none;
+}
+
+.month-nav-bar.is-selection-mode .btn-month-selection-action .icon-selection-close {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* Stamp Animation when clicking selection button */
 .check-path {
     stroke-dasharray: 24;
     stroke-dashoffset: 0;
     transform-origin: 15px 9px;
 }
 
-/* Phase 1: Pure Stamp Animation - Disappears in gray, re-appears in royal blue */
 @keyframes stampCheckmarkInitial {
     0% {
         opacity: 1;
@@ -1353,92 +1426,14 @@ body.month-summary-open #shiftsContainer {
     }
 }
 
-/* Phase 2: Morph/Bloom Animation - Checkmark blooms larger, bolder and centered */
-@keyframes checkBloomThick {
-    0% {
-        transform: scale(1) translate(0, 0);
-        stroke-width: 2.5;
-    }
-    50% {
-        transform: scale(1.42) translate(0, 1.5px);
-        stroke-width: 3.2;
-    }
-    100% {
-        transform: scale(1.35) translate(0, 1.5px);
-        stroke-width: 3.0;
-    }
-}
-
-@keyframes boxFadeOut {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(0.6);
-    }
-}
-
-/* Deactivating selection mode: Checkmark shrinks back, box fades back in */
-@keyframes checkShrinkBack {
-    0% {
-        transform: scale(1.35) translate(0, 1.5px);
-        stroke-width: 3.0;
-    }
-    100% {
-        transform: scale(1) translate(0, 0);
-        stroke-width: 2.4;
-    }
-}
-
-@keyframes boxFadeIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.6);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Active phase classes */
-#btnToggleSelection.animating-phase1 {
+#btnToggleSelection.animating-stamp {
     color: var(--accent-blue) !important;
     opacity: 1 !important;
     filter: drop-shadow(0 0 6px rgba(0, 136, 255, 0.45));
 }
 
-#btnToggleSelection.animating-phase1 .check-path {
-    animation: stampCheckmarkInitial 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-#btnToggleSelection.animating-phase2 .check-path {
-    animation: checkBloomThick 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-#btnToggleSelection.animating-phase2 .box-path {
-    animation: boxFadeOut 0.35s ease forwards;
-}
-
-#btnToggleSelection.animating-check-off .check-path {
-    animation: checkShrinkBack 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-#btnToggleSelection.animating-check-off .box-path {
-    animation: boxFadeIn 0.35s ease forwards;
-}
-
-/* When selection mode is active and stable */
-#btnToggleSelection.active-mode:not(.animating-phase1) .box-path {
-    opacity: 0;
-    pointer-events: none;
-}
-
-#btnToggleSelection.active-mode:not(.animating-phase1):not(.animating-phase2):not(.animating-check-off) .check-path {
-    transform: scale(1.35) translate(0, 1.5px);
-    stroke-width: 3.0;
+#btnToggleSelection.animating-stamp .check-path {
+    animation: stampCheckmarkInitial 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 /* 3. Multi-panel 3D Layers Accordion Animation */

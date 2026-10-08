@@ -2000,47 +2000,32 @@ window.toggleSelectionMode = function() {
     const container = document.getElementById('shiftsContainer');
 
     if (btn) {
-        btn.classList.remove('animating-phase1', 'animating-phase2', 'animating-check-off');
+        btn.classList.remove('animating-stamp');
         void btn.offsetWidth;
     }
 
     if (isSelectionMode) {
-        // Phase 1: Keep bar normal, run the signature stamp animation inside the box
+        // Instant smooth CSS transition for the bar, same as search mode
+        if (monthBar) monthBar.classList.add('is-selection-mode');
+        if (container) container.classList.add('mode-selection');
+        showStatusBubbleToast("מצב בחירה פעיל");
+
+        // Run signature stamp animation
         if (btn) {
-            btn.classList.add('animating-phase1');
-        }
-
-        setTimeout(() => {
-            // Phase 2: Morph the bar to selection mode, bloom the checkmark, fade out the box
-            if (!isSelectionMode) return; // Guard against quick double-tap
-            if (btn) {
-                btn.classList.remove('animating-phase1');
-                void btn.offsetWidth;
-                btn.classList.add('animating-phase2', 'active-mode');
-            }
-            if (monthBar) monthBar.classList.add('is-selection-mode');
-            if (container) container.classList.add('mode-selection');
-            showStatusBubbleToast("מצב בחירה פעיל");
-            updateSelectionUI();
-            renderShifts();
-
+            btn.classList.add('animating-stamp');
             setTimeout(() => {
-                if (btn) btn.classList.remove('animating-phase2');
+                if (btn) btn.classList.remove('animating-stamp');
             }, 450);
-        }, 450);
-    } else {
-        // Exiting selection mode immediately
-        if (btn) {
-            btn.classList.remove('active-mode');
-            btn.classList.add('animating-check-off');
-            setTimeout(() => btn.classList.remove('animating-check-off'), 400);
         }
+    } else {
+        // Exiting selection mode smoothly
         if (monthBar) monthBar.classList.remove('is-selection-mode');
         if (container) container.classList.remove('mode-selection');
         showStatusBubbleToast("מצב בחירה כבוי");
-        updateSelectionUI();
-        renderShifts();
     }
+    
+    updateSelectionUI();
+    renderShifts();
 };
 
 window.toggleSortingMode = function() {
