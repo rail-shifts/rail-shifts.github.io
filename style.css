@@ -2021,8 +2021,8 @@ body.month-summary-open .month-nav-bar {
 }
 
 .shift-card.has-overlap {
-    border-color: rgba(234, 179, 8, 0.45);
-    border-right: 3px solid var(--accent-yellow);
+    border-color: rgba(249, 115, 22, 0.45);
+    border-right: 3px solid #fb923c;
 }
 
 .shift-card.selected-for-delete {
@@ -2229,6 +2229,7 @@ body.month-summary-open .month-nav-bar {
     align-items: center;
     gap: 6px;
     flex-wrap: wrap;
+    direction: ltr;
 }
 
 .tag {
