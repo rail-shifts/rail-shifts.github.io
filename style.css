@@ -1008,6 +1008,10 @@ body.month-summary-open #shiftsContainer {
 /* Integrated Selection Nav Bar Elements */
 .selection-nav-right {
     display: flex;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     align-items: center;
     z-index: 2;
     opacity: 0;
