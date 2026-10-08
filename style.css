@@ -1023,9 +1023,9 @@ body.month-summary-open #shiftsContainer {
 .selection-nav-buttons {
     display: none;
     position: absolute;
-    left: 48px; /* Perfectly aligned to the right of the checkmark button */
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
     align-items: center;
     gap: 8px;
     z-index: 2;
@@ -1357,6 +1357,9 @@ body.month-summary-open .month-nav-bar {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.4;
     transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
@@ -1371,14 +1374,14 @@ body.month-summary-open .month-nav-bar {
     color: var(--accent-red);
 }
 
-/* When in selection mode: box fades out and X rotates in smoothly */
-.month-nav-bar.is-selection-mode .btn-month-selection-action .icon-selection-box {
+/* After stamp animation finishes, morph to X smoothly */
+.btn-month-selection-action.has-morphed-close .icon-selection-box {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.6) rotate(90deg);
     pointer-events: none;
 }
 
-.month-nav-bar.is-selection-mode .btn-month-selection-action .icon-selection-close {
+.btn-month-selection-action.has-morphed-close .icon-selection-close {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
 }

@@ -2010,15 +2010,22 @@ window.toggleSelectionMode = function() {
         if (container) container.classList.add('mode-selection');
         showStatusBubbleToast("מצב בחירה פעיל");
 
-        // Run signature stamp animation
+        // Run signature stamp animation first, then morph smoothly to X
         if (btn) {
+            btn.classList.remove('has-morphed-close');
             btn.classList.add('animating-stamp');
             setTimeout(() => {
-                if (btn) btn.classList.remove('animating-stamp');
-            }, 450);
+                if (btn) {
+                    btn.classList.remove('animating-stamp');
+                    if (isSelectionMode) {
+                        btn.classList.add('has-morphed-close');
+                    }
+                }
+            }, 420);
         }
     } else {
         // Exiting selection mode smoothly
+        if (btn) btn.classList.remove('has-morphed-close', 'animating-stamp');
         if (monthBar) monthBar.classList.remove('is-selection-mode');
         if (container) container.classList.remove('mode-selection');
         showStatusBubbleToast("מצב בחירה כבוי");
