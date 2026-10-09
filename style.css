@@ -2192,7 +2192,7 @@ body.month-summary-open #monthSummaryPopover * {
 .shift-siddur-primary {
     font-size: 0.95rem;
     font-weight: 800;
-    color: #1a94ff;
+    color: #93c5fd;
     line-height: 1.25;
     white-space: nowrap;
     overflow: hidden;
@@ -2205,7 +2205,7 @@ body.month-summary-open #monthSummaryPopover * {
 
 .shift-siddur-secondary {
     font-weight: 600;
-    color: rgba(26, 148, 255, 0.75);
+    color: #38bdf8;
     line-height: 1.15;
     margin-top: 2px;
     text-align: center;
