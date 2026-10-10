@@ -3094,7 +3094,8 @@ window.toggleShiftSearch = function() {
         // Open search panel immediately on click
         bar.classList.add('is-searching');
         if (input) {
-            setTimeout(() => input.focus(), 80);
+            input.focus();
+            setTimeout(() => input.focus(), 50);
         }
 
         // Show glass in bright blue first, then morph smoothly to red X
@@ -3164,7 +3165,7 @@ function matchesShiftSearch(shift, rawQuery) {
     // 1. חיפוש תגיות בזמן אמת (Prefix Matching תוך כדי הקלדה)
     // פרמיה / פרימיה (פ, פר, פרי, פרמ, פרמי, פרימיה, פרמיה)
     const isPremMatch = ['פרמיה', 'פרימיה'].some(w => w.startsWith(qNorm) || qNorm.startsWith(w));
-    if (isPremMatch && qNorm.length >= 2) {
+    if (isPremMatch) {
         if (shift.premStartTime && shift.premEndTime) return true;
     }
 

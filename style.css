@@ -1620,7 +1620,7 @@ body.month-summary-open #monthSummaryPopover * {
 /* Integrated Search Field in Center (Expands comfortably across the bar) */
 .month-search-center {
     position: absolute;
-    left: 8px;
+    left: 44px;
     right: 44px;
     top: 50%;
     transform: translateY(-50%);

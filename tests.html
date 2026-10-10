@@ -517,6 +517,111 @@ function calculateOverlapsForShifts(shiftsList) {
     return overlappingIds;
 }
 
+function normalizeSearchText(str) {
+    if (!str) return '';
+    return str
+        .toLowerCase()
+        .replace(/["'״׳`]/g, '')       // מסיר גרשיים וגרשים
+        .replace(/[\u0591-\u05C7]/g, '')// מסיר ניקוד
+        .trim();
+}
+
+function matchesShiftSearch(shift, rawQuery) {
+    if (!rawQuery) return true;
+    const qTrim = rawQuery.trim();
+    const qNorm = normalizeSearchText(qTrim);
+    if (!qNorm) return true;
+
+    // 1. חיפוש תגיות בזמן אמת (Prefix Matching תוך כדי הקלדה)
+    // פרמיה / פרימיה (פ, פר, פרי, פרמ, פרמי, פרימיה, פרמיה)
+    const isPremMatch = ['פרמיה', 'פרימיה'].some(w => w.startsWith(qNorm) || qNorm.startsWith(w));
+    if (isPremMatch) {
+        if (shift.premStartTime && shift.premEndTime) return true;
+    }
+
+    // נל"ת / נלת (נ, נל, נלת)
+    const isNaltMatch = ['נלת', 'נל"ת'].some(w => normalizeSearchText(w).startsWith(qNorm));
+    if (isNaltMatch && qNorm.length >= 2) {
+        const nalt = (Number(shift.naltStartMinutes) || 0) + (Number(shift.naltEndMinutes) || 0);
+        if (nalt > 0) return true;
+    }
+
+    // הדרכה (הד, הדר, הדרכ, הדרכה)
+    if ('הדרכה'.startsWith(qNorm) && qNorm.length >= 2) {
+        if (shift.instructorStartTime && shift.instructorEndTime) return true;
+    }
+
+    // הערות (ה, הע, הער, הערה, הערות)
+    const isNotesMatch = ['הערות', 'הערה'].some(w => w.startsWith(qNorm) || qNorm.startsWith(w));
+    if (isNotesMatch) {
+        if (shift.notes && shift.notes.trim()) return true;
+    }
+
+    // 2. חיפוש סוגי משמרות בזמן אמת (בוקר / צהריים / לילה)
+    let isMorning = 'בוקר'.startsWith(qNorm) && qNorm.length >= 2;
+    let isNoon = ('צהרים'.startsWith(qNorm) || 'צהריים'.startsWith(qNorm)) && qNorm.length >= 2;
+    let isNight = 'לילה'.startsWith(qNorm) && qNorm.length >= 2;
+
+    if (shift.startTime && (isMorning || isNoon || isNight)) {
+        const sType = getShiftTypeByStart(shift.startTime);
+        if (isMorning && sType === 'morning') return true;
+        if (isNoon && sType === 'noon') return true;
+        if (isNight && sType === 'night') return true;
+    }
+
+    // 3. חיפוש תאריכים מתמשך בזמן אמת (2, 2., 2.9, 02/09, 2/9/26, 2026-09-02)
+    if (shift.date) {
+        const [sYear, sMonth, sDay] = shift.date.split('-');
+        const sDayNum = parseInt(sDay, 10);
+        const sMonthNum = parseInt(sMonth, 10);
+        const sYearShort = sYear ? sYear.slice(-2) : '';
+
+        const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+        const dayIdx = new Date(Number(sYear), sMonthNum - 1, sDayNum).getDay();
+        const dayName = dayNames[dayIdx] || '';
+        if (dayName.startsWith(qNorm) || dayName.includes(qNorm) || ('יום ' + dayName).includes(qNorm)) {
+            return true;
+        }
+
+        const dateQueryParts = qTrim.split(/[./\-]/).map(p => p.trim());
+        if (dateQueryParts.length > 1) {
+            const qD = parseInt(dateQueryParts[0], 10);
+            const rawM = dateQueryParts[1];
+            const qM = rawM ? parseInt(rawM, 10) : null;
+            const qY = dateQueryParts[2] ? dateQueryParts[2].trim() : null;
+
+            if (!isNaN(qD) && qD === sDayNum) {
+                if (!rawM) return true;
+                if (!isNaN(qM) && qM === sMonthNum) {
+                    if (!qY) return true;
+                    if (qY === sYear || qY === sYearShort || sYear.startsWith(qY)) return true;
+                }
+            }
+        } else if (!isNaN(Number(qTrim)) && Number(qTrim) > 0 && Number(qTrim) <= 31) {
+            if (parseInt(qTrim, 10) === sDayNum) {
+                return true;
+            }
+        }
+    }
+
+    // 4. בדיקת טקסט חופשי: סידור והערות תוך כדי הקלדה
+    if (shift.siddur) {
+        const sNorm = normalizeSearchText(shift.siddur);
+        if (sNorm.includes(qNorm)) return true;
+    }
+
+    if (shift.notes) {
+        const nNorm = normalizeSearchText(shift.notes);
+        if (nNorm.includes(qNorm)) return true;
+    }
+
+    // 5. בדיקת שעות ישירה (08, 08:, 08:00 וכו')
+    if (shift.startTime && shift.startTime.includes(qTrim)) return true;
+    if (shift.endTime && shift.endTime.includes(qTrim)) return true;
+
+    return false;
+}
+
 // -------------------------------------------------------------
 // Test Suite Runner
 // -------------------------------------------------------------
@@ -629,6 +734,23 @@ function runAllTests() {
                     { desc: 'משמרות נפרדות ללא חפיפה מחזירות רשימה ריקה', actual: calculateOverlapsForShifts(nonOverlapping).size, expected: 0 },
                     { desc: 'חפיפת צהריים (14:00-16:00) מזוהה בשתי המשמרות', actual: resOverlap.has('shift_a') && resOverlap.has('shift_b'), expected: true },
                     { desc: 'חפיפת לילה במעבר חצות מזוהה בשתי המשמרות', actual: resMidnight.has('night') && resMidnight.has('morning_next_day'), expected: true }
+                ];
+            })()
+        },
+        {
+            title: '7. סינון וחיפוש משמרות (matchesShiftSearch)',
+            tests: (() => {
+                const shiftPrem = { id: '1', date: '2026-10-05', startTime: '07:00', endTime: '15:00', premStartTime: '08:00', premEndTime: '12:00', siddur: '104' };
+                const shiftRegular = { id: '2', date: '2026-10-05', startTime: '15:00', endTime: '23:00', siddur: '205', notes: 'משמרת רגילה' };
+
+                return [
+                    { desc: 'חיפוש "פ" מסנן ומוצא משמרת פרמיה', actual: matchesShiftSearch(shiftPrem, 'פ'), expected: true },
+                    { desc: 'חיפוש "פ" לא מוצא משמרת ללא פרמיה (שאין בה פ בטקסט)', actual: matchesShiftSearch(shiftRegular, 'פ'), expected: false },
+                    { desc: 'חיפוש "פר" מסנן ומוצא משמרת פרמיה', actual: matchesShiftSearch(shiftPrem, 'פר'), expected: true },
+                    { desc: 'חיפוש "פרמיה" מוצא משמרת פרמיה', actual: matchesShiftSearch(shiftPrem, 'פרמיה'), expected: true },
+                    { desc: 'חיפוש "הערה" מוצא משמרת עם הערות', actual: matchesShiftSearch(shiftRegular, 'הערה'), expected: true },
+                    { desc: 'חיפוש "בוקר" מוצא משמרת בוקר 07:00', actual: matchesShiftSearch(shiftPrem, 'בוקר'), expected: true },
+                    { desc: 'חיפוש סידור "104" מוצא משמרת', actual: matchesShiftSearch(shiftPrem, '104'), expected: true }
                 ];
             })()
         }
