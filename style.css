@@ -1083,7 +1083,7 @@ body.view-history header {
 }
 
 body.view-history .app-container {
-    padding-top: calc(56px + 48px + env(safe-area-inset-top, 0px) + 8px);
+    padding-top: calc(56px + 40px + env(safe-area-inset-top, 0px) + 8px);
 }
 
 .month-nav-bar {
@@ -1094,9 +1094,9 @@ body.view-history .app-container {
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: 6px 4px;
+    padding: 0 4px;
     margin: 0;
-    min-height: 48px;
+    min-height: 40px;
     box-shadow: none;
     user-select: none;
     z-index: 2400;
@@ -1110,7 +1110,7 @@ body.view-history .month-nav-bar {
     margin: 0 auto;
     width: 100%;
     max-width: 480px;
-    height: 49px;
+    height: 40px;
     padding: 0 12px;
     background: rgba(11, 19, 41, 0.88);
     backdrop-filter: blur(16px);
