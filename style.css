@@ -3520,107 +3520,147 @@ select.form-control option {
 .shifts-compact-mode {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    background: rgba(15, 20, 32, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
-    padding: 4px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .compact-shift-card {
-    border-radius: 9px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-right: 3px solid rgba(0, 210, 255, 0.35);
-    background: rgba(26, 32, 48, 0.7);
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-right: 3px solid rgba(0, 210, 255, 0.4);
+    background: transparent;
     box-shadow: none;
-    transition: background-color 0.15s, border-color 0.15s;
-    margin-bottom: 0;
+    transition: background-color 0.15s;
+    margin: 0;
+}
+
+.compact-shift-card:last-child {
+    border-bottom: none;
 }
 
 .compact-shift-card:active {
-    background: rgba(0, 210, 255, 0.08);
+    background: rgba(0, 210, 255, 0.04);
 }
 
 .compact-shift-card.active-shift {
-    border-color: rgba(16, 185, 129, 0.4);
     border-right: 3px solid var(--accent-green);
-    background: rgba(16, 185, 129, 0.07);
+    background: rgba(16, 185, 129, 0.05);
 }
 
 .compact-shift-card.has-overlap {
-    border-color: rgba(249, 115, 22, 0.4);
     border-right: 3px solid #fb923c;
 }
 
-.compact-shift-card.is-today {
-    box-shadow: 0 0 0 1px rgba(0, 210, 255, 0.3);
+.compact-shift-card.selected-for-delete {
+    background: rgba(239, 68, 68, 0.08);
+    border-right: 3px solid var(--accent-red);
 }
 
-/* Header in compact row */
+/* Header in compact row - uniform fixed height */
 .compact-shift-header {
-    padding: 8px 12px;
+    height: 60px;
+    min-height: 60px;
+    box-sizing: border-box;
+    padding: 0 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    min-height: 48px;
+    gap: 10px;
     cursor: pointer;
+    user-select: none;
 }
 
-/* Right column: Date, Day, Tags */
+/* Right side: Date + Tags */
 .compact-header-right {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     min-width: 0;
-    flex-shrink: 1;
+    flex-shrink: 0;
 }
 
 .compact-date-block {
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 2px;
     flex-shrink: 0;
 }
 
 .compact-day-line {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-primary);
+    gap: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
     line-height: 1.2;
 }
 
-.compact-date-str {
-    font-size: 0.73rem;
-    color: var(--text-muted);
-    font-family: var(--font-numeric, inherit);
-    line-height: 1.1;
-    margin-right: 2px;
+.compact-day-line .shift-type-icon-inline {
+    width: 18px;
+    height: 18px;
 }
 
-/* Compact Tags inline */
+.compact-date-str {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+/* Tags group: icons only */
 .compact-tags-group {
     display: flex;
     align-items: center;
     gap: 4px;
-    flex-wrap: wrap;
 }
 
 .tag-compact {
-    font-size: 0.70rem;
-    padding: 2px 5px;
-    border-radius: 4px;
-    line-height: 1.2;
+    padding: 3px 6px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    box-sizing: border-box;
+    line-height: 1;
 }
 
-/* Left column: Siddur, Hours, Stamp, Actions */
+.tag-compact svg {
+    display: block;
+}
+
+.tag-compact.tag-overlap {
+    background: rgba(249, 115, 22, 0.16);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.tag-compact.tag-complete {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-green);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tag-compact.tag-alert {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-red);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Left side: Siddur + Hours */
 .compact-header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex-shrink: 0;
     text-align: left;
 }
@@ -3633,16 +3673,22 @@ select.form-control option {
 }
 
 .compact-siddur-title {
-    font-size: 0.86rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.2;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #60a5fa;
+    line-height: 1.25;
     direction: ltr;
+    font-family: 'Inter', 'Assistant', sans-serif;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
 }
 
 .compact-siddur-empty {
-    font-size: 0.80rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-muted);
     line-height: 1.2;
 }
@@ -3650,141 +3696,133 @@ select.form-control option {
 .compact-time-row {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
+    gap: 8px;
     direction: ltr;
-    font-family: var(--font-numeric, inherit);
 }
 
-.compact-duration-pill {
-    font-size: 0.69rem;
-    font-weight: 600;
-    color: var(--accent-cyan);
-    background: rgba(0, 210, 255, 0.1);
-    padding: 1px 4px;
-    border-radius: 3px;
-    border: 1px solid rgba(0, 210, 255, 0.2);
+.compact-time-range {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
-/* Status stamp (watermark style per Vlad) */
-.compact-stamp {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    opacity: 0.75;
-    flex-shrink: 0;
+.compact-total-duration {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-family: 'Inter', 'Assistant', sans-serif;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
-.compact-stamp.stamp-complete {
-    color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(16, 185, 129, 0.25);
-}
-
-.compact-stamp.stamp-alert {
-    color: var(--accent-red);
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-}
-
-/* Empty day row */
-.compact-empty-day-row {
+/* Details Drawer: flat, seamless expansion */
+.compact-details-inner {
+    padding: 10px 14px 14px 14px;
+    background: rgba(0, 0, 0, 0.15);
+    border-top: 1px dashed rgba(255, 255, 255, 0.08);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 12px;
-    border-radius: 8px;
-    background: transparent;
-    border: 1px dashed rgba(255, 255, 255, 0.04);
-    opacity: 0.42;
-    transition: opacity 0.15s, background-color 0.15s;
-    user-select: none;
-}
-
-.compact-empty-day-row:hover {
-    opacity: 0.7;
-    background: rgba(255, 255, 255, 0.02);
-}
-
-.compact-empty-day-row.is-today {
-    opacity: 0.95;
-    border-color: rgba(0, 210, 255, 0.35);
-    border-style: solid;
-    border-right-width: 3px;
-    background: rgba(0, 210, 255, 0.05);
-}
-
-.compact-empty-right {
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
 }
 
-.compact-empty-right .compact-day-name {
-    font-size: 0.81rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.compact-empty-right .compact-formatted-date {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-}
-
-.compact-today-pill {
-    font-size: 0.67rem;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 10px;
-    color: #0b1120;
-    background: var(--accent-cyan);
-    letter-spacing: 0.2px;
-}
-
-.compact-empty-left {
-    font-size: 0.73rem;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-.compact-detail-route {
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    margin-bottom: 8px;
-    font-size: 0.82rem;
+.compact-route-line {
+    font-size: 0.88rem;
+    color: #93c5fd;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 6px;
+    padding-bottom: 2px;
 }
 
-.compact-detail-route .route-label {
+.compact-route-icon {
     color: var(--accent-cyan);
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.compact-info-line {
+    font-size: 0.84rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+}
+
+.compact-duo-line {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: auto;
+    font-size: 0.85rem;
+}
+
+.compact-duo-line .duo-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.compact-duo-line .duo-label,
+.compact-info-line .duo-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.compact-duo-line .duo-val,
+.compact-info-line .duo-val {
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
+.compact-alert-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fb923c;
+    font-size: 0.82rem;
     font-weight: 600;
 }
 
-.compact-detail-route .route-value {
-    color: var(--text-primary);
+.compact-actions-line {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.compact-actions-line button {
+    flex: 1;
 }
 
 @media (max-width: 380px) {
     .compact-shift-header {
-        padding: 7px 8px;
+        padding: 0 10px;
         gap: 6px;
     }
     .compact-day-line {
-        font-size: 0.80rem;
+        font-size: 0.88rem;
     }
     .compact-siddur-title {
-        font-size: 0.80rem;
+        font-size: 0.88rem;
+        max-width: 100px;
     }
-    .compact-time-row {
-        font-size: 0.70rem;
+    .compact-time-range {
+        font-size: 0.82rem;
+    }
+    .compact-duo-line {
+        gap: 10px;
+        font-size: 0.80rem;
     }
 }
 

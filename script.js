@@ -3098,7 +3098,7 @@ function getTodayDateString() {
     return today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
 }
 
-function buildCompactShiftRowHTML(shift, overlappingIds, isToday = false) {
+function buildCompactShiftRowHTML(shift, overlappingIds) {
     const shiftIdStr = String(shift.id);
     const hasStart = Boolean(shift.startTime);
     const hasEnd = Boolean(shift.endTime);
@@ -3129,7 +3129,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds, isToday = false) {
     const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
     const dObj = parts.length === 3 ? new Date(parts[0], parts[1] - 1, parts[2]) : new Date();
     const dayName = 'יום ' + daysArr[dObj.getDay()];
-    const dateFmt = parts.length === 3 ? parts[2] + '/' + parts[1] : '--/--';
+    const dateFmt = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : '--/--/----';
 
     let naltStartRange = '';
     if (hasStart && naltStart > 0) {
@@ -3202,43 +3202,43 @@ function buildCompactShiftRowHTML(shift, overlappingIds, isToday = false) {
             </span>';
     }
 
-    const naltSvgIcon = '<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.76l.12.34V17z"/><circle fill="currentColor" cx="7.5" cy="14.5" r="1.5"/><circle fill="currentColor" cx="16.5" cy="14.5" r="1.5"/></svg>';
-    const premSvgIcon = '<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
-    const instructorSvgIcon = '<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>';
-    const notesSvgIcon = '<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>';
-    const clockCheckSvg = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
-    const clockAlertSvg = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
+    const naltSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.76l.12.34V17z"/><circle fill="currentColor" cx="7.5" cy="14.5" r="1.5"/><circle fill="currentColor" cx="16.5" cy="14.5" r="1.5"/></svg>';
+    const premSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+    const instructorSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>';
+    const notesSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>';
+    const overlapSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>';
+    const clockCheckSvg = '<svg class="svg-icon tag-clock-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
+    const clockAlertSvg = '<svg class="svg-icon tag-clock-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
 
     const durationText = calculateDuration(shift.startTime, shift.endTime);
 
     return '\
-        <div class="shift-card compact-shift-card ' + shiftTypeClass + ' ' + (isActive ? 'active-shift' : '') + ' ' + (isOverlap ? 'has-overlap' : '') + ' ' + (isIncomplete && !isActive ? 'incomplete' : '') + ' ' + (isSelected ? 'selected-for-delete' : '') + ' ' + (isToday ? 'is-today' : '') + '" \
+        <div class="shift-card compact-shift-card ' + shiftTypeClass + ' ' + (isActive ? 'active-shift' : '') + ' ' + (isOverlap ? 'has-overlap' : '') + ' ' + (isIncomplete && !isActive ? 'incomplete' : '') + ' ' + (isSelected ? 'selected-for-delete' : '') + '" \
              data-id="' + shiftIdStr + '" \
-             ' + (isToday ? 'id="compactRowToday"' : '') + ' \
              draggable="' + (isSortingMode ? 'true' : 'false') + '">\
             \
             <div class="shift-header compact-shift-header" onclick="handleCardClick(event, \'' + shiftIdStr + '\')">\
                 <div class="compact-header-right">\
                     <div class="compact-date-block">\
-                        <div class="compact-day-line">' + typeIconHtml + '<span>' + dayName + '</span>' + (isToday ? '<span class="compact-today-pill">היום</span>' : '') + '</div>\
+                        <div class="compact-day-line">' + typeIconHtml + '<span>' + dayName + '</span></div>\
                         <span class="compact-date-str">' + dateFmt + '</span>\
                     </div>\
                     <div class="compact-tags-group">\
-                        ' + (hasNalt ? '<span class="tag tag-nalt tag-compact">' + naltSvgIcon + ' נל״ת</span>' : '') + '\
-                        ' + (hasPrem ? '<span class="tag tag-prem tag-compact">' + premSvgIcon + ' פרמיה</span>' : '') + '\
-                        ' + (hasInstructor ? '<span class="tag tag-instructor tag-compact">' + instructorSvgIcon + ' הדרכה</span>' : '') + '\
+                        ' + (hasNalt ? '<span class="tag tag-nalt tag-compact" title="נל״ת">' + naltSvgIcon + '</span>' : '') + '\
+                        ' + (hasPrem ? '<span class="tag tag-prem tag-compact" title="פרמיה">' + premSvgIcon + '</span>' : '') + '\
+                        ' + (hasInstructor ? '<span class="tag tag-instructor tag-compact" title="הדרכה">' + instructorSvgIcon + '</span>' : '') + '\
                         ' + (hasNotes ? '<span class="tag tag-notes tag-compact" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
-                        ' + (isOverlap ? '<span class="tag tag-overlap tag-compact">כפילות</span>' : '') + '\
+                        ' + (isOverlap ? '<span class="tag tag-overlap tag-compact" title="חפיפת שעות">' + overlapSvgIcon + '</span>' : '') + '\
+                        ' + (isComplete ? '<span class="tag tag-complete tag-compact" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert tag-compact" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                     </div>\
                 </div>\
                 \
                 <div class="compact-header-left">\
-                    ' + (isComplete ? '<span class="compact-stamp stamp-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="compact-stamp stamp-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                     <div class="compact-hours-siddur-box">\
                         ' + (hasSiddur ? '<div class="compact-siddur-title">' + siddurPrimary + '</div>' : '<div class="compact-siddur-empty">משמרת</div>') + '\
                         <div class="compact-time-row">\
                             <span class="compact-time-range">' + (shift.startTime || '--:--') + ' - ' + (shift.endTime || '--:--') + '</span>\
-                            <span class="compact-duration-pill">' + durationText + '</span>\
+                            <span class="compact-total-duration">' + durationText + '</span>\
                         </div>\
                     </div>\
                     <div class="drag-handle-container">\
@@ -3260,100 +3260,55 @@ function buildCompactShiftRowHTML(shift, overlappingIds, isToday = false) {
             \
             <div class="shift-details" id="details_' + shiftIdStr + '">\
                 <div>\
-                    <div class="details-inner compact-details-inner">\
-                        ' + (isOverlap ? '\
-                        <div class="sub-breakdown" style="border-color: rgba(234, 179, 8, 0.3);">\
-                            <div class="breakdown-item" style="color: var(--accent-yellow); border-bottom: none; padding-bottom: 0;">\
-                                <span class="breakdown-label" style="color: var(--accent-yellow); display: flex; align-items: center; gap: 4px;">\
-                                    <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>\
-                                    שים לב:\
-                                </span>\
-                                <span class="breakdown-value" style="color: var(--accent-yellow); font-family: \'Assistant\', sans-serif;">קיימת חפיפת שעות עם משמרת נוספת</span>\
-                            </div>\
-                        </div>' : '') + '\
-                        \
+                    <div class="compact-details-inner">\
                         ' + (hasSiddur && siddurSecondary ? '\
-                        <div class="compact-detail-route">\
-                            <span class="route-label">מסלול:</span>\
-                            <span class="route-value">' + siddurSecondary + '</span>\
+                        <div class="compact-route-line">\
+                            <span class="compact-route-icon">↳</span>\
+                            <span class="compact-route-text">' + siddurSecondary + '</span>\
                         </div>' : '') + '\
                         \
-                        <div class="sub-breakdown">\
-                            <div class="breakdown-item-duo">\
-                                <div class="duo-col" style="flex: 1;">\
-                                    <span class="breakdown-label">כניסה:</span>\
-                                    <span class="breakdown-value">' + (shift.startTime || 'לא הוזן') + '</span>\
-                                    <span class="breakdown-label" style="margin-right: 8px;">יציאה:</span>\
-                                    <span class="breakdown-value">' + (shift.endTime || 'לא הוזן') + '</span>\
-                                    <span class="breakdown-label" style="margin-right: 8px;">משך:</span>\
-                                    <span class="breakdown-value">' + durationText + '</span>\
-                                </div>\
-                            </div>\
+                        ' + (isOverlap ? '\
+                        <div class="compact-alert-line">\
+                            ' + overlapSvgIcon + '\
+                            <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
+                        </div>' : '') + '\
+                        \
+                        <div class="compact-info-line compact-duo-line">\
+                            <span class="duo-item"><span class="duo-label">כניסה:</span> <span class="duo-val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
+                            <span class="duo-item"><span class="duo-label">יציאה:</span> <span class="duo-val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
+                            <span class="duo-item"><span class="duo-label">משך:</span> <span class="duo-val">' + durationText + '</span></span>\
                         </div>\
                         \
                         ' + (hasNalt ? '\
-                        <div class="sub-breakdown">\
-                            ' + (naltStart > 0 ? '\
-                            <div class="breakdown-item">\
-                                <span class="breakdown-label breakdown-label-nalt">' + naltSvgIcon + ' נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span>\
-                                <span class="breakdown-value">' + naltStartRange + '</span>\
-                            </div>' : '') + '\
-                            ' + (naltEnd > 0 ? '\
-                            <div class="breakdown-item">\
-                                <span class="breakdown-label breakdown-label-nalt">' + naltSvgIcon + ' נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span>\
-                                <span class="breakdown-value">' + naltEndRange + '</span>\
-                            </div>' : '') + '\
+                        <div class="compact-info-line">\
+                            ' + (naltStart > 0 ? '<span class="duo-item"><span class="duo-label">' + naltSvgIcon + ' נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="duo-val">' + naltStartRange + '</span></span>' : '') + '\
+                            ' + (naltEnd > 0 ? '<span class="duo-item" style="margin-right: 12px;"><span class="duo-label">' + naltSvgIcon + ' נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="duo-val">' + naltEndRange + '</span></span>' : '') + '\
                         </div>' : '') + '\
                         \
                         ' + (hasPrem ? '\
-                        <div class="sub-breakdown">\
-                            <div class="breakdown-item">\
-                                <span class="breakdown-label breakdown-label-prem">' + premSvgIcon + ' פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
-                                <span class="breakdown-value">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
-                            </div>\
+                        <div class="compact-info-line">\
+                            <span class="duo-label">' + premSvgIcon + ' פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
+                            <span class="duo-val">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
                         </div>' : '') + '\
                         \
                         ' + (window.isUserInstructor && hasInstructor ? '\
-                        <div class="sub-breakdown" style="border-color: rgba(56, 189, 248, 0.2);">\
-                            <div class="breakdown-item">\
-                                <span class="breakdown-label" style="color: var(--accent-instructor);">' + instructorSvgIcon + ' פרמיית הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
-                                <span class="breakdown-value">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
-                            </div>\
+                        <div class="compact-info-line" style="color: var(--accent-instructor);">\
+                            <span class="duo-label" style="color: var(--accent-instructor);">' + instructorSvgIcon + ' הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
+                            <span class="duo-val">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
                         </div>' : '') + '\
                         \
                         ' + (hasNotes ? '\
-                        <div class="notes-display-box">\
-                            <span class="notes-label">' + notesSvgIcon + ' הערות:</span>\
-                            <span class="notes-text">' + shift.notes + '</span>\
+                        <div class="compact-info-line" style="align-items: flex-start;">\
+                            <span class="duo-label">' + notesSvgIcon + ' הערות:</span>\
+                            <span class="duo-val" style="font-weight: normal; color: var(--text-secondary);">' + shift.notes + '</span>\
                         </div>' : '') + '\
                         \
-                        <div class="card-actions-bar">\
+                        <div class="compact-actions-line">\
                             <button class="btn-secondary btn-card-edit" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">עריכה / השלמת חוסר</button>\
                             <button class="btn-secondary btn-danger-outline" onclick="event.stopPropagation(); deleteShift(\'' + shiftIdStr + '\')">מחיקה</button>\
                         </div>\
                     </div>\
                 </div>\
-            </div>\
-        </div>\
-    ';
-}
-
-function buildCompactEmptyDayHTML(dateStr, isToday = false) {
-    const parts = (dateStr || '').split('-');
-    const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-    const dObj = parts.length === 3 ? new Date(parts[0], parts[1] - 1, parts[2]) : new Date();
-    const dayName = 'יום ' + daysArr[dObj.getDay()];
-    const dateFmt = parts.length === 3 ? parts[2] + '/' + parts[1] : '--/--';
-
-    return '\
-        <div class="compact-empty-day-row ' + (isToday ? 'is-today' : '') + '" data-date="' + dateStr + '" ' + (isToday ? 'id="compactRowToday"' : '') + '>\
-            <div class="compact-empty-right">\
-                <span class="compact-day-name">' + dayName + '</span>\
-                <span class="compact-formatted-date">' + dateFmt + '</span>\
-                ' + (isToday ? '<span class="compact-today-pill">היום</span>' : '') + '\
-            </div>\
-            <div class="compact-empty-left">\
-                <span class="compact-empty-text">אין משמרת</span>\
             </div>\
         </div>\
     ';
@@ -3562,7 +3517,7 @@ function renderShifts() {
     if (countEl) countEl.textContent = '(' + mShifts.length + ')';
     updateMonthNavButtonsState();
 
-    if (mShifts.length === 0 && (!isCompactShiftView || currentShiftSearchQuery)) {
+    if (mShifts.length === 0) {
         if (currentShiftSearchQuery) {
             container.innerHTML = '\
                 <div class="empty-state">\
@@ -3582,55 +3537,11 @@ function renderShifts() {
     const overlappingIds = calculateOverlaps();
 
     if (isCompactShiftView) {
-        let contentHtml = '';
-        if (currentShiftSearchQuery) {
-            contentHtml = mShifts.map(shift => buildCompactShiftRowHTML(shift, overlappingIds, false)).join('');
-        } else {
-            const todayStr = getTodayDateString();
-            const [yrStr, moStr] = activeMonthKey.split('-');
-            const yr = parseInt(yrStr, 10);
-            const mo = parseInt(moStr, 10);
-            const totalDays = new Date(yr, mo, 0).getDate();
-            const renderedIds = new Set();
-
-            for (let d = totalDays; d >= 1; d--) {
-                const dayNumStr = String(d).padStart(2, '0');
-                const dayDateStr = yrStr + '-' + moStr + '-' + dayNumStr;
-                const dayShifts = mShifts.filter(s => s.date === dayDateStr);
-                const isToday = (dayDateStr === todayStr);
-
-                if (dayShifts.length > 0) {
-                    dayShifts.forEach(shift => {
-                        contentHtml += buildCompactShiftRowHTML(shift, overlappingIds, isToday);
-                        renderedIds.add(String(shift.id));
-                    });
-                } else {
-                    contentHtml += buildCompactEmptyDayHTML(dayDateStr, isToday);
-                }
-            }
-
-            mShifts.forEach(shift => {
-                if (!renderedIds.has(String(shift.id))) {
-                    contentHtml += buildCompactShiftRowHTML(shift, overlappingIds, false);
-                }
-            });
-        }
-
         container.innerHTML = '\
             <div class="shifts-list-inner shifts-compact-mode">\
-                ' + contentHtml + '\
+                ' + mShifts.map(shift => buildCompactShiftRowHTML(shift, overlappingIds)).join('') + '\
             </div>\
         ';
-
-        if (shouldScrollToToday) {
-            shouldScrollToToday = false;
-            setTimeout(() => {
-                const todayEl = document.getElementById('compactRowToday') || container.querySelector('.compact-shift-card.is-today');
-                if (todayEl) {
-                    todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 120);
-        }
     } else {
         container.innerHTML = '\
             <div class="shifts-list-inner">\
