@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mishmarot-v79';
+const CACHE_NAME = 'mishmarot-v80';
 const urlsToCache = [
   '/',
   '/index.html',

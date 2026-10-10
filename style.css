@@ -80,7 +80,7 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-top: calc(56px + env(safe-area-inset-top, 0px) + 6px);
+    padding-top: calc(48px + env(safe-area-inset-top, 0px) + 6px);
     padding-bottom: 88px;
     position: relative;
 }
@@ -98,7 +98,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px 12px;
+    padding: calc(4px + env(safe-area-inset-top, 0px)) 16px 4px 12px;
     background: rgba(11, 19, 41, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -115,7 +115,7 @@ header {
     margin: 0 auto;
     width: 100%;
     max-width: 480px;
-    height: calc(56px + env(safe-area-inset-top, 0px));
+    height: calc(48px + env(safe-area-inset-top, 0px));
     box-sizing: border-box;
     z-index: 2500;
 }
@@ -1083,7 +1083,7 @@ body.view-history header {
 }
 
 body.view-history .app-container {
-    padding-top: calc(55px + 40px + env(safe-area-inset-top, 0px) + 8px);
+    padding-top: calc(47px + 40px + env(safe-area-inset-top, 0px) + 8px);
 }
 
 .month-nav-bar {
@@ -1104,7 +1104,7 @@ body.view-history .app-container {
 
 body.view-history .month-nav-bar {
     position: fixed;
-    top: calc(55px + env(safe-area-inset-top, 0px));
+    top: calc(47px + env(safe-area-inset-top, 0px));
     left: 0;
     right: 0;
     margin: 0 auto;
