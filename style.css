@@ -1078,22 +1078,11 @@ body.month-summary-open #shiftsContainer {
 
 /* Month Navigation Bar (Single Month View) - Clean Integrated Header */
 body.view-history header {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-    height: calc(56px + 48px + env(safe-area-inset-top, 0px)) !important;
-    align-items: flex-start !important;
-    padding: env(safe-area-inset-top, 0px) 16px 0 12px !important;
-}
-
-body.view-history .header-right,
-body.view-history .header-left-group {
-    height: 56px;
-    display: flex;
-    align-items: center;
+    border-bottom: none !important;
 }
 
 body.view-history .app-container {
-    padding-top: calc(56px + 48px + env(safe-area-inset-top, 0px) + 12px);
+    padding-top: calc(56px + 48px + env(safe-area-inset-top, 0px) + 10px);
 }
 
 .month-nav-bar {
@@ -1122,12 +1111,13 @@ body.view-history .month-nav-bar {
     max-width: 480px;
     height: 48px;
     padding: 0 12px;
-    background: transparent;
+    background: rgba(11, 19, 41, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: none;
-    box-shadow: none;
-    z-index: 2600;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    z-index: 2490;
 }
 
 body.month-summary-open .month-nav-bar {
