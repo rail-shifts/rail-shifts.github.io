@@ -3106,6 +3106,17 @@ function formatCompactDuration(start, end) {
     return '(' + h + ':' + String(m).padStart(2, '0') + ')';
 }
 
+function formatDurationHoursUnit(start, end) {
+    if (!start || !end) return '--';
+    const mins = calculateDurationMinutes(start, end);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    if (h === 0) {
+        return '0:' + String(m).padStart(2, '0') + ' דק׳';
+    }
+    return h + ':' + String(m).padStart(2, '0') + ' שעות';
+}
+
 function buildCompactShiftRowHTML(shift, overlappingIds) {
     const shiftIdStr = String(shift.id);
     const hasStart = Boolean(shift.startTime);
@@ -3230,7 +3241,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
     const clockCheckSvg = '<svg class="svg-icon tag-clock-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
     const clockAlertSvg = '<svg class="svg-icon tag-clock-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
 
-    const durationText = calculateDuration(shift.startTime, shift.endTime);
+    const durationText = formatDurationHoursUnit(shift.startTime, shift.endTime);
     const compactDurationText = formatCompactDuration(shift.startTime, shift.endTime);
 
     return '\

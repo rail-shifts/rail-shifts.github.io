@@ -475,6 +475,17 @@ function formatCompactDuration(start, end) {
     return '(' + h + ':' + String(m).padStart(2, '0') + ')';
 }
 
+function formatDurationHoursUnit(start, end) {
+    if (!start || !end) return '--';
+    const mins = calculateDurationMinutes(start, end);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    if (h === 0) {
+        return '0:' + String(m).padStart(2, '0') + ' דק׳';
+    }
+    return h + ':' + String(m).padStart(2, '0') + ' שעות';
+}
+
 function checkIsShiftActive(shift, currentTimeMs) {
     if (!shift || !shift.startTime || shift.endTime || !shift.date) return false;
     const MAX_SHIFT_MS = 12.5 * 60 * 60 * 1000;
@@ -770,6 +781,16 @@ function runAllTests() {
                 { desc: 'מעבר חצות 22:00 עד 06:15 מחזיר (8:15)', actual: formatCompactDuration('22:00', '06:15'), expected: '(8:15)' },
                 { desc: 'ללא שעת סיום מחזיר (0:00)', actual: formatCompactDuration('07:00', ''), expected: '(0:00)' },
                 { desc: 'ללא שעת התחלה מחזיר (0:00)', actual: formatCompactDuration('', '15:00'), expected: '(0:00)' }
+            ]
+        },
+        {
+            title: 'פורמט משך עם יחידות בשורת פרטים (formatDurationHoursUnit)',
+            tests: [
+                { desc: 'שעות ודקות 03:44 עד 10:50 מחזיר "7:06 שעות"', actual: formatDurationHoursUnit('03:44', '10:50'), expected: '7:06 שעות' },
+                { desc: 'פחות משעה 08:00 עד 08:40 מחזיר "0:40 דק׳"', actual: formatDurationHoursUnit('08:00', '08:40'), expected: '0:40 דק׳' },
+                { desc: 'שעות עגולות 06:00 עד 14:00 מחזיר "8:00 שעות"', actual: formatDurationHoursUnit('06:00', '14:00'), expected: '8:00 שעות' },
+                { desc: 'מעבר חצות 23:00 עד 07:30 מחזיר "8:30 שעות"', actual: formatDurationHoursUnit('23:00', '07:30'), expected: '8:30 שעות' },
+                { desc: 'ללא זמנים מחזיר "--"', actual: formatDurationHoursUnit('', ''), expected: '--' }
             ]
         }
     ];
