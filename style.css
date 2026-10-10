@@ -1082,7 +1082,14 @@ body.view-history header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     height: calc(56px + 48px + env(safe-area-inset-top, 0px)) !important;
     align-items: flex-start !important;
-    padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+    padding: env(safe-area-inset-top, 0px) 16px 0 12px !important;
+}
+
+body.view-history .header-right,
+body.view-history .header-left-group {
+    height: 56px;
+    display: flex;
+    align-items: center;
 }
 
 body.view-history .app-container {
