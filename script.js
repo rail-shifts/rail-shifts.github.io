@@ -916,6 +916,7 @@ window.navigateTo = function(viewName, closeMenu = true) {
     document.getElementById('viewHistory').style.display = (viewName === 'history') ? 'flex' : 'none';
     document.getElementById('viewProfile').style.display = (viewName === 'profile') ? 'flex' : 'none';
     document.getElementById('viewAdmin').style.display = (viewName === 'admin') ? 'flex' : 'none';
+    document.body.classList.toggle('view-history', viewName === 'history');
 
     if (viewName !== 'history') {
         if (typeof isSelectionMode !== 'undefined' && isSelectionMode) toggleSelectionMode();
