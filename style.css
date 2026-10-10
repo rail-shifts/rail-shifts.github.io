@@ -3571,18 +3571,19 @@ select.form-control option {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
     user-select: none;
+    position: relative;
 }
 
-/* Right side: Date + Tags */
+/* Right side: Date + Bare Icon Tags */
 .compact-header-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
-    flex-shrink: 0;
+    flex: 1;
 }
 
 .compact-date-block {
@@ -3596,71 +3597,110 @@ select.form-control option {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.95rem;
+    font-size: 0.90rem;
     font-weight: 700;
     color: #fff;
     line-height: 1.2;
 }
 
 .compact-day-line .shift-type-icon-inline {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
 }
 
 .compact-date-str {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     color: var(--text-muted);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
 }
 
-/* Tags group: icons only */
+/* Tags group: bare icons only - NO backgrounds, NO borders */
 .compact-tags-group {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
+    flex-shrink: 0;
 }
 
 .tag-compact {
-    padding: 3px 6px;
-    border-radius: 6px;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    min-width: unset !important;
+    height: auto !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    box-sizing: border-box;
     line-height: 1;
 }
 
 .tag-compact svg {
     display: block;
+    width: 14px;
+    height: 14px;
+}
+
+.tag-compact.tag-nalt {
+    color: var(--accent-yellow);
+}
+
+.tag-compact.tag-prem {
+    color: #c084fc;
+}
+
+.tag-compact.tag-instructor {
+    color: #38bdf8;
+}
+
+.tag-compact.tag-notes {
+    color: #94a3b8;
 }
 
 .tag-compact.tag-overlap {
-    background: rgba(249, 115, 22, 0.16);
     color: #fb923c;
-    border: 1px solid rgba(249, 115, 22, 0.3);
 }
 
-.tag-compact.tag-complete {
-    background: rgba(16, 185, 129, 0.15);
+/* Status Column - Fixed vertical alignment for all rows! */
+.compact-status-col {
+    width: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.compact-status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.compact-status-icon svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+}
+
+.compact-status-icon.status-complete {
     color: var(--accent-green);
-    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-.tag-compact.tag-alert {
-    background: rgba(239, 68, 68, 0.15);
+.compact-status-icon.status-alert {
     color: var(--accent-red);
-    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Left side: Siddur + Hours */
+/* Left side: Siddur + Hours (Fixed width for razor-sharp column alignment) */
 .compact-header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    width: 135px;
+    min-width: 135px;
     flex-shrink: 0;
     text-align: left;
 }
@@ -3670,11 +3710,13 @@ select.form-control option {
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
+    width: 100%;
+    min-width: 0;
 }
 
 .compact-siddur-title {
-    font-size: 0.95rem;
-    font-weight: 800;
+    font-size: 0.90rem;
+    font-weight: 700;
     color: #60a5fa;
     line-height: 1.25;
     direction: ltr;
@@ -3683,11 +3725,11 @@ select.form-control option {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 140px;
+    max-width: 100%;
 }
 
 .compact-siddur-empty {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--text-muted);
     line-height: 1.2;
@@ -3696,22 +3738,22 @@ select.form-control option {
 .compact-time-row {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     direction: ltr;
 }
 
 .compact-time-range {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-variant-numeric: tabular-nums;
-    font-size: 0.88rem;
-    font-weight: 700;
+    font-size: 0.82rem;
+    font-weight: 600;
     color: #fff;
     line-height: 1.2;
     white-space: nowrap;
 }
 
 .compact-total-duration {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-muted);
     font-family: 'Inter', 'Assistant', sans-serif;
@@ -3719,48 +3761,100 @@ select.form-control option {
     white-space: nowrap;
 }
 
-/* Details Drawer: flat, seamless expansion */
+/* Details: Seamless extension of the row (no sub-window) */
 .compact-details-inner {
-    padding: 10px 14px 14px 14px;
-    background: rgba(0, 0, 0, 0.15);
-    border-top: 1px dashed rgba(255, 255, 255, 0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    padding: 0 14px 12px 14px;
+    background: transparent;
+    border: none;
 }
 
-.compact-route-line {
-    font-size: 0.88rem;
-    color: #93c5fd;
-    font-weight: 600;
+.compact-expanded-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.compact-expanded-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    text-align: right;
+    min-width: 0;
+}
+
+.compact-detail-row {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding-bottom: 2px;
+    font-size: 0.82rem;
+    line-height: 1.3;
+    text-align: right;
+    direction: rtl;
 }
 
-.compact-route-icon {
+.compact-detail-row .label,
+.compact-duo-line .duo-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.compact-detail-row .val,
+.compact-duo-line .duo-val {
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
+.compact-detail-row.route-color {
+    color: #93c5fd;
+    font-weight: 600;
+}
+
+.compact-detail-row.route-color .route-icon {
     color: var(--accent-cyan);
-    font-size: 0.95rem;
+    font-size: 0.90rem;
     font-weight: bold;
 }
 
-.compact-info-line {
-    font-size: 0.84rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-secondary);
+.compact-detail-row.route-color .route-val {
+    color: #93c5fd;
+}
+
+.compact-detail-row.overlap-color {
+    color: #fb923c;
+    font-weight: 600;
+}
+
+.compact-detail-row.nalt-color {
+    color: #facc15;
+}
+
+.compact-detail-row.prem-color {
+    color: #c084fc;
+}
+
+.compact-detail-row.instructor-color {
+    color: #38bdf8;
+}
+
+.compact-detail-row.notes-color {
+    color: #94a3b8;
+    align-items: flex-start;
 }
 
 .compact-duo-line {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: nowrap;
     white-space: nowrap;
     overflow-x: auto;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    direction: rtl;
 }
 
 .compact-duo-line .duo-item {
@@ -3770,39 +3864,45 @@ select.form-control option {
     white-space: nowrap;
 }
 
-.compact-duo-line .duo-label,
-.compact-info-line .duo-label {
-    color: var(--text-muted);
-    font-weight: 500;
+/* Side Action Icon Buttons */
+.compact-expanded-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: 2px;
 }
 
-.compact-duo-line .duo-val,
-.compact-info-line .duo-val {
-    color: #fff;
-    font-weight: 600;
-    font-family: 'Inter', -apple-system, sans-serif;
-    font-variant-numeric: tabular-nums;
-}
-
-.compact-alert-line {
+.compact-action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: #fb923c;
-    font-size: 0.82rem;
-    font-weight: 600;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
 }
 
-.compact-actions-line {
-    display: flex;
-    gap: 10px;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+.compact-action-btn:active {
+    transform: scale(0.92);
 }
 
-.compact-actions-line button {
-    flex: 1;
+.compact-action-btn.btn-edit:hover, .compact-action-btn.btn-edit:active {
+    color: var(--accent-cyan);
+    border-color: rgba(0, 210, 255, 0.3);
+    background: rgba(0, 210, 255, 0.1);
+}
+
+.compact-action-btn.btn-delete:hover, .compact-action-btn.btn-delete:active {
+    color: var(--accent-red);
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.1);
 }
 
 @media (max-width: 380px) {
@@ -3810,19 +3910,22 @@ select.form-control option {
         padding: 0 10px;
         gap: 6px;
     }
+    .compact-header-left {
+        width: 125px;
+        min-width: 125px;
+    }
     .compact-day-line {
-        font-size: 0.88rem;
+        font-size: 0.85rem;
     }
     .compact-siddur-title {
-        font-size: 0.88rem;
-        max-width: 100px;
+        font-size: 0.85rem;
     }
     .compact-time-range {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
     }
     .compact-duo-line {
-        gap: 10px;
-        font-size: 0.80rem;
+        gap: 8px;
+        font-size: 0.78rem;
     }
 }
 

@@ -3098,6 +3098,14 @@ function getTodayDateString() {
     return today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
 }
 
+function formatCompactDuration(start, end) {
+    if (!start || !end) return '(0:00)';
+    const mins = calculateDurationMinutes(start, end);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return '(' + h + ':' + String(m).padStart(2, '0') + ')';
+}
+
 function buildCompactShiftRowHTML(shift, overlappingIds) {
     const shiftIdStr = String(shift.id);
     const hasStart = Boolean(shift.startTime);
@@ -3207,10 +3215,11 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
     const instructorSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>';
     const notesSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>';
     const overlapSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>';
-    const clockCheckSvg = '<svg class="svg-icon tag-clock-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
-    const clockAlertSvg = '<svg class="svg-icon tag-clock-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
+    const clockCheckSvg = '<svg class="svg-icon tag-clock-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
+    const clockAlertSvg = '<svg class="svg-icon tag-clock-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
 
     const durationText = calculateDuration(shift.startTime, shift.endTime);
+    const compactDurationText = formatCompactDuration(shift.startTime, shift.endTime);
 
     return '\
         <div class="shift-card compact-shift-card ' + shiftTypeClass + ' ' + (isActive ? 'active-shift' : '') + ' ' + (isOverlap ? 'has-overlap' : '') + ' ' + (isIncomplete && !isActive ? 'incomplete' : '') + ' ' + (isSelected ? 'selected-for-delete' : '') + '" \
@@ -3229,16 +3238,19 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                         ' + (hasInstructor ? '<span class="tag tag-instructor tag-compact" title="הדרכה">' + instructorSvgIcon + '</span>' : '') + '\
                         ' + (hasNotes ? '<span class="tag tag-notes tag-compact" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
                         ' + (isOverlap ? '<span class="tag tag-overlap tag-compact" title="חפיפת שעות">' + overlapSvgIcon + '</span>' : '') + '\
-                        ' + (isComplete ? '<span class="tag tag-complete tag-compact" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert tag-compact" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                     </div>\
+                </div>\
+                \
+                <div class="compact-status-col">\
+                    ' + (isComplete ? '<span class="compact-status-icon status-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="compact-status-icon status-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                 </div>\
                 \
                 <div class="compact-header-left">\
                     <div class="compact-hours-siddur-box">\
-                        ' + (hasSiddur ? '<div class="compact-siddur-title">' + siddurPrimary + '</div>' : '<div class="compact-siddur-empty">משמרת</div>') + '\
+                        <div class="compact-siddur-title">' + (hasSiddur ? siddurPrimary : 'משמרת') + '</div>\
                         <div class="compact-time-row">\
                             <span class="compact-time-range">' + (shift.startTime || '--:--') + ' - ' + (shift.endTime || '--:--') + '</span>\
-                            <span class="compact-total-duration">' + durationText + '</span>\
+                            <span class="compact-total-duration">' + compactDurationText + '</span>\
                         </div>\
                     </div>\
                     <div class="drag-handle-container">\
@@ -3261,51 +3273,63 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
             <div class="shift-details" id="details_' + shiftIdStr + '">\
                 <div>\
                     <div class="compact-details-inner">\
-                        ' + (hasSiddur && siddurSecondary ? '\
-                        <div class="compact-route-line">\
-                            <span class="compact-route-icon">↳</span>\
-                            <span class="compact-route-text">' + siddurSecondary + '</span>\
-                        </div>' : '') + '\
-                        \
-                        ' + (isOverlap ? '\
-                        <div class="compact-alert-line">\
-                            ' + overlapSvgIcon + '\
-                            <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
-                        </div>' : '') + '\
-                        \
-                        <div class="compact-info-line compact-duo-line">\
-                            <span class="duo-item"><span class="duo-label">כניסה:</span> <span class="duo-val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
-                            <span class="duo-item"><span class="duo-label">יציאה:</span> <span class="duo-val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
-                            <span class="duo-item"><span class="duo-label">משך:</span> <span class="duo-val">' + durationText + '</span></span>\
-                        </div>\
-                        \
-                        ' + (hasNalt ? '\
-                        <div class="compact-info-line">\
-                            ' + (naltStart > 0 ? '<span class="duo-item"><span class="duo-label">' + naltSvgIcon + ' נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="duo-val">' + naltStartRange + '</span></span>' : '') + '\
-                            ' + (naltEnd > 0 ? '<span class="duo-item" style="margin-right: 12px;"><span class="duo-label">' + naltSvgIcon + ' נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="duo-val">' + naltEndRange + '</span></span>' : '') + '\
-                        </div>' : '') + '\
-                        \
-                        ' + (hasPrem ? '\
-                        <div class="compact-info-line">\
-                            <span class="duo-label">' + premSvgIcon + ' פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
-                            <span class="duo-val">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
-                        </div>' : '') + '\
-                        \
-                        ' + (window.isUserInstructor && hasInstructor ? '\
-                        <div class="compact-info-line" style="color: var(--accent-instructor);">\
-                            <span class="duo-label" style="color: var(--accent-instructor);">' + instructorSvgIcon + ' הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
-                            <span class="duo-val">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
-                        </div>' : '') + '\
-                        \
-                        ' + (hasNotes ? '\
-                        <div class="compact-info-line" style="align-items: flex-start;">\
-                            <span class="duo-label">' + notesSvgIcon + ' הערות:</span>\
-                            <span class="duo-val" style="font-weight: normal; color: var(--text-secondary);">' + shift.notes + '</span>\
-                        </div>' : '') + '\
-                        \
-                        <div class="compact-actions-line">\
-                            <button class="btn-secondary btn-card-edit" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">עריכה / השלמת חוסר</button>\
-                            <button class="btn-secondary btn-danger-outline" onclick="event.stopPropagation(); deleteShift(\'' + shiftIdStr + '\')">מחיקה</button>\
+                        <div class="compact-expanded-body">\
+                            <div class="compact-expanded-info">\
+                                ' + (hasSiddur && siddurSecondary ? '\
+                                <div class="compact-detail-row route-color">\
+                                    <span class="route-icon">↳</span>\
+                                    <span class="route-val">' + siddurSecondary + '</span>\
+                                </div>' : '') + '\
+                                \
+                                ' + (isOverlap ? '\
+                                <div class="compact-detail-row overlap-color">\
+                                    ' + overlapSvgIcon + '\
+                                    <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
+                                </div>' : '') + '\
+                                \
+                                <div class="compact-detail-row duo-color">\
+                                    <span class="duo-item"><span class="label">כניסה:</span> <span class="val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
+                                    <span class="duo-item"><span class="label">יציאה:</span> <span class="val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
+                                    <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
+                                </div>\
+                                \
+                                ' + (hasNalt ? '\
+                                <div class="compact-detail-row nalt-color">\
+                                    ' + naltSvgIcon + '\
+                                    ' + (naltStart > 0 ? '<span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>' : '') + '\
+                                    ' + (naltEnd > 0 ? '<span class="duo-item" style="margin-right: 8px;"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>' : '') + '\
+                                </div>' : '') + '\
+                                \
+                                ' + (hasPrem ? '\
+                                <div class="compact-detail-row prem-color">\
+                                    ' + premSvgIcon + '\
+                                    <span class="label">פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
+                                    <span class="val">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
+                                </div>' : '') + '\
+                                \
+                                ' + (window.isUserInstructor && hasInstructor ? '\
+                                <div class="compact-detail-row instructor-color">\
+                                    ' + instructorSvgIcon + '\
+                                    <span class="label">הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
+                                    <span class="val">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
+                                </div>' : '') + '\
+                                \
+                                ' + (hasNotes ? '\
+                                <div class="compact-detail-row notes-color">\
+                                    ' + notesSvgIcon + '\
+                                    <span class="label">הערות:</span>\
+                                    <span class="val">' + shift.notes + '</span>\
+                                </div>' : '') + '\
+                            </div>\
+                            \
+                            <div class="compact-expanded-actions">\
+                                <button class="compact-action-btn btn-edit" title="עריכה / השלמת חוסר" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">\
+                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>\
+                                </button>\
+                                <button class="compact-action-btn btn-delete" title="מחיקה" onclick="event.stopPropagation(); deleteShift(\'' + shiftIdStr + '\')">\
+                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>\
+                                </button>\
+                            </div>\
                         </div>\
                     </div>\
                 </div>\
