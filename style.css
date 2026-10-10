@@ -384,6 +384,19 @@ header {
     transform: translateY(0);
 }
 
+/* User Menu Open: Header and Month Nav Bar remain unblurred and sharp, but clicks pass through to backdrop to close menu */
+body.user-menu-open header,
+body.user-menu-open header *,
+body.user-menu-open .month-nav-bar,
+body.user-menu-open .month-nav-bar * {
+    pointer-events: none !important;
+}
+
+body.user-menu-open #headerAuthContainer,
+body.user-menu-open #headerAuthContainer * {
+    pointer-events: auto !important;
+}
+
 .dropdown-item {
     width: 100%;
     height: 36px;

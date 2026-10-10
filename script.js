@@ -1021,6 +1021,7 @@ window.closeUserMenu = function(e) {
     if (dropdown) dropdown.classList.remove('open');
     if (backdrop) backdrop.classList.remove('open');
     if (authContainer) authContainer.classList.remove('menu-open');
+    document.body.classList.remove('user-menu-open');
     window.updateBodyScrollLock();
 };
 
@@ -1076,6 +1077,7 @@ window.handleAuthClick = async function(event) {
     }
     dropdown.classList.add('open');
     if (backdrop) backdrop.classList.add('open');
+    document.body.classList.add('user-menu-open');
     window.updateBodyScrollLock();
 };
 
