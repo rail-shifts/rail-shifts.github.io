@@ -3460,3 +3460,332 @@ select.form-control option {
     margin-top: 6px;
 }
 
+/* ==========================================
+   VIEW MODE TOGGLE (Clock Screen)
+   ========================================== */
+.view-mode-toggle-wrap {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btn-toggle-compact-preview {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 7px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-toggle-compact-preview:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+}
+
+.btn-toggle-compact-preview .preview-mode-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+    box-shadow: none;
+    flex-shrink: 0;
+}
+
+.btn-toggle-compact-preview.is-compact-active {
+    background: rgba(0, 210, 255, 0.08);
+    border-color: rgba(0, 210, 255, 0.35);
+    color: var(--accent-cyan);
+}
+
+.btn-toggle-compact-preview.is-compact-active .preview-mode-indicator {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
+}
+
+/* ==========================================
+   COMPACT SHIFTS VIEW MODE
+   ========================================== */
+.shifts-compact-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: rgba(15, 20, 32, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 4px;
+}
+
+.compact-shift-card {
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 3px solid rgba(0, 210, 255, 0.35);
+    background: rgba(26, 32, 48, 0.7);
+    box-shadow: none;
+    transition: background-color 0.15s, border-color 0.15s;
+    margin-bottom: 0;
+}
+
+.compact-shift-card:active {
+    background: rgba(0, 210, 255, 0.08);
+}
+
+.compact-shift-card.active-shift {
+    border-color: rgba(16, 185, 129, 0.4);
+    border-right: 3px solid var(--accent-green);
+    background: rgba(16, 185, 129, 0.07);
+}
+
+.compact-shift-card.has-overlap {
+    border-color: rgba(249, 115, 22, 0.4);
+    border-right: 3px solid #fb923c;
+}
+
+.compact-shift-card.is-today {
+    box-shadow: 0 0 0 1px rgba(0, 210, 255, 0.3);
+}
+
+/* Header in compact row */
+.compact-shift-header {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 48px;
+    cursor: pointer;
+}
+
+/* Right column: Date, Day, Tags */
+.compact-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+.compact-date-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+}
+
+.compact-day-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.compact-date-str {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    font-family: var(--font-numeric, inherit);
+    line-height: 1.1;
+    margin-right: 2px;
+}
+
+/* Compact Tags inline */
+.compact-tags-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.tag-compact {
+    font-size: 0.70rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    line-height: 1.2;
+}
+
+/* Left column: Siddur, Hours, Stamp, Actions */
+.compact-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.compact-hours-siddur-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.compact-siddur-title {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    direction: ltr;
+}
+
+.compact-siddur-empty {
+    font-size: 0.80rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+.compact-time-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    direction: ltr;
+    font-family: var(--font-numeric, inherit);
+}
+
+.compact-duration-pill {
+    font-size: 0.69rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    background: rgba(0, 210, 255, 0.1);
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 210, 255, 0.2);
+}
+
+/* Status stamp (watermark style per Vlad) */
+.compact-stamp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    opacity: 0.75;
+    flex-shrink: 0;
+}
+
+.compact-stamp.stamp-complete {
+    color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.compact-stamp.stamp-alert {
+    color: var(--accent-red);
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* Empty day row */
+.compact-empty-day-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.04);
+    opacity: 0.42;
+    transition: opacity 0.15s, background-color 0.15s;
+    user-select: none;
+}
+
+.compact-empty-day-row:hover {
+    opacity: 0.7;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.compact-empty-day-row.is-today {
+    opacity: 0.95;
+    border-color: rgba(0, 210, 255, 0.35);
+    border-style: solid;
+    border-right-width: 3px;
+    background: rgba(0, 210, 255, 0.05);
+}
+
+.compact-empty-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.compact-empty-right .compact-day-name {
+    font-size: 0.81rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.compact-empty-right .compact-formatted-date {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.compact-today-pill {
+    font-size: 0.67rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    color: #0b1120;
+    background: var(--accent-cyan);
+    letter-spacing: 0.2px;
+}
+
+.compact-empty-left {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.compact-detail-route {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.compact-detail-route .route-label {
+    color: var(--accent-cyan);
+    font-weight: 600;
+}
+
+.compact-detail-route .route-value {
+    color: var(--text-primary);
+}
+
+@media (max-width: 380px) {
+    .compact-shift-header {
+        padding: 7px 8px;
+        gap: 6px;
+    }
+    .compact-day-line {
+        font-size: 0.80rem;
+    }
+    .compact-siddur-title {
+        font-size: 0.80rem;
+    }
+    .compact-time-row {
+        font-size: 0.70rem;
+    }
+}
+
+

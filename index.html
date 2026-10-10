@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=13.7">
+    <link rel="stylesheet" href="style.css?v=13.8">
 </head>
 <body>
 
@@ -142,6 +142,13 @@
                         </div>
                     </button>
                 </div>
+            </div>
+
+            <div class="view-mode-toggle-wrap">
+                <button id="btnToggleCompactPreview" class="btn-toggle-compact-preview" onclick="toggleCompactShiftView()" title="החלף מצב תצוגת יומן">
+                    <span class="preview-mode-indicator"></span>
+                    <span id="compactPreviewLabel">תצוגת יומן: כרטיסיות רגילות</span>
+                </button>
             </div>
         </div>
     </div>
@@ -673,6 +680,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=10.0"></script>
+<script type="module" src="script.js?v=10.1"></script>
 </body>
 </html>
