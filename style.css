@@ -1078,20 +1078,24 @@ body.month-summary-open #shiftsContainer {
 
 /* Month Navigation Bar (Single Month View) - Clean Integrated Header */
 .month-nav-bar {
-    position: relative;
+    position: sticky;
+    top: calc(56px + env(safe-area-inset-top, 0px));
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: transparent;
+    background: rgba(11, 19, 41, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 0;
     padding: 6px 4px 6px 4px;
+    margin-top: -6px;
     margin-bottom: 0;
     min-height: 48px;
-    box-shadow: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     user-select: none;
-    z-index: 100;
+    z-index: 2400;
 }
 
 body.month-summary-open .month-nav-bar {
