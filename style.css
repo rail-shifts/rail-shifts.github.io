@@ -892,7 +892,8 @@ header {
     transition: filter 0.22s ease, opacity 0.22s ease;
 }
 
-body.month-summary-open #shiftsContainer {
+body.month-summary-open #shiftsContainer,
+body.month-picker-open #shiftsContainer {
     filter: blur(4px);
     opacity: 0.6;
     pointer-events: none;
@@ -1121,12 +1122,14 @@ body.view-history .month-nav-bar {
     z-index: 2490;
 }
 
-body.month-summary-open .month-nav-bar {
+body.month-summary-open .month-nav-bar,
+body.month-picker-open .month-nav-bar {
     z-index: 2700; /* Stays above the full-screen backdrop so popover is visible and clickable */
     pointer-events: none; /* Blocks clicks to other nav elements, clicking them closes popover */
 }
 
-body.month-summary-open .month-nav-bar * {
+body.month-summary-open .month-nav-bar *,
+body.month-picker-open .month-nav-bar * {
     pointer-events: none;
 }
 
@@ -1135,6 +1138,13 @@ body.month-summary-open #btnMonthSummary *,
 body.month-summary-open #monthSummaryPopover,
 body.month-summary-open #monthSummaryPopover * {
     pointer-events: auto; /* Keeps summary toggle button and popover itself interactive */
+}
+
+body.month-picker-open #monthTitleWrapper,
+body.month-picker-open #monthTitleWrapper *,
+body.month-picker-open #monthPickerPopover,
+body.month-picker-open #monthPickerPopover * {
+    pointer-events: auto; /* Keeps month title wrapper and popover itself interactive */
 }
 
 /* Center Group & Buttons Transitions - Smooth fade like search */
@@ -1241,6 +1251,20 @@ body.month-summary-open #monthSummaryPopover * {
     transform: scale(0.96);
     background: rgba(0, 136, 255, 0.12);
     border-color: var(--accent-blue);
+}
+
+.month-title-wrapper .month-title-chevron {
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.month-picker-open .month-title-wrapper .month-title-chevron {
+    transform: rotate(180deg);
+}
+
+body.month-picker-open .month-title-wrapper {
+    background: rgba(0, 136, 255, 0.12);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 12px rgba(0, 136, 255, 0.25);
 }
 
 .month-title-text {
@@ -1744,10 +1768,33 @@ body.month-summary-open #monthSummaryPopover * {
     transform: scale(0.9);
 }
 
-.month-picker-sheet {
-    max-width: 330px !important;
-    padding: 12px 14px 16px !important;
-    border-radius: 20px !important;
+/* Floating Popover for Month Picker */
+.month-picker-popover {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px) scale(0.96);
+    transform-origin: top center;
+    width: 320px;
+    max-width: calc(100vw - 20px);
+    background: rgba(14, 23, 42, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 136, 255, 0.25);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 136, 255, 0.15);
+    border-radius: 18px;
+    padding: 12px 14px 14px;
+    z-index: 2650;
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.month-picker-popover.open {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
 }
 
 .month-picker-header {

@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=13.2">
+    <link rel="stylesheet" href="style.css?v=13.3">
 </head>
 <body>
 
@@ -204,7 +204,7 @@
                         <path d="M7 4.5l9 5.5-9 5.5"/>
                     </svg>
                 </button>
-                <div class="month-title-wrapper" onclick="openMonthPickerModal()" title="בחר חודש">
+                <div class="month-title-wrapper" id="monthTitleWrapper" onclick="toggleMonthPickerPopover()" title="בחר חודש">
                     <span class="month-title-text" id="monthNavTitle">טוען...</span>
                     <span class="month-count-badge" id="monthNavCount">(0)</span>
                     <svg class="month-title-chevron" viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l5 5 5-5z"/></svg>
@@ -214,6 +214,36 @@
                         <path d="M17 4.5l-9 5.5 9 5.5"/>
                     </svg>
                 </button>
+
+                <!-- Floating Popover for Month Picker (Anchored directly under month title) -->
+                <div id="monthPickerPopover" class="month-picker-popover" onclick="event.stopPropagation();">
+                    <div class="month-picker-header">
+                        <button class="btn-close" onclick="closeMonthPickerPopover()" title="סגור">
+                            <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                        <div class="month-picker-year-selector">
+                            <button class="btn-picker-year-nav" id="btnPickerYearPrev" onclick="changePickerYear(-1)" title="שנה קודמת">
+                                <svg viewBox="0 0 24 20" width="18" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 4.5l9 5.5-9 5.5"/>
+                                </svg>
+                            </button>
+                            <span class="month-picker-year-title" id="monthPickerYearTitle">2026</span>
+                            <button class="btn-picker-year-nav" id="btnPickerYearNext" onclick="changePickerYear(1)" title="שנה הבאה">
+                                <svg viewBox="0 0 24 20" width="18" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 4.5l-9 5.5 9 5.5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="month-picker-header-spacer"></div>
+                    </div>
+
+                    <!-- 12 Month Grid -->
+                    <div class="month-picker-grid" id="monthPickerGrid">
+                        <!-- Dynamic 12 Month Cells -->
+                    </div>
+                </div>
             </div>
 
             <!-- Integrated Search Input in Center (Shown when searching) -->
@@ -388,40 +418,9 @@
 
 <div id="statusBubbleToast" class="status-bubble-toast"></div>
 
-<!-- Modal for Month Picker (iOS Wheel Style) -->
-<div class="modal-overlay" id="monthPickerModal" onclick="if(event.target === this) closeMonthPickerModal()">
-    <div class="modal-sheet month-picker-sheet">
-        <div class="modal-header month-picker-header">
-            <button class="btn-close" onclick="closeMonthPickerModal()" title="סגור">
-                <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </button>
-            <div class="month-picker-year-selector">
-                <button class="btn-picker-year-nav" id="btnPickerYearPrev" onclick="changePickerYear(-1)" title="שנה קודמת">
-                    <svg viewBox="0 0 24 20" width="18" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M7 4.5l9 5.5-9 5.5"/>
-                    </svg>
-                </button>
-                <span class="month-picker-year-title" id="monthPickerYearTitle">2026</span>
-                <button class="btn-picker-year-nav" id="btnPickerYearNext" onclick="changePickerYear(1)" title="שנה הבאה">
-                    <svg viewBox="0 0 24 20" width="18" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 4.5l-9 5.5 9 5.5"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="month-picker-header-spacer"></div>
-        </div>
-
-        <!-- 12 Month Grid -->
-        <div class="month-picker-grid" id="monthPickerGrid">
-            <!-- Dynamic 12 Month Cells -->
-        </div>
-    </div>
-</div>
-
-<!-- Floating Popover Backdrop for Monthly Summary -->
+<!-- Floating Popover Backdrops -->
 <div id="monthSummaryBackdrop" class="month-summary-backdrop" onclick="closeMonthlySummaryPopover()"></div>
+<div id="monthPickerBackdrop" class="month-summary-backdrop" onclick="closeMonthPickerPopover()"></div>
 
 <div class="modal-overlay" id="shiftModal">
     <div class="modal-sheet">
@@ -680,6 +679,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=9.7"></script>
+<script type="module" src="script.js?v=9.8"></script>
 </body>
 </html>

@@ -1080,6 +1080,9 @@ window.handleAuthClick = async function(event) {
 };
 
 window.openMonthlySummaryModal = function(mk) {
+    if (window.closeMonthPickerPopover) {
+        window.closeMonthPickerPopover();
+    }
     const popover = document.getElementById('monthSummaryPopover');
     const backdrop = document.getElementById('monthSummaryBackdrop');
     const btn = document.getElementById('btnMonthSummary');
@@ -2160,9 +2163,23 @@ window.changeMonth = function(direction) {
 
 let pickerSelectedYear = null;
 
-window.openMonthPickerModal = function() {
-    const modal = document.getElementById('monthPickerModal');
-    if (!modal) return;
+window.toggleMonthPickerPopover = function() {
+    const popover = document.getElementById('monthPickerPopover');
+    if (popover && popover.classList.contains('open')) {
+        closeMonthPickerPopover();
+    } else {
+        openMonthPickerPopover();
+    }
+};
+
+window.openMonthPickerPopover = function() {
+    if (window.closeMonthlySummaryPopover) {
+        window.closeMonthlySummaryPopover();
+    }
+
+    const popover = document.getElementById('monthPickerPopover');
+    const backdrop = document.getElementById('monthPickerBackdrop');
+    if (!popover) return;
 
     if (!activeMonthKey || activeMonthKey === 'NONE') {
         activeMonthKey = getInitialMonthKey();
@@ -2172,8 +2189,25 @@ window.openMonthPickerModal = function() {
     pickerSelectedYear = parseInt(curY, 10);
 
     renderMonthPickerContent();
-    modal.classList.add('open');
-    updateBodyScrollLock();
+    popover.classList.add('open');
+    if (backdrop) backdrop.classList.add('open');
+    document.body.classList.add('month-picker-open');
+};
+
+window.closeMonthPickerPopover = function() {
+    const popover = document.getElementById('monthPickerPopover');
+    const backdrop = document.getElementById('monthPickerBackdrop');
+    if (popover) popover.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('open');
+    document.body.classList.remove('month-picker-open');
+};
+
+window.openMonthPickerModal = function() {
+    openMonthPickerPopover();
+};
+
+window.closeMonthPickerModal = function() {
+    closeMonthPickerPopover();
 };
 
 window.changePickerYear = function(dir) {
@@ -2218,6 +2252,7 @@ function renderMonthPickerContent() {
         if (isSelected) cellClasses.push('selected');
         if (isOutOfRange) cellClasses.push('disabled');
 
+        // לחיצה על חודש חסום אינה עושה כלום ואינה סוגרת את התפריט
         const clickHandler = isOutOfRange ? '' : 'onclick="selectPickerMonth(\'' + mKey + '\')"';
 
         gridHtml += '\
@@ -2233,15 +2268,13 @@ function renderMonthPickerContent() {
 
 window.selectPickerMonth = function(mKey) {
     if (!mKey) return;
-    activeMonthKey = mKey;
-    closeMonthPickerModal();
-    renderShifts();
-};
+    const earliest = getEarliestMonthKey();
+    const latest = getLatestMonthKey();
+    if (mKey < earliest || mKey > latest) return; // חודש חסום - לא סוגר ולא עושה כלום
 
-window.closeMonthPickerModal = function() {
-    const modal = document.getElementById('monthPickerModal');
-    if (modal) modal.classList.remove('open');
-    updateBodyScrollLock();
+    activeMonthKey = mKey;
+    closeMonthPickerPopover();
+    renderShifts();
 };
 
 // ===== Desktop 24h Time Input Support (Only on non-touch desktop) =====
@@ -3037,6 +3070,8 @@ window.toggleShiftSearch = function() {
     if (isSearching) {
         closeShiftSearch();
     } else {
+        if (window.closeMonthlySummaryPopover) window.closeMonthlySummaryPopover();
+        if (window.closeMonthPickerPopover) window.closeMonthPickerPopover();
         // Open search panel immediately on click
         bar.classList.add('is-searching');
         if (input) {
