@@ -3521,18 +3521,17 @@ select.form-control option {
     display: flex;
     flex-direction: column;
     gap: 0;
-    background: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     padding: 0;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    box-shadow: none;
 }
 
 .compact-shift-card {
     border-radius: 0;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     border-right: 3px solid rgba(0, 210, 255, 0.4);
     background: transparent;
     box-shadow: none;
@@ -3541,7 +3540,7 @@ select.form-control option {
 }
 
 .compact-shift-card:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .compact-shift-card:active {
@@ -3562,12 +3561,11 @@ select.form-control option {
     border-right: 3px solid var(--accent-red);
 }
 
-/* Header in compact row - uniform fixed height */
+/* Header in compact row - two balanced lines */
 .compact-shift-header {
-    height: 60px;
-    min-height: 60px;
+    min-height: 58px;
     box-sizing: border-box;
-    padding: 0 14px;
+    padding: 8px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3577,19 +3575,34 @@ select.form-control option {
     position: relative;
 }
 
-/* Right side: Date + Bare Icon Tags */
-.compact-header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-    flex: 1;
-}
-
-.compact-date-block {
+.compact-header-content {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    justify-content: center;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Line 1: Day Name (right) + Siddur Primary (left) */
+.compact-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.compact-top-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.compact-top-left {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
     flex-shrink: 0;
 }
 
@@ -3606,6 +3619,38 @@ select.form-control option {
 .compact-day-line .shift-type-icon-inline {
     width: 17px;
     height: 17px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.compact-siddur-title {
+    font-size: 0.90rem;
+    font-weight: 700;
+    color: #60a5fa;
+    line-height: 1.25;
+    direction: ltr;
+    font-family: 'Inter', 'Assistant', sans-serif;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+/* Line 2: Date + Bare Tags (right) + Status Icon + Hours/Duration (left) */
+.compact-row-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.compact-bottom-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
 }
 
 .compact-date-str {
@@ -3614,13 +3659,14 @@ select.form-control option {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
+    white-space: nowrap;
 }
 
-/* Tags group: bare icons only - NO backgrounds, NO borders */
+/* Tags group: bare icons only */
 .compact-tags-group {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     flex-shrink: 0;
 }
 
@@ -3662,9 +3708,17 @@ select.form-control option {
     color: #fb923c;
 }
 
-/* Status Column - Fixed vertical alignment for all rows! */
+/* Bottom Left: Fixed Status Icon Alignment + Hours */
+.compact-bottom-left {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 .compact-status-col {
-    width: 22px;
+    width: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3694,52 +3748,14 @@ select.form-control option {
     color: var(--accent-red);
 }
 
-/* Left side: Siddur + Hours (Fixed width for razor-sharp column alignment) */
-.compact-header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 135px;
-    min-width: 135px;
-    flex-shrink: 0;
-    text-align: left;
-}
-
-.compact-hours-siddur-box {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-    width: 100%;
-    min-width: 0;
-}
-
-.compact-siddur-title {
-    font-size: 0.90rem;
-    font-weight: 700;
-    color: #60a5fa;
-    line-height: 1.25;
-    direction: ltr;
-    font-family: 'Inter', 'Assistant', sans-serif;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.compact-siddur-empty {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    line-height: 1.2;
-}
-
 .compact-time-row {
     display: inline-flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 6px;
     direction: ltr;
+    min-width: 135px;
+    text-align: left;
 }
 
 .compact-time-range {
@@ -3761,7 +3777,7 @@ select.form-control option {
     white-space: nowrap;
 }
 
-/* Details: Seamless extension of the row (no sub-window) */
+/* Details: Seamless extension of the row */
 .compact-details-inner {
     padding: 0 14px 12px 14px;
     background: transparent;
@@ -3779,7 +3795,7 @@ select.form-control option {
 .compact-expanded-info {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     flex: 1;
     text-align: right;
     min-width: 0;
@@ -3795,14 +3811,12 @@ select.form-control option {
     direction: rtl;
 }
 
-.compact-detail-row .label,
-.compact-duo-line .duo-label {
+.compact-detail-row .label {
     color: var(--text-muted);
     font-weight: 500;
 }
 
-.compact-detail-row .val,
-.compact-duo-line .duo-val {
+.compact-detail-row .val {
     color: #fff;
     font-weight: 600;
     font-family: 'Inter', -apple-system, sans-serif;
@@ -3829,6 +3843,28 @@ select.form-control option {
     font-weight: 600;
 }
 
+.compact-detail-row.time-summary-color {
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+
+.compact-detail-row.time-summary-color svg {
+    color: var(--accent-cyan);
+    flex-shrink: 0;
+}
+
+.compact-pipe-divider {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.75rem;
+    user-select: none;
+    margin: 0 2px;
+}
+
 .compact-detail-row.nalt-color {
     color: #facc15;
 }
@@ -3844,24 +3880,6 @@ select.form-control option {
 .compact-detail-row.notes-color {
     color: #94a3b8;
     align-items: flex-start;
-}
-
-.compact-duo-line {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    overflow-x: auto;
-    font-size: 0.82rem;
-    direction: rtl;
-}
-
-.compact-duo-line .duo-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    white-space: nowrap;
 }
 
 /* Side Action Icon Buttons */
@@ -3899,33 +3917,48 @@ select.form-control option {
     background: rgba(0, 210, 255, 0.1);
 }
 
+.compact-action-btn.btn-delete {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.08);
+}
+
 .compact-action-btn.btn-delete:hover, .compact-action-btn.btn-delete:active {
-    color: var(--accent-red);
-    border-color: rgba(239, 68, 68, 0.3);
-    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.45);
+    background: rgba(239, 68, 68, 0.18);
 }
 
 @media (max-width: 380px) {
     .compact-shift-header {
-        padding: 0 10px;
+        padding: 7px 10px;
         gap: 6px;
     }
-    .compact-header-left {
-        width: 125px;
-        min-width: 125px;
+    .compact-bottom-right {
+        gap: 6px;
+    }
+    .compact-bottom-left {
+        gap: 6px;
+    }
+    .compact-time-row {
+        min-width: 120px;
+        gap: 4px;
     }
     .compact-day-line {
-        font-size: 0.85rem;
+        font-size: 0.84rem;
     }
     .compact-siddur-title {
-        font-size: 0.85rem;
+        font-size: 0.84rem;
+        max-width: 110px;
     }
     .compact-time-range {
-        font-size: 0.78rem;
+        font-size: 0.77rem;
     }
-    .compact-duo-line {
-        gap: 8px;
-        font-size: 0.78rem;
+    .compact-total-duration {
+        font-size: 0.72rem;
+    }
+    .compact-date-str {
+        font-size: 0.70rem;
     }
 }
 

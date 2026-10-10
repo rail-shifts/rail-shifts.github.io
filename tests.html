@@ -467,6 +467,14 @@ function calculateDurationMinutes(start, end) {
     return diff;
 }
 
+function formatCompactDuration(start, end) {
+    if (!start || !end) return '(0:00)';
+    const mins = calculateDurationMinutes(start, end);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return '(' + h + ':' + String(m).padStart(2, '0') + ')';
+}
+
 function checkIsShiftActive(shift, currentTimeMs) {
     if (!shift || !shift.startTime || shift.endTime || !shift.date) return false;
     const MAX_SHIFT_MS = 12.5 * 60 * 60 * 1000;
@@ -753,6 +761,16 @@ function runAllTests() {
                     { desc: 'חיפוש סידור "104" מוצא משמרת', actual: matchesShiftSearch(shiftPrem, '104'), expected: true }
                 ];
             })()
+        },
+        {
+            title: 'פורמט משך קומפקטי בתצוגת שורות (formatCompactDuration)',
+            tests: [
+                { desc: 'שעות מלאות 19:19 עד 23:19 מחזיר (4:00)', actual: formatCompactDuration('19:19', '23:19'), expected: '(4:00)' },
+                { desc: 'שעות ודקות 07:00 עד 14:06 מחזיר (7:06)', actual: formatCompactDuration('07:00', '14:06'), expected: '(7:06)' },
+                { desc: 'מעבר חצות 22:00 עד 06:15 מחזיר (8:15)', actual: formatCompactDuration('22:00', '06:15'), expected: '(8:15)' },
+                { desc: 'ללא שעת סיום מחזיר (0:00)', actual: formatCompactDuration('07:00', ''), expected: '(0:00)' },
+                { desc: 'ללא שעת התחלה מחזיר (0:00)', actual: formatCompactDuration('', '15:00'), expected: '(0:00)' }
+            ]
         }
     ];
 

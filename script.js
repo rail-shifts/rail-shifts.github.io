@@ -3227,45 +3227,49 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
              draggable="' + (isSortingMode ? 'true' : 'false') + '">\
             \
             <div class="shift-header compact-shift-header" onclick="handleCardClick(event, \'' + shiftIdStr + '\')">\
-                <div class="compact-header-right">\
-                    <div class="compact-date-block">\
-                        <div class="compact-day-line">' + typeIconHtml + '<span>' + dayName + '</span></div>\
-                        <span class="compact-date-str">' + dateFmt + '</span>\
-                    </div>\
-                    <div class="compact-tags-group">\
-                        ' + (hasNalt ? '<span class="tag tag-nalt tag-compact" title="נל״ת">' + naltSvgIcon + '</span>' : '') + '\
-                        ' + (hasPrem ? '<span class="tag tag-prem tag-compact" title="פרמיה">' + premSvgIcon + '</span>' : '') + '\
-                        ' + (hasInstructor ? '<span class="tag tag-instructor tag-compact" title="הדרכה">' + instructorSvgIcon + '</span>' : '') + '\
-                        ' + (hasNotes ? '<span class="tag tag-notes tag-compact" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
-                        ' + (isOverlap ? '<span class="tag tag-overlap tag-compact" title="חפיפת שעות">' + overlapSvgIcon + '</span>' : '') + '\
-                    </div>\
-                </div>\
-                \
-                <div class="compact-status-col">\
-                    ' + (isComplete ? '<span class="compact-status-icon status-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="compact-status-icon status-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
-                </div>\
-                \
-                <div class="compact-header-left">\
-                    <div class="compact-hours-siddur-box">\
-                        <div class="compact-siddur-title">' + (hasSiddur ? siddurPrimary : 'משמרת') + '</div>\
-                        <div class="compact-time-row">\
-                            <span class="compact-time-range">' + (shift.startTime || '--:--') + ' - ' + (shift.endTime || '--:--') + '</span>\
-                            <span class="compact-total-duration">' + compactDurationText + '</span>\
+                <div class="compact-header-content">\
+                    <div class="compact-row-top">\
+                        <div class="compact-top-right">\
+                            <span class="compact-day-line">' + typeIconHtml + '<span>' + dayName + '</span></span>\
+                        </div>\
+                        <div class="compact-top-left">\
+                            <span class="compact-siddur-title">' + (hasSiddur ? siddurPrimary : 'משמרת') + '</span>\
                         </div>\
                     </div>\
-                    <div class="drag-handle-container">\
-                        <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="color: var(--text-muted);">\
-                            <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>\
-                            <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>\
-                            <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>\
+                    <div class="compact-row-bottom">\
+                        <div class="compact-bottom-right">\
+                            <span class="compact-date-str">' + dateFmt + '</span>\
+                            <div class="compact-tags-group">\
+                                ' + (hasNalt ? '<span class="tag tag-nalt tag-compact" title="נל״ת">' + naltSvgIcon + '</span>' : '') + '\
+                                ' + (hasPrem ? '<span class="tag tag-prem tag-compact" title="פרמיה">' + premSvgIcon + '</span>' : '') + '\
+                                ' + (hasInstructor ? '<span class="tag tag-instructor tag-compact" title="הדרכה">' + instructorSvgIcon + '</span>' : '') + '\
+                                ' + (hasNotes ? '<span class="tag tag-notes tag-compact" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
+                                ' + (isOverlap ? '<span class="tag tag-overlap tag-compact" title="חפיפת שעות">' + overlapSvgIcon + '</span>' : '') + '\
+                            </div>\
+                        </div>\
+                        <div class="compact-bottom-left">\
+                            <div class="compact-status-col">\
+                                ' + (isComplete ? '<span class="compact-status-icon status-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="compact-status-icon status-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
+                            </div>\
+                            <div class="compact-time-row">\
+                                <span class="compact-time-range">' + (shift.startTime || '--:--') + ' - ' + (shift.endTime || '--:--') + '</span>\
+                                <span class="compact-total-duration">' + compactDurationText + '</span>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="drag-handle-container">\
+                    <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="color: var(--text-muted);">\
+                        <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>\
+                        <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>\
+                        <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>\
+                    </svg>\
+                </div>\
+                <div class="select-checkbox-container">\
+                    <div class="custom-checkbox">\
+                        <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24">\
+                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>\
                         </svg>\
-                    </div>\
-                    <div class="select-checkbox-container">\
-                        <div class="custom-checkbox">\
-                            <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24">\
-                                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>\
-                            </svg>\
-                        </div>\
                     </div>\
                 </div>\
             </div>\
@@ -3275,21 +3279,24 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                     <div class="compact-details-inner">\
                         <div class="compact-expanded-body">\
                             <div class="compact-expanded-info">\
-                                ' + (hasSiddur && siddurSecondary ? '\
-                                <div class="compact-detail-row route-color">\
-                                    <span class="route-icon">↳</span>\
-                                    <span class="route-val">' + siddurSecondary + '</span>\
-                                </div>' : '') + '\
-                                \
                                 ' + (isOverlap ? '\
                                 <div class="compact-detail-row overlap-color">\
                                     ' + overlapSvgIcon + '\
                                     <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
                                 </div>' : '') + '\
                                 \
-                                <div class="compact-detail-row duo-color">\
+                                ' + (hasSiddur && siddurSecondary ? '\
+                                <div class="compact-detail-row route-color">\
+                                    <span class="route-icon">↳</span>\
+                                    <span class="route-val">' + siddurSecondary + '</span>\
+                                </div>' : '') + '\
+                                \
+                                <div class="compact-detail-row time-summary-color">\
+                                    <svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>\
                                     <span class="duo-item"><span class="label">כניסה:</span> <span class="val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
+                                    <span class="compact-pipe-divider">|</span>\
                                     <span class="duo-item"><span class="label">יציאה:</span> <span class="val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
+                                    <span class="compact-pipe-divider">|</span>\
                                     <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
                                 </div>\
                                 \
