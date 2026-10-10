@@ -1181,10 +1181,12 @@ body.month-picker-open #monthPickerPopover * {
 .month-nav-center-group {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     gap: 3px;
+    height: 28px;
     pointer-events: auto;
     z-index: 1;
 }
@@ -1289,6 +1291,8 @@ body.month-picker-open .month-title-wrapper {
 .month-nav-group-side {
     display: flex;
     align-items: center;
+    height: 32px;
+    align-self: center;
     gap: 2px;
     z-index: 2;
     transition: opacity 0.2s ease, visibility 0.2s ease;

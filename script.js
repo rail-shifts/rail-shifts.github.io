@@ -1146,12 +1146,16 @@ window.closeMonthlySummaryPopover = function() {
     const backdrop = document.getElementById('monthSummaryBackdrop');
     const btn = document.getElementById('btnMonthSummary');
 
+    const wasOpen = (popover && popover.classList.contains('open')) || (btn && btn.classList.contains('active-mode'));
+
     if (btn) {
         btn.classList.remove('active-mode');
-        btn.classList.remove('animating-bars');
-        void btn.offsetWidth;
-        btn.classList.add('animating-bars');
-        setTimeout(() => btn.classList.remove('animating-bars'), 500);
+        if (wasOpen) {
+            btn.classList.remove('animating-bars');
+            void btn.offsetWidth;
+            btn.classList.add('animating-bars');
+            setTimeout(() => btn.classList.remove('animating-bars'), 500);
+        }
     }
     if (popover) popover.classList.remove('open');
     if (backdrop) backdrop.classList.remove('open');
@@ -2173,7 +2177,8 @@ window.toggleMonthPickerPopover = function() {
 };
 
 window.openMonthPickerPopover = function() {
-    if (window.closeMonthlySummaryPopover) {
+    const sumPopover = document.getElementById('monthSummaryPopover');
+    if (sumPopover && sumPopover.classList.contains('open') && window.closeMonthlySummaryPopover) {
         window.closeMonthlySummaryPopover();
     }
 
