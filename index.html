@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=13.0">
+    <link rel="stylesheet" href="style.css?v=13.1">
 </head>
 <body>
 
@@ -151,7 +151,7 @@
         <div class="month-nav-bar" id="monthNavBar">
             <!-- Right Actions Group (Search & Monthly Summary) -->
             <div class="month-nav-group-side month-nav-group-right">
-                <button class="btn-month-action btn-month-search-action" id="btnSearchToggle" onclick="toggleShiftSearch(); this.blur();" title="חיפוש משמרות">
+                <button class="btn-month-action btn-month-search-action" id="btnSearchToggle" onclick="toggleShiftSearch()" title="חיפוש משמרות">
                     <svg class="icon-search-magnifier" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="7"/>
                         <line x1="21" y1="21" x2="16.5" y2="16.5"/>
@@ -217,9 +217,9 @@
             </div>
 
             <!-- Integrated Search Input in Center (Shown when searching) -->
-            <div class="month-search-center" id="monthSearchCenter">
+            <div class="month-search-center" id="monthSearchCenter" onclick="document.getElementById('shiftSearchInput')?.focus()">
                 <input type="text" id="shiftSearchInput" class="shift-search-input" placeholder="חיפוש סידור, תאריך, הערה, פרמיה..." oninput="handleShiftSearchInput(this.value)">
-                <button class="btn-search-clear" id="btnSearchClear" onclick="clearShiftSearch()" title="נקה שדה">
+                <button class="btn-search-clear" id="btnSearchClear" onclick="event.stopPropagation(); clearShiftSearch()" title="נקה שדה">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -685,6 +685,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=9.5"></script>
+<script type="module" src="script.js?v=9.6"></script>
 </body>
 </html>

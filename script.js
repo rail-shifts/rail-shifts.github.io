@@ -1473,6 +1473,18 @@ function setupGlobalInteractions() {
         btn.addEventListener('mouseleave', clearSummaryPressed);
     });
 
+    const searchBtn = document.getElementById('btnSearchToggle');
+    if (searchBtn && !searchBtn.dataset.searchTouchInit) {
+        searchBtn.dataset.searchTouchInit = 'true';
+        searchBtn.addEventListener('touchend', (e) => {
+            const bar = document.getElementById('monthNavBar');
+            if (bar && !bar.classList.contains('is-searching')) {
+                if (e.cancelable) e.preventDefault();
+                toggleShiftSearch();
+            }
+        });
+    }
+
     if (!window._globalButtonTouchInit) {
         window._globalButtonTouchInit = true;
         let activeTouchTarget = null;
@@ -3095,7 +3107,6 @@ window.toggleShiftSearch = function() {
         bar.classList.add('is-searching');
         if (input) {
             input.focus();
-            setTimeout(() => input.focus(), 50);
         }
 
         // Show glass in bright blue first, then morph smoothly to red X
