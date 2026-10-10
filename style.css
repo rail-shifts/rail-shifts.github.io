@@ -1819,15 +1819,9 @@ body.month-picker-open .month-title-wrapper {
 .month-picker-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding-bottom: 8px !important;
     margin-bottom: 8px !important;
-}
-
-.month-picker-header-spacer {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
 }
 
 /* 12-Month Year Grid */
