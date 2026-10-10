@@ -3602,8 +3602,11 @@ select.form-control option {
 .compact-top-left {
     display: inline-flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+    width: 135px;
+    min-width: 135px;
     flex-shrink: 0;
+    text-align: center;
 }
 
 .compact-day-line {
@@ -3634,7 +3637,8 @@ select.form-control option {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
+    max-width: 135px;
+    text-align: center;
 }
 
 /* Line 2: Date + Bare Tags (right) + Status Icon + Hours/Duration (left) */
@@ -3785,10 +3789,7 @@ select.form-control option {
 }
 
 .compact-expanded-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
+    display: block;
     padding-top: 4px;
 }
 
@@ -3796,7 +3797,7 @@ select.form-control option {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex: 1;
+    width: 100%;
     text-align: right;
     min-width: 0;
 }
@@ -3809,6 +3810,7 @@ select.form-control option {
     line-height: 1.3;
     text-align: right;
     direction: rtl;
+    white-space: nowrap;
 }
 
 .compact-detail-row .label {
@@ -3880,50 +3882,56 @@ select.form-control option {
 .compact-detail-row.notes-color {
     color: #94a3b8;
     align-items: flex-start;
+    white-space: normal;
+    word-break: break-word;
 }
 
-/* Side Action Icon Buttons */
-.compact-expanded-actions {
+/* Bottom Action Chips */
+.compact-actions-row {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
     align-items: center;
-    flex-shrink: 0;
-    padding-top: 2px;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 4px;
 }
 
-.compact-action-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 7px;
-    display: flex;
+.compact-action-chip {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--text-secondary);
+    gap: 5px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 6px;
+    font-size: 0.77rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.15s ease;
-    padding: 0;
+    font-family: inherit;
+    line-height: 1;
 }
 
-.compact-action-btn:active {
-    transform: scale(0.92);
+.compact-action-chip:active {
+    transform: scale(0.94);
 }
 
-.compact-action-btn.btn-edit:hover, .compact-action-btn.btn-edit:active {
+.compact-action-chip.btn-edit {
     color: var(--accent-cyan);
-    border-color: rgba(0, 210, 255, 0.3);
-    background: rgba(0, 210, 255, 0.1);
+    border: 1px solid rgba(0, 210, 255, 0.25);
+    background: rgba(0, 210, 255, 0.08);
 }
 
-.compact-action-btn.btn-delete {
+.compact-action-chip.btn-edit:hover, .compact-action-chip.btn-edit:active {
+    border-color: rgba(0, 210, 255, 0.45);
+    background: rgba(0, 210, 255, 0.18);
+}
+
+.compact-action-chip.btn-delete {
     color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(239, 68, 68, 0.25);
     background: rgba(239, 68, 68, 0.08);
 }
 
-.compact-action-btn.btn-delete:hover, .compact-action-btn.btn-delete:active {
+.compact-action-chip.btn-delete:hover, .compact-action-chip.btn-delete:active {
     color: #f87171;
     border-color: rgba(239, 68, 68, 0.45);
     background: rgba(239, 68, 68, 0.18);
@@ -3940,16 +3948,21 @@ select.form-control option {
     .compact-bottom-left {
         gap: 6px;
     }
+    .compact-top-left {
+        width: 120px;
+        min-width: 120px;
+    }
+    .compact-siddur-title {
+        font-size: 0.84rem;
+        max-width: 120px;
+        text-align: center;
+    }
     .compact-time-row {
         min-width: 120px;
         gap: 4px;
     }
     .compact-day-line {
         font-size: 0.84rem;
-    }
-    .compact-siddur-title {
-        font-size: 0.84rem;
-        max-width: 110px;
     }
     .compact-time-range {
         font-size: 0.77rem;

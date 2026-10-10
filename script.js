@@ -3149,6 +3149,18 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
         naltEndRange = subtractMinutesFromTime(shift.endTime, naltEnd) + ' – ' + shift.endTime;
     }
 
+    let naltContent = '';
+    if (naltStart > 0 && naltEnd > 0) {
+        naltContent = '<span class="label">נל״ת:</span> ' +
+            '<span class="duo-item"><span class="label">הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>' +
+            '<span class="compact-pipe-divider">|</span>' +
+            '<span class="duo-item"><span class="label">חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>';
+    } else if (naltStart > 0) {
+        naltContent = '<span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>';
+    } else if (naltEnd > 0) {
+        naltContent = '<span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>';
+    }
+
     let shiftTypeClass = '';
     if (hasStart) {
         const sType = getShiftTypeByStart(shift.startTime);
@@ -3303,8 +3315,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                                 ' + (hasNalt ? '\
                                 <div class="compact-detail-row nalt-color">\
                                     ' + naltSvgIcon + '\
-                                    ' + (naltStart > 0 ? '<span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>' : '') + '\
-                                    ' + (naltEnd > 0 ? '<span class="duo-item" style="margin-right: 8px;"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>' : '') + '\
+                                    ' + naltContent + '\
                                 </div>' : '') + '\
                                 \
                                 ' + (hasPrem ? '\
@@ -3329,12 +3340,14 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                                 </div>' : '') + '\
                             </div>\
                             \
-                            <div class="compact-expanded-actions">\
-                                <button class="compact-action-btn btn-edit" title="עריכה / השלמת חוסר" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">\
-                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>\
+                            <div class="compact-actions-row">\
+                                <button class="compact-action-chip btn-edit" title="עריכה / השלמת חוסר" onclick="event.stopPropagation(); openShiftModal(\'' + shiftIdStr + '\')">\
+                                    <svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>\
+                                    <span>עריכה</span>\
                                 </button>\
-                                <button class="compact-action-btn btn-delete" title="מחיקה" onclick="event.stopPropagation(); deleteShift(\'' + shiftIdStr + '\')">\
-                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>\
+                                <button class="compact-action-chip btn-delete" title="מחיקה" onclick="event.stopPropagation(); deleteShift(\'' + shiftIdStr + '\')">\
+                                    <svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>\
+                                    <span>מחיקה</span>\
                                 </button>\
                             </div>\
                         </div>\
