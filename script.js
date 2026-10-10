@@ -2187,14 +2187,12 @@ window.changePickerYear = function(dir) {
     renderMonthPickerContent();
 };
 
-let wheelActiveMonthKey = null;
-
 function renderMonthPickerContent() {
-    const scroller = document.getElementById('monthWheelScroller');
+    const grid = document.getElementById('monthPickerGrid');
     const headerTitle = document.getElementById('monthPickerYearTitle');
     const btnYearPrev = document.getElementById('btnPickerYearPrev');
     const btnYearNext = document.getElementById('btnPickerYearNext');
-    if (!scroller) return;
+    if (!grid) return;
 
     const earliest = getEarliestMonthKey();
     const latest = getLatestMonthKey();
@@ -2206,102 +2204,38 @@ function renderMonthPickerContent() {
     if (btnYearPrev) btnYearPrev.classList.toggle('nav-disabled', pickerSelectedYear <= earliestYear);
     if (btnYearNext) btnYearNext.classList.toggle('nav-disabled', pickerSelectedYear >= latestYear);
 
-    // 12 החודשים של השנה הנבחרת
-    let monthsHtml = '';
-    const availableMonths = [];
-    for (let m = 12; m >= 1; m--) {
+    // 12 החודשים של השנה הנבחרת (ינואר עד דצמבר)
+    let gridHtml = '';
+    for (let m = 1; m <= 12; m++) {
         const mKey = pickerSelectedYear + '-' + String(m).padStart(2, '0');
         const isOutOfRange = (mKey < earliest || mKey > latest);
-        if (isOutOfRange) continue;
+        const isSelected = (mKey === activeMonthKey);
 
-        availableMonths.push(mKey);
-        monthsHtml += '\
-            <div class="ios-wheel-item" data-key="' + mKey + '" onclick="clickWheelItem(\'' + mKey + '\')">\
-                ' + formatMonthOnlyName(mKey) + '\
+        const count = (window.shifts || []).filter(s => s.date && s.date.startsWith(mKey)).length;
+        const countBadge = count > 0 ? '<span class="month-picker-count">(' + count + ')</span>' : '';
+
+        const cellClasses = ['month-picker-cell'];
+        if (isSelected) cellClasses.push('selected');
+        if (isOutOfRange) cellClasses.push('disabled');
+
+        const clickHandler = isOutOfRange ? '' : 'onclick="selectPickerMonth(\'' + mKey + '\')"';
+
+        gridHtml += '\
+            <div class="' + cellClasses.join(' ') + '" data-key="' + mKey + '" ' + clickHandler + '>\
+                <span class="month-picker-name">' + formatMonthOnlyName(mKey) + '</span>\
+                ' + countBadge + '\
             </div>\
         ';
     }
 
-    scroller.innerHTML = monthsHtml;
-
-    // קביעת החודש הנבחר הראשוני
-    if (availableMonths.includes(activeMonthKey)) {
-        wheelActiveMonthKey = activeMonthKey;
-    } else {
-        wheelActiveMonthKey = availableMonths[0] || null;
-    }
-
-    // גלילה חלקה למרכז החודש הנבחר
-    setTimeout(() => {
-        scrollToWheelMonth(wheelActiveMonthKey, false);
-        updateWheelSelectedClass();
-    }, 50);
+    grid.innerHTML = gridHtml;
 }
 
-function scrollToWheelMonth(mKey, smooth = true) {
-    const scroller = document.getElementById('monthWheelScroller');
-    if (!scroller) return;
-    const targetItem = scroller.querySelector(`.ios-wheel-item[data-key="${mKey}"]`);
-    if (!targetItem) return;
-
-    const itemTop = targetItem.offsetTop;
-    const scrollerCenter = scroller.clientHeight / 2;
-    const itemHeight = targetItem.clientHeight;
-    const scrollTarget = itemTop - scrollerCenter + (itemHeight / 2);
-
-    scroller.scrollTo({
-        top: scrollTarget,
-        behavior: smooth ? 'smooth' : 'auto'
-    });
-}
-
-window.clickWheelItem = function(mKey) {
-    wheelActiveMonthKey = mKey;
-    scrollToWheelMonth(mKey, true);
-    updateWheelSelectedClass();
-};
-
-let wheelScrollTimeout = null;
-window.onWheelScroll = function() {
-    clearTimeout(wheelScrollTimeout);
-    updateWheelSelectedClass();
-};
-
-function updateWheelSelectedClass() {
-    const scroller = document.getElementById('monthWheelScroller');
-    if (!scroller) return;
-
-    const items = scroller.querySelectorAll('.ios-wheel-item');
-    const scrollerRect = scroller.getBoundingClientRect();
-    const centerY = scrollerRect.top + (scrollerRect.height / 2);
-
-    let closestItem = null;
-    let minDistance = Infinity;
-
-    items.forEach(item => {
-        const itemRect = item.getBoundingClientRect();
-        const itemCenter = itemRect.top + (itemRect.height / 2);
-        const dist = Math.abs(centerY - itemCenter);
-
-        if (dist < minDistance) {
-            minDistance = dist;
-            closestItem = item;
-        }
-    });
-
-    items.forEach(item => item.classList.remove('selected'));
-    if (closestItem) {
-        closestItem.classList.add('selected');
-        wheelActiveMonthKey = closestItem.getAttribute('data-key');
-    }
-}
-
-window.confirmWheelMonth = function() {
-    if (wheelActiveMonthKey) {
-        activeMonthKey = wheelActiveMonthKey;
-        closeMonthPickerModal();
-        renderShifts();
-    }
+window.selectPickerMonth = function(mKey) {
+    if (!mKey) return;
+    activeMonthKey = mKey;
+    closeMonthPickerModal();
+    renderShifts();
 };
 
 window.closeMonthPickerModal = function() {

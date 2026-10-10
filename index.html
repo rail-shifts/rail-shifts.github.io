@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- External CSS Style Sheet -->
-    <link rel="stylesheet" href="style.css?v=13.1">
+    <link rel="stylesheet" href="style.css?v=13.2">
 </head>
 <body>
 
@@ -413,15 +413,10 @@
             <div class="month-picker-header-spacer"></div>
         </div>
 
-        <!-- iOS Wheel Picker Container -->
-        <div class="ios-wheel-container">
-            <div class="ios-wheel-highlight"></div>
-            <div class="ios-wheel-scroller" id="monthWheelScroller" onscroll="onWheelScroll()">
-                <!-- Dynamic Month Items -->
-            </div>
+        <!-- 12 Month Grid -->
+        <div class="month-picker-grid" id="monthPickerGrid">
+            <!-- Dynamic 12 Month Cells -->
         </div>
-
-        <button class="btn-wheel-select" onclick="confirmWheelMonth()">אישור</button>
     </div>
 </div>
 
@@ -685,6 +680,6 @@
 </div>
 
 <!-- External JavaScript File -->
-<script type="module" src="script.js?v=9.6"></script>
+<script type="module" src="script.js?v=9.7"></script>
 </body>
 </html>
