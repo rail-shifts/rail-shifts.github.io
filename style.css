@@ -505,9 +505,7 @@ body.user-menu-open #headerAuthContainer * {
     gap: 8px;
     background: linear-gradient(180deg, transparent 0%, rgba(11, 19, 41, 0.8) 35%, var(--bg-primary) 100%);
     z-index: 900;
-    pointer-events: none; 
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
+    pointer-events: none;
 }
 
 .bottom-nav-wrapper.tools-open,
