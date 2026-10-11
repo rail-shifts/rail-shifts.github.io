@@ -3809,13 +3809,30 @@ select.form-control option {
 
 .compact-detail-row {
     display: flex;
-    align-items: center;
-    gap: 4px;
+    align-items: flex-start;
+    gap: 6px;
     font-size: 0.82rem;
     line-height: 1.3;
     text-align: right;
     direction: rtl;
     white-space: nowrap;
+}
+
+.compact-row-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    min-width: 15px;
+    height: 24px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.compact-row-icon svg {
+    display: block;
+    width: 13px;
+    height: 13px;
 }
 
 .compact-detail-row .label {
@@ -3840,13 +3857,25 @@ select.form-control option {
     border-radius: 6px;
     padding: 3px 8px;
     box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.icon-spacer {
-    display: inline-block;
-    width: 13px;
-    height: 13px;
-    flex-shrink: 0;
+.compact-row-box.compact-multi-line-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    padding: 4px 8px;
+}
+
+.compact-box-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    white-space: nowrap;
 }
 
 .compact-detail-row.route-color {
@@ -3873,15 +3902,9 @@ select.form-control option {
 
 .compact-detail-row.time-summary-color {
     color: #94a3b8;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    font-size: 0.82rem;
 }
 
-.compact-detail-row.time-summary-color svg.clock-white {
+.compact-detail-row.time-summary-color .compact-row-icon svg.clock-white {
     color: #ffffff;
     flex-shrink: 0;
 }

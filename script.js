@@ -3136,6 +3136,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
     const overlapSvgIcon = '<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>';
     const clockCheckSvg = '<svg class="svg-icon tag-clock-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
     const clockAlertSvg = '<svg class="svg-icon tag-clock-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
+    const clockSummarySvg = '<svg class="svg-icon clock-white" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>';
 
     const naltStart = Number(shift.naltStartMinutes ?? (shift.naltStartHours ? shift.naltStartHours * 60 : 0)) || 0;
     const naltEnd = Number(shift.naltEndMinutes ?? (shift.naltEndHours ? shift.naltEndHours * 60 : 0)) || 0;
@@ -3171,25 +3172,32 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
     let naltHtml = '';
     if (naltStart > 0 && naltEnd > 0) {
         naltHtml = '\
-            <div class="compact-detail-row nalt-color compact-row-box">\
-                ' + naltSvgIcon + '\
-                <span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>\
-            </div>\
-            <div class="compact-detail-row nalt-color compact-row-box nalt-sub-row">\
-                <span class="icon-spacer"></span>\
-                <span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>\
+            <div class="compact-detail-row nalt-color">\
+                <span class="compact-row-icon">' + naltSvgIcon + '</span>\
+                <div class="compact-row-box compact-multi-line-box">\
+                    <div class="compact-box-line">\
+                        <span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>\
+                    </div>\
+                    <div class="compact-box-line">\
+                        <span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>\
+                    </div>\
+                </div>\
             </div>';
     } else if (naltStart > 0) {
         naltHtml = '\
-            <div class="compact-detail-row nalt-color compact-row-box">\
-                ' + naltSvgIcon + '\
-                <span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>\
+            <div class="compact-detail-row nalt-color">\
+                <span class="compact-row-icon">' + naltSvgIcon + '</span>\
+                <div class="compact-row-box">\
+                    <span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>\
+                </div>\
             </div>';
     } else if (naltEnd > 0) {
         naltHtml = '\
-            <div class="compact-detail-row nalt-color compact-row-box">\
-                ' + naltSvgIcon + '\
-                <span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>\
+            <div class="compact-detail-row nalt-color">\
+                <span class="compact-row-icon">' + naltSvgIcon + '</span>\
+                <div class="compact-row-box">\
+                    <span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>\
+                </div>\
             </div>';
     }
 
@@ -3316,50 +3324,63 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                         <div class="compact-expanded-body">\
                             <div class="compact-expanded-info">\
                                 ' + (isOverlap ? '\
-                                <div class="compact-detail-row overlap-color compact-row-box">\
-                                    ' + overlapSvgIcon + '\
-                                    <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
+                                <div class="compact-detail-row overlap-color">\
+                                    <span class="compact-row-icon">' + overlapSvgIcon + '</span>\
+                                    <div class="compact-row-box">\
+                                        <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
+                                    </div>\
                                 </div>' : '') + '\
                                 \
                                 ' + (hasSiddur && siddurSecondary ? '\
-                                <div class="compact-detail-row route-color compact-row-box">\
-                                    <span class="route-icon">↳</span>\
-                                    <span class="route-val">' + siddurSecondary + '</span>\
+                                <div class="compact-detail-row route-color">\
+                                    <span class="compact-row-icon route-icon">↳</span>\
+                                    <div class="compact-row-box">\
+                                        <span class="route-val">' + siddurSecondary + '</span>\
+                                    </div>\
                                 </div>' : '') + '\
                                 \
-                                <div class="compact-detail-row time-summary-color compact-row-box">\
-                                    <svg class="svg-icon clock-white" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>\
-                                    <span class="duo-item"><span class="label">כניסה:</span> <span class="val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
-                                    <span class="compact-pipe-divider">|</span>\
-                                    <span class="duo-item"><span class="label">יציאה:</span> <span class="val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
+                                <div class="compact-detail-row time-summary-color">\
+                                    <span class="compact-row-icon">' + clockSummarySvg + '</span>\
+                                    <div class="compact-row-box' + (hasStart && hasEnd ? ' compact-multi-line-box' : '') + '">\
+                                        <div class="compact-box-line">\
+                                            <span class="duo-item"><span class="label">כניסה:</span> <span class="val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
+                                            <span class="compact-pipe-divider">|</span>\
+                                            <span class="duo-item"><span class="label">יציאה:</span> <span class="val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
+                                        </div>\
+                                        ' + (hasStart && hasEnd ? '\
+                                        <div class="compact-box-line duration-sub-color">\
+                                            <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
+                                        </div>' : '') + '\
+                                    </div>\
                                 </div>\
-                                ' + (hasStart && hasEnd ? '\
-                                <div class="compact-detail-row duration-sub-color compact-row-box duration-sub-row">\
-                                    <span class="icon-spacer"></span>\
-                                    <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
-                                </div>' : '') + '\
                                 \
                                 ' + naltHtml + '\
                                 \
                                 ' + (hasPrem ? '\
-                                <div class="compact-detail-row prem-color compact-row-box">\
-                                    ' + premSvgIcon + '\
-                                    <span class="label">פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
-                                    <span class="val">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
+                                <div class="compact-detail-row prem-color">\
+                                    <span class="compact-row-icon">' + premSvgIcon + '</span>\
+                                    <div class="compact-row-box">\
+                                        <span class="label">פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
+                                        <span class="val">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
+                                    </div>\
                                 </div>' : '') + '\
                                 \
                                 ' + (window.isUserInstructor && hasInstructor ? '\
-                                <div class="compact-detail-row instructor-color compact-row-box">\
-                                    ' + instructorSvgIcon + '\
-                                    <span class="label">הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
-                                    <span class="val">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
+                                <div class="compact-detail-row instructor-color">\
+                                    <span class="compact-row-icon">' + instructorSvgIcon + '</span>\
+                                    <div class="compact-row-box">\
+                                        <span class="label">הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
+                                        <span class="val">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
+                                    </div>\
                                 </div>' : '') + '\
                                 \
                                 ' + (hasNotes ? '\
-                                <div class="compact-detail-row notes-color compact-row-box">\
-                                    ' + notesSvgIcon + '\
-                                    <span class="label">הערות:</span>\
-                                    <span class="val">' + shift.notes + '</span>\
+                                <div class="compact-detail-row notes-color">\
+                                    <span class="compact-row-icon">' + notesSvgIcon + '</span>\
+                                    <div class="compact-row-box">\
+                                        <span class="label">הערות:</span>\
+                                        <span class="val">' + shift.notes + '</span>\
+                                    </div>\
                                 </div>' : '') + '\
                             </div>\
                             \
