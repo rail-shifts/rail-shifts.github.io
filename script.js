@@ -3160,16 +3160,29 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
         naltEndRange = subtractMinutesFromTime(shift.endTime, naltEnd) + ' – ' + shift.endTime;
     }
 
-    let naltContent = '';
+    let naltHtml = '';
     if (naltStart > 0 && naltEnd > 0) {
-        naltContent = '<span class="label">נל״ת:</span> ' +
-            '<span class="duo-item"><span class="label">הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>' +
-            '<span class="compact-pipe-divider">|</span>' +
-            '<span class="duo-item"><span class="label">חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>';
+        naltHtml = '\
+            <div class="compact-detail-row nalt-color compact-row-box">\
+                ' + naltSvgIcon + '\
+                <span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>\
+            </div>\
+            <div class="compact-detail-row nalt-color compact-row-box nalt-sub-row">\
+                <span class="icon-spacer"></span>\
+                <span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>\
+            </div>';
     } else if (naltStart > 0) {
-        naltContent = '<span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>';
+        naltHtml = '\
+            <div class="compact-detail-row nalt-color compact-row-box">\
+                ' + naltSvgIcon + '\
+                <span class="duo-item"><span class="label">נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span> <span class="val">' + naltStartRange + '</span></span>\
+            </div>';
     } else if (naltEnd > 0) {
-        naltContent = '<span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>';
+        naltHtml = '\
+            <div class="compact-detail-row nalt-color compact-row-box">\
+                ' + naltSvgIcon + '\
+                <span class="duo-item"><span class="label">נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span> <span class="val">' + naltEndRange + '</span></span>\
+            </div>';
     }
 
     let shiftTypeClass = '';
@@ -3303,48 +3316,47 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                         <div class="compact-expanded-body">\
                             <div class="compact-expanded-info">\
                                 ' + (isOverlap ? '\
-                                <div class="compact-detail-row overlap-color">\
+                                <div class="compact-detail-row overlap-color compact-row-box">\
                                     ' + overlapSvgIcon + '\
                                     <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
                                 </div>' : '') + '\
                                 \
                                 ' + (hasSiddur && siddurSecondary ? '\
-                                <div class="compact-detail-row route-color">\
+                                <div class="compact-detail-row route-color compact-row-box">\
                                     <span class="route-icon">↳</span>\
                                     <span class="route-val">' + siddurSecondary + '</span>\
                                 </div>' : '') + '\
                                 \
-                                <div class="compact-detail-row time-summary-color">\
-                                    <svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>\
+                                <div class="compact-detail-row time-summary-color compact-row-box">\
+                                    <svg class="svg-icon clock-white" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>\
                                     <span class="duo-item"><span class="label">כניסה:</span> <span class="val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
                                     <span class="compact-pipe-divider">|</span>\
                                     <span class="duo-item"><span class="label">יציאה:</span> <span class="val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
-                                    <span class="compact-pipe-divider">|</span>\
-                                    <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
                                 </div>\
-                                \
-                                ' + (hasNalt ? '\
-                                <div class="compact-detail-row nalt-color">\
-                                    ' + naltSvgIcon + '\
-                                    ' + naltContent + '\
+                                ' + (hasStart && hasEnd ? '\
+                                <div class="compact-detail-row duration-sub-color compact-row-box duration-sub-row">\
+                                    <span class="icon-spacer"></span>\
+                                    <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
                                 </div>' : '') + '\
                                 \
+                                ' + naltHtml + '\
+                                \
                                 ' + (hasPrem ? '\
-                                <div class="compact-detail-row prem-color">\
+                                <div class="compact-detail-row prem-color compact-row-box">\
                                     ' + premSvgIcon + '\
                                     <span class="label">פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
                                     <span class="val">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
                                 </div>' : '') + '\
                                 \
                                 ' + (window.isUserInstructor && hasInstructor ? '\
-                                <div class="compact-detail-row instructor-color">\
+                                <div class="compact-detail-row instructor-color compact-row-box">\
                                     ' + instructorSvgIcon + '\
                                     <span class="label">הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
                                     <span class="val">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
                                 </div>' : '') + '\
                                 \
                                 ' + (hasNotes ? '\
-                                <div class="compact-detail-row notes-color">\
+                                <div class="compact-detail-row notes-color compact-row-box">\
                                     ' + notesSvgIcon + '\
                                     <span class="label">הערות:</span>\
                                     <span class="val">' + shift.notes + '</span>\

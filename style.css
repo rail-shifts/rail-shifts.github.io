@@ -3834,19 +3834,38 @@ select.form-control option {
     font-variant-numeric: tabular-nums;
 }
 
+.compact-row-box {
+    width: fit-content;
+    max-width: 100%;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 3px 8px;
+    box-sizing: border-box;
+}
+
+.icon-spacer {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
 .compact-detail-row.route-color {
-    color: #93c5fd;
-    font-weight: 600;
+    color: #60a5fa;
+    font-size: 0.80rem;
+    font-weight: 500;
+    opacity: 0.88;
 }
 
 .compact-detail-row.route-color .route-icon {
-    color: var(--accent-cyan);
-    font-size: 0.90rem;
-    font-weight: bold;
+    color: #60a5fa;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
 .compact-detail-row.route-color .route-val {
-    color: #93c5fd;
+    color: #60a5fa;
 }
 
 .compact-detail-row.overlap-color {
@@ -3864,9 +3883,21 @@ select.form-control option {
     font-size: 0.82rem;
 }
 
-.compact-detail-row.time-summary-color svg {
-    color: var(--accent-cyan);
+.compact-detail-row.time-summary-color svg.clock-white {
+    color: #ffffff;
     flex-shrink: 0;
+}
+
+.compact-detail-row.duration-sub-color {
+    color: #94a3b8;
+}
+
+.compact-detail-row.duration-sub-color .label {
+    color: var(--text-muted);
+}
+
+.compact-detail-row.duration-sub-color .val {
+    color: #ffffff;
 }
 
 .compact-pipe-divider {
@@ -3880,11 +3911,35 @@ select.form-control option {
     color: #facc15;
 }
 
+.compact-detail-row.nalt-color .label {
+    color: #fde047;
+}
+
+.compact-detail-row.nalt-color .val {
+    color: #facc15;
+}
+
 .compact-detail-row.prem-color {
     color: #c084fc;
 }
 
+.compact-detail-row.prem-color .label {
+    color: #d8b4fe;
+}
+
+.compact-detail-row.prem-color .val {
+    color: #c084fc;
+}
+
 .compact-detail-row.instructor-color {
+    color: #38bdf8;
+}
+
+.compact-detail-row.instructor-color .label {
+    color: #7dd3fc;
+}
+
+.compact-detail-row.instructor-color .val {
     color: #38bdf8;
 }
 
