@@ -536,6 +536,27 @@ function calculateOverlapsForShifts(shiftsList) {
     return overlappingIds;
 }
 
+function mergeCloudAndLocalShifts(cloudShifts = [], localShifts = [], nowMs = Date.now()) {
+    const cloudIds = new Set((cloudShifts || []).map(s => String(s.id)));
+    const merged = Array.isArray(cloudShifts) ? [...cloudShifts] : [];
+
+    const extraLocalShifts = (localShifts || []).filter(s => {
+        if (!s || !s.id || cloudIds.has(String(s.id))) return false;
+        const isActive = s.startTime && !s.endTime;
+        const isRecentlyCreated = s.startTimestamp && (nowMs - s.startTimestamp < 300000);
+        return isActive || isRecentlyCreated;
+    });
+
+    if (extraLocalShifts.length > 0) {
+        merged.unshift(...extraLocalShifts);
+    }
+
+    return {
+        mergedShifts: merged,
+        extraLocalShifts: extraLocalShifts
+    };
+}
+
 function normalizeSearchText(str) {
     if (!str) return '';
     return str
@@ -792,6 +813,29 @@ function runAllTests() {
                 { desc: 'מעבר חצות 23:00 עד 07:30 מחזיר "8:30 שעות"', actual: formatDurationHoursUnit('23:00', '07:30'), expected: '8:30 שעות' },
                 { desc: 'ללא זמנים מחזיר "--"', actual: formatDurationHoursUnit('', ''), expected: '--' }
             ]
+        },
+        {
+            title: '8. מניעת דריסת משמרות בעת סנכרון ענן (mergeCloudAndLocalShifts)',
+            tests: (() => {
+                const nowMs = 1700000000000;
+                const cloudShift = { id: 'c1', startTime: '07:00', endTime: '15:00', startTimestamp: nowMs - 3600000 };
+                const localActiveShift = { id: 'active_1', startTime: '20:00', endTime: null, startTimestamp: nowMs - 5000 };
+                const localRecentClosed = { id: 'recent_1', startTime: '15:00', endTime: '16:00', startTimestamp: nowMs - 60000 };
+                const localOldDeleted = { id: 'old_1', startTime: '08:00', endTime: '16:00', startTimestamp: nowMs - 86400000 };
+
+                const res1 = mergeCloudAndLocalShifts([cloudShift], [cloudShift, localActiveShift], nowMs);
+                const res2 = mergeCloudAndLocalShifts([cloudShift], [cloudShift, localOldDeleted], nowMs);
+                const res3 = mergeCloudAndLocalShifts([cloudShift], [cloudShift, localRecentClosed], nowMs);
+                const res4 = mergeCloudAndLocalShifts([cloudShift], [cloudShift], nowMs);
+
+                return [
+                    { desc: 'משמרת פעילה שנוצרה מקומית נשמרת ולא נדרסת על ידי סנכרון ענן', actual: res1.mergedShifts.some(s => s.id === 'active_1'), expected: true },
+                    { desc: 'משמרת פעילה מזוהה כ-extraLocalShift לסנכרון חוזר לענן', actual: res1.extraLocalShifts.length, expected: 1 },
+                    { desc: 'משמרת ישנה סגורה שנמחקה בענן אינה מוחזרת מחדש בטעות', actual: res2.mergedShifts.length, expected: 1 },
+                    { desc: 'משמרת שנוצרה ונסגרה בדקות האחרונות בזמן שהסנכרון רץ נשמרת', actual: res3.mergedShifts.some(s => s.id === 'recent_1'), expected: true },
+                    { desc: 'כאשר אין משמרות מקומיות חדשות, רשימת הענן נשארת ללא שינוי', actual: res4.extraLocalShifts.length, expected: 0 }
+                ];
+            })()
         }
     ];
 

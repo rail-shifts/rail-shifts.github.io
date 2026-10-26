@@ -213,6 +213,28 @@ onAuthStateChanged(auth, async (user) => {
 
 const isTestEnvironment = window.location.hostname.includes('vercel.app') || window.location.hostname === 'localhost';
 
+function mergeCloudAndLocalShifts(cloudShifts = [], localShifts = [], nowMs = Date.now()) {
+    const cloudIds = new Set((cloudShifts || []).map(s => String(s.id)));
+    const merged = Array.isArray(cloudShifts) ? [...cloudShifts] : [];
+
+    const extraLocalShifts = (localShifts || []).filter(s => {
+        if (!s || !s.id || cloudIds.has(String(s.id))) return false;
+        const isActive = s.startTime && !s.endTime;
+        const isRecentlyCreated = s.startTimestamp && (nowMs - s.startTimestamp < 300000);
+        return isActive || isRecentlyCreated;
+    });
+
+    if (extraLocalShifts.length > 0) {
+        merged.unshift(...extraLocalShifts);
+    }
+
+    return {
+        mergedShifts: merged,
+        extraLocalShifts: extraLocalShifts
+    };
+}
+window.mergeCloudAndLocalShifts = mergeCloudAndLocalShifts;
+
 async function handleUserAuthenticationSync(uid) {
     if (isTestEnvironment) {
         console.log('[Test Mode] Isolated environment: Cloud shifts sync disabled. Preserving local shifts.');
@@ -230,11 +252,31 @@ async function handleUserAuthenticationSync(uid) {
         });
 
         let localShifts = JSON.parse(localStorage.getItem('railway_shifts') || '[]');
+        let currentMemShifts = Array.isArray(window.shifts) && window.shifts.length > 0 ? window.shifts : localShifts;
+        let combinedLocal = [...currentMemShifts];
+        for (let ls of localShifts) {
+            if (!combinedLocal.some(s => String(s.id) === String(ls.id))) {
+                combinedLocal.push(ls);
+            }
+        }
+
         let lastUser = localStorage.getItem('railway_last_user');
         let isSameUser = (lastUser === uid);
 
         if (isSameUser) {
-            window.shifts = cloudShifts.length > 0 ? cloudShifts : localShifts;
+            const { mergedShifts, extraLocalShifts } = mergeCloudAndLocalShifts(cloudShifts, combinedLocal);
+
+            if (extraLocalShifts.length > 0) {
+                for (let extraShift of extraLocalShifts) {
+                    try {
+                        await setDoc(doc(db, 'users', uid, 'shifts', String(extraShift.id)), extraShift);
+                    } catch (e) {
+                        console.error('Failed to sync local shift to cloud:', e);
+                    }
+                }
+            }
+
+            window.shifts = mergedShifts.length > 0 ? mergedShifts : combinedLocal;
             autoSortShiftsArray(window.shifts);
             localStorage.setItem('railway_shifts', JSON.stringify(window.shifts));
             localStorage.setItem('railway_last_user', uid);
