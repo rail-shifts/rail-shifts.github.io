@@ -63,17 +63,6 @@ body.modal-open {
     overflow: hidden !important;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: env(safe-area-inset-top, 20px);
-    background: rgba(11, 19, 41, 0.95);
-    z-index: 3000;
-}
-
 .app-container {
     width: 100%;
     max-width: 480px;
@@ -99,7 +88,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: calc(4px + env(safe-area-inset-top, 0px)) 16px 4px 12px;
-    background: transparent;
+    background: rgba(11, 19, 41, 0.98);
     border-radius: 0;
     border-top: none;
     border-left: none;
@@ -116,33 +105,15 @@ header {
     height: calc(48px + env(safe-area-inset-top, 0px));
     box-sizing: border-box;
     z-index: 2500;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    isolation: isolate;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(11, 19, 41, 0.88);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    z-index: -1;
-    pointer-events: none;
 }
 
 .header-right {
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
 .header-left-group {
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
     gap: 14px;
