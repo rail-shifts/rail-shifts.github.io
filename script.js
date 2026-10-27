@@ -4017,3 +4017,19 @@ setupNaltCustomInputHandlers('End');
 setupDesktop24hTimeInputs();
 updateCompactPreviewButtonUI();
 window.navigateTo(currentView, false);
+
+// Silent post-launch layout flush for iPadOS / WebKit standalone PWAs (dismisses initial system launch blur)
+function triggerPostLaunchCompositorFlush() {
+    const hdr = document.getElementById('mainHeader') || document.querySelector('header');
+    if (hdr) {
+        hdr.style.webkitTransform = 'translateZ(0)';
+        hdr.style.transform = 'translateZ(0)';
+        void hdr.offsetHeight;
+    }
+    if (typeof updateActiveShiftUI === 'function') {
+        updateActiveShiftUI();
+    }
+}
+setTimeout(triggerPostLaunchCompositorFlush, 350);
+setTimeout(triggerPostLaunchCompositorFlush, 750);
+
