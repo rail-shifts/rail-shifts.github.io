@@ -88,7 +88,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: calc(4px + env(safe-area-inset-top, 0px)) 16px 4px 12px;
-    background: rgba(11, 19, 41, 0.98);
+    background: #0b1329;
     border-radius: 0;
     border-top: none;
     border-left: none;

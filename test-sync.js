@@ -78,9 +78,14 @@
                 }
             }
 
-            if (typeof autoSortShiftsArray === 'function') {
-                autoSortShiftsArray(window.shifts);
-            }
+            window.shifts.sort((a, b) => {
+                const dateA = a.date || '';
+                const dateB = b.date || '';
+                if (dateA !== dateB) return dateB.localeCompare(dateA);
+                const timeA = a.startTime || '00:00';
+                const timeB = b.startTime || '00:00';
+                return timeB.localeCompare(timeA);
+            });
 
             localStorage.setItem('railway_shifts', JSON.stringify(window.shifts));
 
