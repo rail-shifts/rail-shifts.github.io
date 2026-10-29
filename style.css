@@ -63,21 +63,6 @@ body.modal-open {
     overflow: hidden !important;
 }
 
-/* Full-width top edge strip: iOS/iPadOS 26 probes a point at the top edge of the viewport and
-   only suppresses its system scroll-edge blur if a fixed element spanning >=90% of the viewport
-   width is found there. The 480px header alone is not wide enough on iPad. Must stay hit-testable
-   (no pointer-events:none) so the system can detect it. Nothing interactive sits in these 8px. */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: max(env(safe-area-inset-top, 0px), 8px);
-    background: #0b1329;
-    z-index: 3000;
-}
-
 .app-container {
     width: 100%;
     max-width: 480px;
