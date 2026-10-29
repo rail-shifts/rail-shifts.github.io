@@ -69,7 +69,7 @@ body.modal-open {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding-top: calc(48px + max(env(safe-area-inset-top, 0px), 24px) + 6px);
+    padding-top: calc(48px + env(safe-area-inset-top, 0px) + 6px);
     padding-bottom: 88px;
     position: relative;
 }
@@ -87,7 +87,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: calc(4px + max(env(safe-area-inset-top, 0px), 24px)) 16px 4px 12px;
+    padding: calc(4px + env(safe-area-inset-top, 0px)) 16px 4px 12px;
     background: rgba(11, 19, 41, 0.98);
     border-radius: 0;
     border-top: none;
@@ -102,9 +102,28 @@ header {
     margin: 0 auto;
     width: 100%;
     max-width: 480px;
-    height: calc(48px + max(env(safe-area-inset-top, 0px), 24px));
+    height: calc(48px + env(safe-area-inset-top, 0px));
     box-sizing: border-box;
     z-index: 2500;
+}
+
+/* Tablet / iPad clearance (12px) to prevent iPadOS top blur */
+@media (min-width: 481px) {
+    .app-container {
+        padding-top: calc(48px + max(env(safe-area-inset-top, 0px), 12px) + 6px);
+    }
+    header {
+        padding-top: calc(4px + max(env(safe-area-inset-top, 0px), 12px));
+        height: calc(48px + max(env(safe-area-inset-top, 0px), 12px));
+    }
+}
+
+html.is-ipad .app-container {
+    padding-top: calc(48px + max(env(safe-area-inset-top, 0px), 12px) + 6px);
+}
+html.is-ipad header {
+    padding-top: calc(4px + max(env(safe-area-inset-top, 0px), 12px));
+    height: calc(48px + max(env(safe-area-inset-top, 0px), 12px));
 }
 
 .header-right {
