@@ -83,58 +83,40 @@ body.modal-open {
     flex-shrink: 0;
 }
 
-/* The header box spans the full viewport width so iOS/iPadOS 26 recognizes it as a top bar
-   flush with the edge (and does not lay its system scroll-edge blur over it).
-   Visually it stays a 480px column: content is padded in, and the line/shadow are drawn
-   by header::before only across the 480px column. Empty sides are not clickable. */
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: calc(4px + env(safe-area-inset-top, 0px)) max(16px, calc((100% - 480px) / 2 + 16px)) 4px max(12px, calc((100% - 480px) / 2 + 12px));
+    padding: calc(4px + env(safe-area-inset-top, 0px)) 16px 4px 12px;
     background: rgba(11, 19, 41, 0.98);
     border-radius: 0;
-    border: none;
-    box-shadow: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    margin: 0;
+    margin: 0 auto;
     width: 100%;
-    max-width: none;
+    max-width: 480px;
     height: calc(48px + env(safe-area-inset-top, 0px));
     box-sizing: border-box;
     z-index: 2500;
-    pointer-events: none;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: min(100%, 480px);
-    transform: translateX(-50%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-    z-index: -1;
-    pointer-events: none;
 }
 
 .header-right {
     display: flex;
     align-items: center;
     gap: 10px;
-    pointer-events: auto;
 }
 
 .header-left-group {
     display: flex;
     align-items: center;
     gap: 14px;
-    pointer-events: auto;
 }
 
 .header-status-box {
