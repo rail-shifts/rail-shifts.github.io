@@ -22,6 +22,31 @@
     
     <!-- External CSS Style Sheet -->
     <link rel="stylesheet" href="style.css?v=15.3">
+
+    <!-- Early Test Experiment Evaluator (Runs only in Test Environment) -->
+    <script>
+        (function() {
+            try {
+                if (window.location.hostname.includes('vercel.app') || window.location.hostname === 'localhost') {
+                    var exp = localStorage.getItem('railway_header_experiment');
+                    if (exp && exp !== 'default') {
+                        var st = document.createElement('style');
+                        st.id = 'headerExperimentStyle';
+                        if (exp === 'sticky') {
+                            st.textContent = 'header{position:-webkit-sticky!important;position:sticky!important;top:0!important;}.app-container{padding-top:6px!important;}';
+                        } else if (exp === 'top1px') {
+                            st.textContent = 'header{top:1px!important;}.app-container{padding-top:calc(49px + env(safe-area-inset-top, 0px))!important;}';
+                        } else if (exp === 'hardware') {
+                            st.textContent = 'header{-webkit-transform:translateZ(0)!important;transform:translateZ(0)!important;will-change:transform!important;}';
+                        } else if (exp === 'relative') {
+                            st.textContent = 'header{position:relative!important;top:auto!important;}.app-container{padding-top:6px!important;}';
+                        }
+                        document.head.appendChild(st);
+                    }
+                }
+            } catch(e) {}
+        })();
+    </script>
 </head>
 <body>
 
@@ -686,7 +711,7 @@
 <script>
     if (window.location.hostname.includes('vercel.app') || window.location.hostname === 'localhost') {
         const s = document.createElement('script');
-        s.src = 'test-sync.js?v=1.0';
+        s.src = 'test-sync.js?v=1.1';
         document.body.appendChild(s);
     }
 </script>

@@ -10,6 +10,34 @@
         return;
     }
 
+    // ---------------------------------------------------------
+    // Header Display Experiment (iPad Blur Diagnostic Tool)
+    // ---------------------------------------------------------
+    const EXP_STORAGE_KEY = 'railway_header_experiment';
+
+    function applyExperimentStyle(exp) {
+        let st = document.getElementById('headerExperimentStyle');
+        if (!st) {
+            st = document.createElement('style');
+            st.id = 'headerExperimentStyle';
+            document.head.appendChild(st);
+        }
+        if (exp === 'sticky') {
+            st.textContent = 'header{position:-webkit-sticky!important;position:sticky!important;top:0!important;}.app-container{padding-top:6px!important;}';
+        } else if (exp === 'top1px') {
+            st.textContent = 'header{top:1px!important;}.app-container{padding-top:calc(49px + env(safe-area-inset-top, 0px))!important;}';
+        } else if (exp === 'hardware') {
+            st.textContent = 'header{-webkit-transform:translateZ(0)!important;transform:translateZ(0)!important;will-change:transform!important;}';
+        } else if (exp === 'relative') {
+            st.textContent = 'header{position:relative!important;top:auto!important;}.app-container{padding-top:6px!important;}';
+        } else {
+            st.textContent = '';
+        }
+    }
+
+    // Apply currently active experiment on module startup
+    applyExperimentStyle(localStorage.getItem(EXP_STORAGE_KEY) || 'default');
+
     const STORAGE_KEY = 'railway_test_sync_enabled';
 
     function isSyncEnabled() {
@@ -159,6 +187,52 @@
         `;
 
         contentContainer.appendChild(card);
+
+        // Header Display Experiment Card
+        const expCard = document.createElement('div');
+        expCard.id = 'headerExpCard';
+        expCard.className = 'card-sub-section';
+        expCard.style.cssText = 'padding: 14px; border: 1px dashed rgba(255, 170, 0, 0.45); background: rgba(255, 170, 0, 0.05); border-radius: 12px; margin-top: 10px; box-sizing: border-box;';
+
+        const currentExp = localStorage.getItem(EXP_STORAGE_KEY) || 'default';
+
+        expCard.innerHTML = `
+            <div style="text-align: right; margin-bottom: 8px;">
+                <div style="font-weight: 800; font-size: 0.92rem; color: #ffaa00; display: flex; align-items: center; gap: 6px;">
+                    <span>🔬 ניסוי תצוגת הדר (iPad Blur Fix)</span>
+                </div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
+                    בחר מצב, סגור את האפליקציה לגמרי באייפד ופתח מחדש לבדיקה
+                </div>
+            </div>
+            <select id="headerExpSelect" style="width: 100%; padding: 9px 12px; background: rgba(11, 19, 41, 0.9); border: 1px solid rgba(255, 170, 0, 0.5); border-radius: 10px; color: #ffffff; font-size: 0.88rem; outline: none; cursor: pointer; box-sizing: border-box;">
+                <option value="default" ${currentExp === 'default' ? 'selected' : ''}>1. רגיל (Fixed - המצב הנוכחי)</option>
+                <option value="sticky" ${currentExp === 'sticky' ? 'selected' : ''}>2. Sticky (דביק בתזרים הדף)</option>
+                <option value="top1px" ${currentExp === 'top1px' ? 'selected' : ''}>3. Fixed + רווח 1px מלמעלה</option>
+                <option value="hardware" ${currentExp === 'hardware' ? 'selected' : ''}>4. האצת חומרה (Transform 3D)</option>
+                <option value="relative" ${currentExp === 'relative' ? 'selected' : ''}>5. גלילה רגילה (Relative - לא נעוץ)</option>
+            </select>
+            <div id="headerExpStatus" style="font-size: 0.75rem; color: #00d2ff; text-align: center; margin-top: 8px; min-height: 14px;"></div>
+        `;
+
+        contentContainer.appendChild(expCard);
+
+        const expSelect = document.getElementById('headerExpSelect');
+        const expStatus = document.getElementById('headerExpStatus');
+
+        if (expSelect) {
+            expSelect.addEventListener('change', (e) => {
+                const val = e.target.value;
+                localStorage.setItem(EXP_STORAGE_KEY, val);
+                applyExperimentStyle(val);
+                if (expStatus) {
+                    expStatus.textContent = '✓ המצב עודכן! סגור את האפליקציה מה-App Switcher ופתח מחדש לבדיקת פתיחה קרה';
+                }
+                if (typeof showStatusBubbleToast === 'function') {
+                    showStatusBubbleToast('מצב הדר עודכן');
+                }
+            });
+        }
 
         const toggle = document.getElementById('testSyncToggle');
         const slider = document.getElementById('testSyncSlider');
