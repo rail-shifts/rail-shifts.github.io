@@ -3099,10 +3099,10 @@ function buildShiftCardHTML(shift, overlappingIds) {
                 <div>\
                     <div class="details-inner">\
                         ' + (isOverlap ? '\
-                        <div class="sub-breakdown" style="border-color: rgba(234, 179, 8, 0.3);">\
+                        <div class="sub-breakdown" style="border-color: rgba(250, 204, 21, 0.35);">\
                             <div class="breakdown-item" style="color: var(--accent-yellow); border-bottom: none; padding-bottom: 0;">\
                                 <span class="breakdown-label" style="color: var(--accent-yellow); display: flex; align-items: center; gap: 4px;">\
-                                    <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>\
+                                    ' + overlapSvgIcon + '\
                                     שים לב:\
                                 </span>\
                                 <span class="breakdown-value" style="color: var(--accent-yellow); font-family: \'Assistant\', sans-serif;">קיימת חפיפת שעות עם משמרת נוספת</span>\

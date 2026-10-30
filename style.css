@@ -8,8 +8,8 @@
     --accent-green: #10b981;
     --accent-orange: #f59e0b;
     --accent-red: #ef4444;
-    --accent-yellow: #eab308;
-    --accent-taxi: #facc15;
+    --accent-yellow: #facc15;
+    --accent-taxi: #fb923c;
     --accent-purple: #c084fc;
     --accent-instructor: #38bdf8;
     --text-main: #f8fafc;
@@ -3953,7 +3953,7 @@ select.form-control option {
 }
 
 .compact-detail-row.overlap-color {
-    color: #fb923c;
+    color: #facc15;
     font-weight: 600;
 }
 
@@ -3988,16 +3988,16 @@ select.form-control option {
 }
 
 .compact-detail-row.nalt-color {
-    color: #facc15;
+    color: #fb923c;
 }
 
 .compact-detail-row.nalt-color .label {
-    color: rgba(250, 204, 21, 0.75);
+    color: rgba(251, 146, 60, 0.75);
     font-weight: 400;
 }
 
 .compact-detail-row.nalt-color .val {
-    color: #facc15;
+    color: #fb923c;
     font-weight: 600;
 }
 
