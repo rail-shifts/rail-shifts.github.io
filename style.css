@@ -107,25 +107,6 @@ header {
     z-index: 2500;
 }
 
-/* Tablet / iPad clearance (16px) to prevent iPadOS top blur */
-@media (min-width: 481px) {
-    .app-container {
-        padding-top: calc(48px + max(env(safe-area-inset-top, 0px), 16px) + 6px);
-    }
-    header {
-        padding-top: calc(4px + max(env(safe-area-inset-top, 0px), 16px));
-        height: calc(48px + max(env(safe-area-inset-top, 0px), 16px));
-    }
-}
-
-html.is-ipad .app-container {
-    padding-top: calc(48px + max(env(safe-area-inset-top, 0px), 16px) + 6px);
-}
-html.is-ipad header {
-    padding-top: calc(4px + max(env(safe-area-inset-top, 0px), 16px));
-    height: calc(48px + max(env(safe-area-inset-top, 0px), 16px));
-}
-
 .header-right {
     display: flex;
     align-items: center;
