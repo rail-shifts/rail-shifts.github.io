@@ -3538,7 +3538,7 @@ select.form-control option {
 }
 
 .compact-shift-card.has-overlap {
-    border-right: 4px solid var(--accent-red) !important;
+    border-right: 4px solid #facc15 !important;
 }
 
 .compact-shift-card.selected-for-delete {
@@ -3678,7 +3678,7 @@ select.form-control option {
 }
 
 .tag-compact.tag-nalt {
-    color: var(--accent-yellow);
+    color: #fb923c;
 }
 
 .tag-compact.tag-prem {
@@ -3694,7 +3694,7 @@ select.form-control option {
 }
 
 .tag-compact.tag-overlap {
-    color: var(--accent-red);
+    color: #facc15;
 }
 
 /* Bottom Left: Fixed Status Icon Alignment + Hours */
