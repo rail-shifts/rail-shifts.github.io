@@ -2058,16 +2058,24 @@ window.calculateDurationMinutes = function(start, end) {
 window.parseSiddurDisplay = function(siddur) {
     if (!siddur || !siddur.trim()) return { primary: '', secondary: '' };
     const text = siddur.trim();
-    const numPattern = /(\d+(?:[-/]\d+)*)/;
-    const match = text.match(numPattern);
 
-    if (match) {
-        const primary = match[1];
-        const secondary = text.replace(match[1], '').replace(/\s+/g, ' ').trim();
+    // Check if there is an explicit location - location route (contains words separated by a hyphen, e.g. "בני ברק - דימונה", "חיפה - ת"א")
+    // Note: Numbers with hyphens like "4717-1" or additions like "+ עיתוק" are part of the siddur, not routes
+    const routeMatch = text.match(/(?:[,;|]\s*|(?:\d+[\s\w\+]*(?:\s+עיתוק)?\s+(?:-\s+)?))([\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*\s*[-–—]\s*[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*)$/);
+
+    if (routeMatch) {
+        const secondary = routeMatch[1].trim();
+        let primary = text.slice(0, text.lastIndexOf(secondary)).trim();
+        primary = primary.replace(/[,;|/]\s*$/, '').replace(/\s*[-–—]\s*$/, '').trim();
+
+        if (!primary) {
+            return { primary: secondary, secondary: '' };
+        }
         return { primary, secondary };
-    } else {
-        return { primary: text, secondary: '' };
     }
+
+    // No route found: entire text (e.g. "4717", "4717 + עיתוק", "עיתוק אשדוד", "4717-1") is primary!
+    return { primary: text, secondary: '' };
 };
 
 function formatMonthName(mk) {

@@ -444,6 +444,26 @@ function subtractMinutesFromTime(timeStr, minsToSub) {
     return String(Math.floor(total / 60)).padStart(2, '0') + ':' + String(total % 60).padStart(2, '0');
 }
 
+function parseSiddurDisplay(siddur) {
+    if (!siddur || !siddur.trim()) return { primary: '', secondary: '' };
+    const text = siddur.trim();
+
+    const routeMatch = text.match(/(?:[,;|]\s*|(?:\d+[\s\w\+]*(?:\s+עיתוק)?\s+(?:-\s+)?))([\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*\s*[-–—]\s*[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*)$/);
+
+    if (routeMatch) {
+        const secondary = routeMatch[1].trim();
+        let primary = text.slice(0, text.lastIndexOf(secondary)).trim();
+        primary = primary.replace(/[,;|/]\s*$/, '').replace(/\s*[-–—]\s*$/, '').trim();
+
+        if (!primary) {
+            return { primary: secondary, secondary: '' };
+        }
+        return { primary, secondary };
+    }
+
+    return { primary: text, secondary: '' };
+}
+
 function calculateDuration(start, end) {
     if (!start || !end) return '--';
     const [h1, m1] = start.split(':').map(Number);
@@ -836,6 +856,19 @@ function runAllTests() {
                     { desc: 'כאשר אין משמרות מקומיות חדשות, רשימת הענן נשארת ללא שינוי', actual: res4.extraLocalShifts.length, expected: 0 }
                 ];
             })()
+        },
+        {
+            title: '9. חילוץ סידור ומסלול (parseSiddurDisplay)',
+            tests: [
+                { desc: 'סידור עם עיתוק "4717 + עיתוק" נשאר כולו בסידור ראשי ללא מסלול', actual: parseSiddurDisplay('4717 + עיתוק').primary, expected: '4717 + עיתוק' },
+                { desc: 'סידור עם עיתוק "4717 + עיתוק" מחזיר מסלול ריק', actual: parseSiddurDisplay('4717 + עיתוק').secondary, expected: '' },
+                { desc: 'סידור מילולי "עיתוק אשדוד" נשאר כולו בסידור ראשי', actual: parseSiddurDisplay('עיתוק אשדוד').primary, expected: 'עיתוק אשדוד' },
+                { desc: 'סידור מספר ומסלול "4717 בני ברק - דימונה" מפריד את המסלול למשני', actual: parseSiddurDisplay('4717 בני ברק - דימונה').secondary, expected: 'בני ברק - דימונה' },
+                { desc: 'סידור מספר ומסלול "4717 בני ברק - דימונה" משאיר את 4717 בראשי', actual: parseSiddurDisplay('4717 בני ברק - דימונה').primary, expected: '4717' },
+                { desc: 'סידור עם עיתוק ומסלול מפריד נכון את המסלול', actual: parseSiddurDisplay('4717 + עיתוק בני ברק - דימונה').secondary, expected: 'בני ברק - דימונה' },
+                { desc: 'סידור עם עיתוק ומסלול משאיר "4717 + עיתוק" בראשי', actual: parseSiddurDisplay('4717 + עיתוק בני ברק - דימונה').primary, expected: '4717 + עיתוק' },
+                { desc: 'מסלול בלבד "בני ברק - דימונה" ללא מספר נשאר בראשי', actual: parseSiddurDisplay('בני ברק - דימונה').primary, expected: 'בני ברק - דימונה' }
+            ]
         }
     ];
 
