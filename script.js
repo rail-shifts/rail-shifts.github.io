@@ -3342,7 +3342,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                                 ' + (isComplete ? '<span class="compact-status-icon status-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="compact-status-icon status-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
                             </div>\
                             <div class="compact-time-row">\
-                                <span class="compact-time-range">' + (shift.startTime || '--:--') + ' - ' + (shift.endTime || '--:--') + '</span>\
+                                <span class="compact-time-range">' + (shift.startTime || '--:--') + ' - ' + (shift.endTime || '--:--') + '</span> \
                                 <span class="compact-total-duration">' + compactDurationText + '</span>\
                             </div>\
                         </div>\
