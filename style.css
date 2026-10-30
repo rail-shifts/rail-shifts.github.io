@@ -2642,6 +2642,37 @@ body.month-picker-open .month-title-wrapper {
     direction: ltr;
 }
 
+.breakdown-value-work {
+    direction: rtl !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.breakdown-value-work .sub-label,
+.compact-detail-row .sub-label {
+    color: rgba(148, 163, 184, 0.85);
+    font-weight: 400;
+    font-family: 'Assistant', sans-serif;
+    font-size: 0.85rem;
+}
+
+.breakdown-value-work .val-time,
+.compact-detail-row .val-time {
+    color: #ffffff;
+    font-weight: 600;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+}
+
+.breakdown-value-work .range-dash,
+.compact-detail-row .range-dash {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+    margin: 0 2px;
+}
+
 .notes-display-box {
     background: rgba(0, 0, 0, 0.25);
     border-radius: 10px;

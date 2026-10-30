@@ -2960,6 +2960,18 @@ function buildShiftCardHTML(shift, overlappingIds) {
 
     const premDurationMins = (shift.premStartTime && shift.premEndTime) ? window.calculateDurationMinutes(shift.premStartTime, shift.premEndTime) : 0;
     const instructorDurationMins = (window.isUserInstructor && shift.instructorStartTime && shift.instructorEndTime) ? window.calculateDurationMinutes(shift.instructorStartTime, shift.instructorEndTime) : 0;
+    const workDurationMins = (shift.startTime && shift.endTime) ? window.calculateDurationMinutes(shift.startTime, shift.endTime) : 0;
+
+    let shiftHoursHtml = '';
+    if (hasStart && hasEnd) {
+        shiftHoursHtml = '<span class="sub-label">יציאה</span> <span class="val-time">' + shift.endTime + '</span> <span class="range-dash">–</span> <span class="val-time">' + shift.startTime + '</span> <span class="sub-label">כניסה</span>';
+    } else if (hasStart) {
+        shiftHoursHtml = '<span class="sub-label">כניסה</span> <span class="val-time">' + shift.startTime + '</span>';
+    } else if (hasEnd) {
+        shiftHoursHtml = '<span class="sub-label">יציאה</span> <span class="val-time">' + shift.endTime + '</span>';
+    } else {
+        shiftHoursHtml = '<span class="val-time">לא הוזן</span>';
+    }
 
     const parts = (shift.date || '').split('-');
     const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
@@ -3045,6 +3057,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
     const overlapSvgIcon = '<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M12 1.5L0.8 21.5h22.4L12 1.5z M10.6 7h2.8v6.5h-2.8z M10.6 15.5h2.8v3h-2.8z"/></svg>';
     const clockCheckSvg = '<svg class="svg-icon tag-clock-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5.7 14.2A8 8 0 1 1 13 19"/><path d="M13 6v5h4.5"/><path d="M4.5 17.2l2.3 2.3 4.3-4.3"/></svg>';
     const clockAlertSvg = '<svg class="svg-icon tag-clock-icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5.3 12.8A8 8 0 1 1 14.2 18.9"/><path d="M13 6v5h4.5"/><path class="triangle-fill" fill-rule="evenodd" d="M7.8 13.5L12 21H3.6ZM7.2 15.8H8.4V18.4H7.2ZM7.2 19.4H8.4V20.6H7.2Z"/></svg>';
+    const clockSummarySvg = '<svg class="svg-icon clock-white" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>';
 
     return '\
         <div class="shift-card ' + shiftTypeClass + ' ' + (isActive ? 'active-shift' : '') + ' ' + (isOverlap ? 'has-overlap' : '') + ' ' + (isIncomplete && !isActive ? 'incomplete' : '') + ' ' + (isSelected ? 'selected-for-delete' : '') + '" \
@@ -3110,19 +3123,9 @@ function buildShiftCardHTML(shift, overlappingIds) {
                         </div>' : '') + '\
                         \
                         <div class="sub-breakdown">\
-                            ' + (hasSiddur ? '\
-                            <div class="breakdown-item-siddur">\
-                                <span class="breakdown-label">סידור:</span>\
-                                <span class="breakdown-value-center">' + shift.siddur + '</span>\
-                                <div></div>\
-                            </div>' : '') + '\
-                            <div class="breakdown-item-duo" style="display: flex; align-items: center;">\
-                                <div class="duo-col" style="flex: 1;">\
-                                    <span class="breakdown-label">כניסה:</span>\
-                                    <span class="breakdown-value">' + (shift.startTime || 'לא הוזן') + '</span>\
-                                    <span class="breakdown-label" style="margin-right: 12px;">יציאה:</span>\
-                                    <span class="breakdown-value">' + (shift.endTime || 'לא הוזן') + '</span>\
-                                </div>\
+                            <div class="breakdown-item" style="border-bottom: none; padding-bottom: 0;">\
+                                <span class="breakdown-label">' + clockSummarySvg + ' משמרת ' + (workDurationMins > 0 ? '(' + window.formatMinutesToHM(workDurationMins) + ')' : '') + ':</span>\
+                                <div class="breakdown-value breakdown-value-work">' + shiftHoursHtml + '</div>\
                             </div>\
                         </div>\
                         \
@@ -3232,6 +3235,18 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
 
     const premDurationMins = (shift.premStartTime && shift.premEndTime) ? window.calculateDurationMinutes(shift.premStartTime, shift.premEndTime) : 0;
     const instructorDurationMins = (window.isUserInstructor && shift.instructorStartTime && shift.instructorEndTime) ? window.calculateDurationMinutes(shift.instructorStartTime, shift.instructorEndTime) : 0;
+    const workDurationMins = (shift.startTime && shift.endTime) ? window.calculateDurationMinutes(shift.startTime, shift.endTime) : 0;
+
+    let shiftHoursHtml = '';
+    if (hasStart && hasEnd) {
+        shiftHoursHtml = '<span class="sub-label">יציאה</span> <span class="val-time">' + shift.endTime + '</span> <span class="range-dash">–</span> <span class="val-time">' + shift.startTime + '</span> <span class="sub-label">כניסה</span>';
+    } else if (hasStart) {
+        shiftHoursHtml = '<span class="sub-label">כניסה</span> <span class="val-time">' + shift.startTime + '</span>';
+    } else if (hasEnd) {
+        shiftHoursHtml = '<span class="sub-label">יציאה</span> <span class="val-time">' + shift.endTime + '</span>';
+    } else {
+        shiftHoursHtml = '<span class="val-time">לא הוזן</span>';
+    }
 
     const parts = (shift.date || '').split('-');
     const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
@@ -3421,16 +3436,9 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                                 \
                                 <div class="compact-detail-row time-summary-color">\
                                     <span class="compact-row-icon">' + clockSummarySvg + '</span>\
-                                    <div class="compact-row-box' + (hasStart && hasEnd ? ' compact-multi-line-box' : '') + '">\
-                                        <div class="compact-box-line">\
-                                            <span class="duo-item"><span class="label">כניסה:</span> <span class="val">' + (shift.startTime || 'לא הוזן') + '</span></span>\
-                                            <span class="compact-pipe-divider">|</span>\
-                                            <span class="duo-item"><span class="label">יציאה:</span> <span class="val">' + (shift.endTime || 'לא הוזן') + '</span></span>\
-                                        </div>\
-                                        ' + (hasStart && hasEnd ? '\
-                                        <div class="compact-box-line duration-sub-color">\
-                                            <span class="duo-item"><span class="label">משך:</span> <span class="val">' + durationText + '</span></span>\
-                                        </div>' : '') + '\
+                                    <div class="compact-row-box">\
+                                        <span class="label">משמרת ' + (workDurationMins > 0 ? '(' + window.formatMinutesToHM(workDurationMins) + ')' : '') + ':</span>\
+                                        <div class="val breakdown-value-work">' + shiftHoursHtml + '</div>\
                                     </div>\
                                 </div>\
                                 \
