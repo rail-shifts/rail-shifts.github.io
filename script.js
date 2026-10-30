@@ -3078,7 +3078,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
                             ' + (hasNalt ? '<span class="tag tag-nalt">' + naltSvgIcon + ' נל״ת</span>' : '') + '\
                             ' + (hasPrem ? '<span class="tag tag-prem">' + premSvgIcon + ' פרמיה</span>' : '') + '\
                             ' + (hasInstructor ? '<span class="tag tag-instructor">' + instructorSvgIcon + ' הדרכה</span>' : '') + '\
-                            ' + (hasNotes ? '<span class="tag tag-notes" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
+                            ' + (hasNotes ? '<span class="tag tag-notes" title="הערות">' + notesSvgIcon + ' הערות</span>' : '') + '\
                             ' + (isOverlap ? '<span class="tag tag-overlap">' + overlapSvgIcon + ' כפילות</span>' : '') + '\
                         </div>\
                         <div class="badges-group-left">\
@@ -3099,13 +3099,13 @@ function buildShiftCardHTML(shift, overlappingIds) {
                 <div>\
                     <div class="details-inner">\
                         ' + (isOverlap ? '\
-                        <div class="sub-breakdown" style="border-color: rgba(250, 204, 21, 0.35);">\
-                            <div class="breakdown-item" style="color: var(--accent-yellow); border-bottom: none; padding-bottom: 0;">\
-                                <span class="breakdown-label" style="color: var(--accent-yellow); display: flex; align-items: center; gap: 4px;">\
+                        <div class="sub-breakdown">\
+                            <div class="breakdown-item breakdown-item-overlap" style="border-bottom: none; padding-bottom: 0;">\
+                                <span class="breakdown-label breakdown-label-overlap">\
                                     ' + overlapSvgIcon + '\
                                     שים לב:\
                                 </span>\
-                                <span class="breakdown-value" style="color: var(--accent-yellow); font-family: \'Assistant\', sans-serif;">קיימת חפיפת שעות עם משמרת נוספת</span>\
+                                <span class="breakdown-value breakdown-value-overlap">קיימת חפיפת שעות עם משמרת נוספת</span>\
                             </div>\
                         </div>' : '') + '\
                         \
@@ -3116,16 +3116,12 @@ function buildShiftCardHTML(shift, overlappingIds) {
                                 <span class="breakdown-value-center">' + shift.siddur + '</span>\
                                 <div></div>\
                             </div>' : '') + '\
-                            <div class="breakdown-item-duo" style="display: flex; justify-content: space-between; align-items: center;">\
+                            <div class="breakdown-item-duo" style="display: flex; align-items: center;">\
                                 <div class="duo-col" style="flex: 1;">\
                                     <span class="breakdown-label">כניסה:</span>\
                                     <span class="breakdown-value">' + (shift.startTime || 'לא הוזן') + '</span>\
-                                    <span class="breakdown-label" style="margin-right: 8px;">יציאה:</span>\
+                                    <span class="breakdown-label" style="margin-right: 12px;">יציאה:</span>\
                                     <span class="breakdown-value">' + (shift.endTime || 'לא הוזן') + '</span>\
-                                </div>\
-                                <div class="checkbox-label-container ' + (shift.fullPrem ? 'is-checked' : '') + '" onclick="handleFullPremClick(event, \'' + shiftIdStr + '\')" style="margin-right: auto;">\
-                                    <input type="checkbox" ' + (shift.fullPrem ? 'checked' : '') + ' style="pointer-events: none;" tabindex="-1">\
-                                    <span>פרמיה מלאה</span>\
                                 </div>\
                             </div>\
                         </div>\
@@ -3135,12 +3131,12 @@ function buildShiftCardHTML(shift, overlappingIds) {
                             ' + (naltStart > 0 ? '\
                             <div class="breakdown-item">\
                                 <span class="breakdown-label breakdown-label-nalt">' + naltSvgIcon + ' נל״ת הלוך (' + window.formatMinutesToHM(naltStart) + '):</span>\
-                                <span class="breakdown-value">' + naltStartRange + '</span>\
+                                <span class="breakdown-value breakdown-value-nalt">' + naltStartRange + '</span>\
                             </div>' : '') + '\
                             ' + (naltEnd > 0 ? '\
                             <div class="breakdown-item">\
                                 <span class="breakdown-label breakdown-label-nalt">' + naltSvgIcon + ' נל״ת חזור (' + window.formatMinutesToHM(naltEnd) + '):</span>\
-                                <span class="breakdown-value">' + naltEndRange + '</span>\
+                                <span class="breakdown-value breakdown-value-nalt">' + naltEndRange + '</span>\
                             </div>' : '') + '\
                         </div>' : '') + '\
                         \
@@ -3148,15 +3144,15 @@ function buildShiftCardHTML(shift, overlappingIds) {
                         <div class="sub-breakdown">\
                             <div class="breakdown-item">\
                                 <span class="breakdown-label breakdown-label-prem">' + premSvgIcon + ' פרמיה ' + (premDurationMins > 0 ? '(' + window.formatMinutesToHM(premDurationMins) + ')' : '') + ':</span>\
-                                <span class="breakdown-value">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
+                                <span class="breakdown-value breakdown-value-prem">' + (shift.premStartTime || '---') + ' – ' + (shift.premEndTime || '---') + '</span>\
                             </div>\
                         </div>' : '') + '\
                         \
                         ' + (window.isUserInstructor && hasInstructor ? '\
-                        <div class="sub-breakdown" style="border-color: rgba(56, 189, 248, 0.2);">\
+                        <div class="sub-breakdown">\
                             <div class="breakdown-item">\
-                                <span class="breakdown-label" style="color: var(--accent-instructor);">' + instructorSvgIcon + ' פרמיית הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
-                                <span class="breakdown-value">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
+                                <span class="breakdown-label breakdown-label-instructor">' + instructorSvgIcon + ' הדרכה ' + (instructorDurationMins > 0 ? '(' + window.formatMinutesToHM(instructorDurationMins) + ')' : '') + ':</span>\
+                                <span class="breakdown-value breakdown-value-instructor">' + (shift.instructorStartTime || '---') + ' – ' + (shift.instructorEndTime || '---') + '</span>\
                             </div>\
                         </div>' : '') + '\
                         \
@@ -3411,7 +3407,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                                 <div class="compact-detail-row overlap-color">\
                                     <span class="compact-row-icon">' + overlapSvgIcon + '</span>\
                                     <div class="compact-row-box">\
-                                        <span>שים לב: קיימת חפיפת שעות עם משמרת נוספת</span>\
+                                        <span class="label">שים לב:</span> <span class="val">קיימת חפיפת שעות עם משמרת נוספת</span>\
                                     </div>\
                                 </div>' : '') + '\
                                 \
@@ -3419,7 +3415,7 @@ function buildCompactShiftRowHTML(shift, overlappingIds) {
                                 <div class="compact-detail-row route-color">\
                                     <span class="compact-row-icon route-icon">↳</span>\
                                     <div class="compact-row-box">\
-                                        <span class="route-val">' + siddurSecondary + '</span>\
+                                        <span class="label">מסלול:</span> <span class="val">' + siddurSecondary + '</span>\
                                     </div>\
                                 </div>' : '') + '\
                                 \

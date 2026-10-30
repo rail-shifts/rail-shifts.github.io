@@ -2576,22 +2576,61 @@ body.month-picker-open .month-title-wrapper {
 }
 
 .breakdown-label {
-    color: var(--text-muted);
+    color: rgba(148, 163, 184, 0.85);
+    font-weight: 400;
+}
+
+.breakdown-label-overlap {
+    color: rgba(250, 204, 21, 0.75);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 400;
+}
+
+.breakdown-value-overlap {
+    color: #facc15 !important;
+    font-weight: 600;
+    font-family: 'Assistant', sans-serif;
+    direction: rtl;
 }
 
 .breakdown-label-nalt {
-    color: var(--accent-taxi);
+    color: rgba(251, 146, 60, 0.75);
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    font-weight: 400;
+}
+
+.breakdown-value-nalt {
+    color: #fb923c !important;
     font-weight: 600;
 }
 
 .breakdown-label-prem {
-    color: var(--accent-purple);
+    color: rgba(192, 132, 252, 0.75);
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    font-weight: 400;
+}
+
+.breakdown-value-prem {
+    color: #c084fc !important;
+    font-weight: 600;
+}
+
+.breakdown-label-instructor {
+    color: rgba(56, 189, 248, 0.75);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 400;
+}
+
+.breakdown-value-instructor {
+    color: #38bdf8 !important;
     font-weight: 600;
 }
 
@@ -2621,17 +2660,18 @@ body.month-picker-open .month-title-wrapper {
 }
 
 .notes-label {
-    color: var(--text-muted);
+    color: rgba(148, 163, 184, 0.85);
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-weight: 600;
+    font-weight: 400;
     flex-shrink: 0;
 }
 
 .notes-text {
     flex: 1;
-    color: #cbd5e1;
+    color: #ffffff;
+    font-weight: 500;
 }
 
 .card-actions-bar {
@@ -3948,13 +3988,30 @@ select.form-control option {
     font-weight: 600;
 }
 
-.compact-detail-row.route-color .route-val {
+.compact-detail-row.route-color .label {
+    color: rgba(96, 165, 250, 0.75);
+    font-weight: 400;
+}
+
+.compact-detail-row.route-color .val {
     color: #60a5fa;
+    font-weight: 600;
+    font-family: 'Assistant', sans-serif;
 }
 
 .compact-detail-row.overlap-color {
     color: #facc15;
+}
+
+.compact-detail-row.overlap-color .label {
+    color: rgba(250, 204, 21, 0.75);
+    font-weight: 400;
+}
+
+.compact-detail-row.overlap-color .val {
+    color: #facc15;
     font-weight: 600;
+    font-family: 'Assistant', sans-serif;
 }
 
 .compact-detail-row.time-summary-color {
