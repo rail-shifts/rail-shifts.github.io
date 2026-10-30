@@ -2059,22 +2059,40 @@ window.parseSiddurDisplay = function(siddur) {
     if (!siddur || !siddur.trim()) return { primary: '', secondary: '' };
     const text = siddur.trim();
 
-    // Check if there is an explicit location - location route (contains words separated by a hyphen, e.g. "בני ברק - דימונה", "חיפה - ת"א")
-    // Note: Numbers with hyphens like "4717-1" or additions like "+ עיתוק" are part of the siddur, not routes
-    const routeMatch = text.match(/(?:[,;|]\s*|(?:\d+[\s\w\+]*(?:\s+עיתוק)?\s+(?:-\s+)?))([\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*\s*[-–—]\s*[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*)$/);
+    // A route is a sequence of location/station names separated by dashes (e.g. "אשדוד - דימונה - אשדוד", "בני ברק - דימונה")
+    // Each hop in the route contains Hebrew/Latin letters (NOT pure digits, which are train numbers like 4607-4608 or 4607 - 4608)
+    const routeRegex = /((?:[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*\s*[-–—]\s*)+[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*)/;
 
-    if (routeMatch) {
-        const secondary = routeMatch[1].trim();
-        let primary = text.slice(0, text.lastIndexOf(secondary)).trim();
-        primary = primary.replace(/[,;|/]\s*$/, '').replace(/\s*[-–—]\s*$/, '').trim();
+    const match = text.match(routeRegex);
+
+    if (match) {
+        let route = match[0].trim();
+        let beforeRoute = text.slice(0, match.index).trim();
+        let afterRoute = text.slice(match.index + match[0].length).trim();
+
+        // If the route accidentally matched "+ עיתוק" at its start (e.g. "+ עיתוק אשדוד - דימונה")
+        const plusAddon = route.match(/^\+?\s*עיתוק\s+/);
+        if (plusAddon) {
+            beforeRoute = (beforeRoute + ' ' + plusAddon[0]).trim();
+            route = route.slice(plusAddon[0].length).trim();
+        }
+
+        // Clean leading or trailing dashes on route
+        route = route.replace(/^[-–—]\s*/, '').replace(/\s*[-–—]$/, '').trim();
+
+        // Clean trailing separators connecting primary to route
+        let primary = beforeRoute.replace(/[,;|/]\s*$/, '').replace(/\s*[-–—]\s*$/, '').trim();
+        if (afterRoute) {
+            primary = (primary + ' ' + afterRoute).trim();
+        }
 
         if (!primary) {
-            return { primary: secondary, secondary: '' };
+            return { primary: route, secondary: '' };
         }
-        return { primary, secondary };
+
+        return { primary, secondary: route };
     }
 
-    // No route found: entire text (e.g. "4717", "4717 + עיתוק", "עיתוק אשדוד", "4717-1") is primary!
     return { primary: text, secondary: '' };
 };
 

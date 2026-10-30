@@ -448,17 +448,33 @@ function parseSiddurDisplay(siddur) {
     if (!siddur || !siddur.trim()) return { primary: '', secondary: '' };
     const text = siddur.trim();
 
-    const routeMatch = text.match(/(?:[,;|]\s*|(?:\d+[\s\w\+]*(?:\s+עיתוק)?\s+(?:-\s+)?))([\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*\s*[-–—]\s*[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*)$/);
+    const routeRegex = /((?:[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*\s*[-–—]\s*)+[\u0590-\u05FFa-zA-Z"'\.]+(?:\s+[\u0590-\u05FFa-zA-Z"'\.]+)*)/;
 
-    if (routeMatch) {
-        const secondary = routeMatch[1].trim();
-        let primary = text.slice(0, text.lastIndexOf(secondary)).trim();
-        primary = primary.replace(/[,;|/]\s*$/, '').replace(/\s*[-–—]\s*$/, '').trim();
+    const match = text.match(routeRegex);
+
+    if (match) {
+        let route = match[0].trim();
+        let beforeRoute = text.slice(0, match.index).trim();
+        let afterRoute = text.slice(match.index + match[0].length).trim();
+
+        const plusAddon = route.match(/^\+?\s*עיתוק\s+/);
+        if (plusAddon) {
+            beforeRoute = (beforeRoute + ' ' + plusAddon[0]).trim();
+            route = route.slice(plusAddon[0].length).trim();
+        }
+
+        route = route.replace(/^[-–—]\s*/, '').replace(/\s*[-–—]$/, '').trim();
+
+        let primary = beforeRoute.replace(/[,;|/]\s*$/, '').replace(/\s*[-–—]\s*$/, '').trim();
+        if (afterRoute) {
+            primary = (primary + ' ' + afterRoute).trim();
+        }
 
         if (!primary) {
-            return { primary: secondary, secondary: '' };
+            return { primary: route, secondary: '' };
         }
-        return { primary, secondary };
+
+        return { primary, secondary: route };
     }
 
     return { primary: text, secondary: '' };
@@ -867,6 +883,8 @@ function runAllTests() {
                 { desc: 'סידור מספר ומסלול "4717 בני ברק - דימונה" משאיר את 4717 בראשי', actual: parseSiddurDisplay('4717 בני ברק - דימונה').primary, expected: '4717' },
                 { desc: 'סידור עם עיתוק ומסלול מפריד נכון את המסלול', actual: parseSiddurDisplay('4717 + עיתוק בני ברק - דימונה').secondary, expected: 'בני ברק - דימונה' },
                 { desc: 'סידור עם עיתוק ומסלול משאיר "4717 + עיתוק" בראשי', actual: parseSiddurDisplay('4717 + עיתוק בני ברק - דימונה').primary, expected: '4717 + עיתוק' },
+                { desc: 'מספרי רכבות עם מקף ומסלול רב-תחנות מפריד נכון את המסלול', actual: parseSiddurDisplay('4607-4608 אשדוד - דימונה - אשדוד').secondary, expected: 'אשדוד - דימונה - אשדוד' },
+                { desc: 'מספרי רכבות עם מקף ומסלול רב-תחנות משאיר את המספר בראשי', actual: parseSiddurDisplay('4607-4608 אשדוד - דימונה - אשדוד').primary, expected: '4607-4608' },
                 { desc: 'מסלול בלבד "בני ברק - דימונה" ללא מספר נשאר בראשי', actual: parseSiddurDisplay('בני ברק - דימונה').primary, expected: 'בני ברק - דימונה' }
             ]
         }
