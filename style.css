@@ -1661,28 +1661,35 @@ body.month-picker-open .month-title-wrapper {
     transform-origin: center center;
 }
 
-/* Default (Cards mode active): Show List icon to switch to list */
-.btn-month-view-toggle .icon-mode-list {
+/* Default (Cards mode active): Show Cards icon in normal toolbar grey */
+.btn-month-view-toggle .icon-mode-cards {
     transform: scale(1) rotate(0deg);
     opacity: 1;
+    pointer-events: auto;
 }
 
-.btn-month-view-toggle .icon-mode-cards {
-    transform: scale(0.4) rotate(-90deg);
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* Compact mode active: Show Cards icon to switch back to cards */
-.btn-month-view-toggle.is-compact-active .icon-mode-list {
+.btn-month-view-toggle .icon-mode-list {
     transform: scale(0.4) rotate(90deg);
     opacity: 0;
     pointer-events: none;
 }
 
+/* Compact mode active: Show List icon with active blue indicator */
+.btn-month-view-toggle.is-compact-active {
+    color: var(--accent-blue) !important;
+    opacity: 1 !important;
+}
+
 .btn-month-view-toggle.is-compact-active .icon-mode-cards {
+    transform: scale(0.4) rotate(-90deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btn-month-view-toggle.is-compact-active .icon-mode-list {
     transform: scale(1) rotate(0deg);
     opacity: 1;
+    pointer-events: auto;
 }
 
 .month-nav-bar.is-searching .month-nav-group-left {
