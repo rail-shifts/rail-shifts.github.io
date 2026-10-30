@@ -3893,8 +3893,8 @@ select.form-control option {
 }
 
 .compact-detail-row .label {
-    color: var(--text-muted);
-    font-weight: 500;
+    color: rgba(148, 163, 184, 0.85);
+    font-weight: 400;
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -3971,11 +3971,13 @@ select.form-control option {
 }
 
 .compact-detail-row.duration-sub-color .label {
-    color: var(--text-muted);
+    color: rgba(148, 163, 184, 0.85);
+    font-weight: 400;
 }
 
 .compact-detail-row.duration-sub-color .val {
     color: #ffffff;
+    font-weight: 600;
 }
 
 .compact-pipe-divider {
@@ -3990,11 +3992,13 @@ select.form-control option {
 }
 
 .compact-detail-row.nalt-color .label {
-    color: #fde047;
+    color: rgba(250, 204, 21, 0.75);
+    font-weight: 400;
 }
 
 .compact-detail-row.nalt-color .val {
     color: #facc15;
+    font-weight: 600;
 }
 
 .compact-detail-row.prem-color {
@@ -4002,11 +4006,13 @@ select.form-control option {
 }
 
 .compact-detail-row.prem-color .label {
-    color: #d8b4fe;
+    color: rgba(192, 132, 252, 0.75);
+    font-weight: 400;
 }
 
 .compact-detail-row.prem-color .val {
     color: #c084fc;
+    font-weight: 600;
 }
 
 .compact-detail-row.instructor-color {
@@ -4014,11 +4020,13 @@ select.form-control option {
 }
 
 .compact-detail-row.instructor-color .label {
-    color: #7dd3fc;
+    color: rgba(56, 189, 248, 0.75);
+    font-weight: 400;
 }
 
 .compact-detail-row.instructor-color .val {
     color: #38bdf8;
+    font-weight: 600;
 }
 
 .compact-detail-row.notes-color {
@@ -4027,7 +4035,14 @@ select.form-control option {
     white-space: normal;
 }
 
+.compact-detail-row.notes-color .label {
+    color: rgba(148, 163, 184, 0.85);
+    font-weight: 400;
+}
+
 .compact-detail-row.notes-color .val {
+    color: #ffffff;
+    font-weight: 500;
     white-space: normal;
     word-break: break-word;
 }
@@ -4039,6 +4054,7 @@ select.form-control option {
     gap: 8px;
     margin-top: 8px;
     padding-top: 4px;
+    margin-right: 21px;
 }
 
 .compact-action-chip {
