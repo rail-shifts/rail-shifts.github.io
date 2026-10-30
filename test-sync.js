@@ -198,14 +198,44 @@
         }
     }
 
-    // Listen for settings modal open
-    const origOpenSettingsModal = window.openSettingsModal;
-    window.openSettingsModal = function() {
-        if (typeof origOpenSettingsModal === 'function') {
-            origOpenSettingsModal();
+    // Intercept window.openSettingsModal seamlessly even if script.js sets it later
+    let _openSettingsModal = window.openSettingsModal;
+    try {
+        Object.defineProperty(window, 'openSettingsModal', {
+            configurable: true,
+            enumerable: true,
+            get() {
+                return function() {
+                    if (typeof _openSettingsModal === 'function') {
+                        _openSettingsModal();
+                    }
+                    injectSettingsUI();
+                };
+            },
+            set(fn) {
+                _openSettingsModal = fn;
+            }
+        });
+    } catch(e) {
+        console.warn('[TestSync] Could not define property on window.openSettingsModal', e);
+    }
+
+    // Listen to clicks on settings button in user dropdown
+    document.addEventListener('click', (e) => {
+        if (e.target && (e.target.closest('[onclick*="openSettingsModal"]') || e.target.closest('#userDropdownMenu button'))) {
+            setTimeout(injectSettingsUI, 30);
+            setTimeout(injectSettingsUI, 200);
         }
+    }, true);
+
+    // Initial and periodic injection attempts to guarantee mounting
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', injectSettingsUI);
+    } else {
         injectSettingsUI();
-    };
+    }
+    window.addEventListener('load', injectSettingsUI);
+    [100, 400, 1000, 2500].forEach(ms => setTimeout(injectSettingsUI, ms));
 
     // Auto-run if enabled upon authentication
     let hasAutoSynced = false;
