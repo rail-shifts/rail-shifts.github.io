@@ -3655,11 +3655,12 @@ select.form-control option {
 .compact-top-left {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 84px;
+    justify-content: flex-end;
     min-width: 84px;
+    max-width: 180px;
+    width: auto;
     flex-shrink: 0;
-    text-align: center;
+    text-align: left;
 }
 
 .compact-day-line {
@@ -3690,8 +3691,8 @@ select.form-control option {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 125px;
-    text-align: center;
+    max-width: 180px;
+    text-align: left;
 }
 
 /* Line 2: Date + Bare Tags (right) + Status Icon + Hours/Duration (left) */
@@ -3809,11 +3810,11 @@ select.form-control option {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 5px;
+    gap: 8px;
     direction: ltr;
-    width: 135px;
-    min-width: 135px;
-    max-width: 135px;
+    width: 148px;
+    min-width: 148px;
+    max-width: 148px;
     text-align: left;
 }
 
@@ -3825,8 +3826,8 @@ select.form-control option {
     color: #fff;
     line-height: 1.2;
     white-space: nowrap;
-    width: 86px;
-    min-width: 86px;
+    width: 94px;
+    min-width: 94px;
     text-align: left;
 }
 
