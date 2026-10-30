@@ -1011,7 +1011,7 @@ body.month-picker-open #shiftsContainer {
 .selection-nav-right {
     display: flex;
     position: absolute;
-    right: 8px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     align-items: center;
@@ -1113,7 +1113,7 @@ body.view-history .month-nav-bar {
     width: 100%;
     max-width: 480px;
     height: 41px;
-    padding: 0 8px;
+    padding: 0 12px;
     background: rgba(11, 19, 41, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -1295,22 +1295,22 @@ body.month-picker-open .month-title-wrapper {
     align-items: center;
     height: 28px;
     align-self: center;
-    gap: 4px;
+    gap: 2.5px;
     z-index: 2;
     transition: opacity 0.2s ease, visibility 0.2s ease;
     transform: translateZ(0);
 }
 
 .month-nav-group-right {
-    width: 92px;
-    min-width: 92px;
+    width: 89px;
+    min-width: 89px;
     margin-left: 0;
     justify-content: flex-start;
 }
 
 .month-nav-group-left {
-    width: 92px;
-    min-width: 92px;
+    width: 89px;
+    min-width: 89px;
     margin-right: auto;
     justify-content: flex-end;
 }
@@ -1707,8 +1707,8 @@ body.month-picker-open .month-title-wrapper {
 /* Integrated Search Field in Center (Expands comfortably across the bar) */
 .month-search-center {
     position: absolute;
-    left: 40px;
-    right: 40px;
+    left: 44px;
+    right: 44px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -2150,7 +2150,7 @@ body.month-picker-open .month-title-wrapper {
     background: var(--bg-card);
     border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-right: 3px solid rgba(0, 210, 255, 0.4);
+    border-right: 4px solid rgba(0, 210, 255, 0.4);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     transition: border-color 0.15s, background-color 0.15s;
     user-select: none;
@@ -2179,6 +2179,11 @@ body.month-picker-open .month-title-wrapper {
 .shift-card.active-shift {
     border-color: rgba(16, 185, 129, 0.45);
     border-right: 4px solid var(--accent-green);
+}
+
+.shift-card.incomplete {
+    border-color: rgba(239, 68, 68, 0.35);
+    border-right: 4px solid var(--accent-red) !important;
 }
 
 .shift-card.has-overlap {
@@ -3594,6 +3599,10 @@ select.form-control option {
 .compact-shift-card.active-shift {
     border-right: 4px solid var(--accent-green) !important;
     background: rgba(16, 185, 129, 0.05);
+}
+
+.compact-shift-card.incomplete {
+    border-right: 4px solid var(--accent-red) !important;
 }
 
 .compact-shift-card.has-overlap {
