@@ -132,6 +132,9 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .rail-icon-svg {
@@ -1337,6 +1340,7 @@ body.month-picker-open .month-title-wrapper {
 
 #btnSearchToggle,
 #btnMonthSummary,
+#btnToggleCompactView,
 #btnToggleMultiPanel,
 #btnToggleSelection {
     color: var(--text-muted);
@@ -1344,6 +1348,7 @@ body.month-picker-open .month-title-wrapper {
 }
 
 #btnMonthSummary.active-mode,
+#btnToggleCompactView.is-compact-active,
 #btnToggleMultiPanel.active-mode,
 #btnToggleSelection.active-mode {
     color: var(--accent-blue) !important;
@@ -1352,6 +1357,7 @@ body.month-picker-open .month-title-wrapper {
 }
 
 #btnMonthSummary.active-mode:not(.animating-bars) svg,
+#btnToggleCompactView.is-compact-active svg,
 #btnToggleMultiPanel.active-mode svg,
 #btnToggleSelection.active-mode svg {
     filter: drop-shadow(0 0 6px rgba(0, 136, 255, 0.45));
@@ -1630,13 +1636,53 @@ body.month-picker-open .month-title-wrapper {
     pointer-events: none;
 }
 
-.month-nav-bar.is-searching #btnMonthSummary {
+.month-nav-bar.is-searching #btnMonthSummary,
+.month-nav-bar.is-searching #btnToggleCompactView {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     width: 0;
     margin: 0;
     overflow: hidden;
+}
+
+/* View Mode Toggle Action Button (Cards vs. Compact Rows) */
+.btn-month-view-toggle {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-month-view-toggle .icon-mode-list,
+.btn-month-view-toggle .icon-mode-cards {
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease;
+    transform-origin: center center;
+}
+
+/* Default (Cards mode active): Show List icon to switch to list */
+.btn-month-view-toggle .icon-mode-list {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+}
+
+.btn-month-view-toggle .icon-mode-cards {
+    transform: scale(0.4) rotate(-90deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Compact mode active: Show Cards icon to switch back to cards */
+.btn-month-view-toggle.is-compact-active .icon-mode-list {
+    transform: scale(0.4) rotate(90deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btn-month-view-toggle.is-compact-active .icon-mode-cards {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
 }
 
 .month-nav-bar.is-searching .month-nav-group-left {
@@ -2119,17 +2165,17 @@ body.month-picker-open .month-title-wrapper {
 
 .shift-card.active-shift {
     border-color: rgba(16, 185, 129, 0.45);
-    border-right: 3px solid var(--accent-green);
+    border-right: 4px solid var(--accent-green);
 }
 
 .shift-card.has-overlap {
-    border-color: rgba(249, 115, 22, 0.45);
-    border-right: 3px solid #fb923c;
+    border-color: rgba(250, 204, 21, 0.45);
+    border-right: 4px solid #facc15;
 }
 
 .shift-card.selected-for-delete {
     border-color: rgba(239, 68, 68, 0.45);
-    border-right: 3px solid var(--accent-red);
+    border-right: 4px solid var(--accent-red);
 }
 
 .shift-card.dragging {
@@ -2350,15 +2396,15 @@ body.month-picker-open .month-title-wrapper {
 }
 
 .tag-overlap {
-    background: rgba(249, 115, 22, 0.14);
-    color: #fb923c;
-    border: 1px solid rgba(249, 115, 22, 0.35);
+    background: rgba(250, 204, 21, 0.12);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.35);
 }
 
 .tag-nalt {
-    background: rgba(250, 204, 21, 0.12);
-    color: var(--accent-taxi);
-    border: 1px solid rgba(250, 204, 21, 0.3);
+    background: rgba(249, 115, 22, 0.14);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.35);
 }
 
 .tag-prem {

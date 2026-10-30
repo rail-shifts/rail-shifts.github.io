@@ -770,15 +770,26 @@ window.toggleCompactShiftView = function() {
 };
 
 window.updateCompactPreviewButtonUI = function() {
+    const navBtn = document.getElementById('btnToggleCompactView');
+    if (navBtn) {
+        if (isCompactShiftView) {
+            navBtn.classList.add('is-compact-active');
+            navBtn.setAttribute('title', 'תצוגת יומן: עבור לכרטיסיות');
+        } else {
+            navBtn.classList.remove('is-compact-active');
+            navBtn.setAttribute('title', 'תצוגת יומן: עבור לרשימה קומפקטית');
+        }
+    }
     const btn = document.getElementById('btnToggleCompactPreview');
     const label = document.getElementById('compactPreviewLabel');
-    if (!btn || !label) return;
-    if (isCompactShiftView) {
-        btn.classList.add('is-compact-active');
-        label.textContent = 'תצוגת יומן: רשימה קומפקטית (חדש)';
-    } else {
-        btn.classList.remove('is-compact-active');
-        label.textContent = 'תצוגת יומן: כרטיסיות רגילות';
+    if (btn && label) {
+        if (isCompactShiftView) {
+            btn.classList.add('is-compact-active');
+            label.textContent = 'תצוגת יומן: רשימה קומפקטית (חדש)';
+        } else {
+            btn.classList.remove('is-compact-active');
+            label.textContent = 'תצוגת יומן: כרטיסיות רגילות';
+        }
     }
 };
 
@@ -3041,7 +3052,7 @@ function buildShiftCardHTML(shift, overlappingIds) {
                             ' + (hasPrem ? '<span class="tag tag-prem">' + premSvgIcon + ' פרמיה</span>' : '') + '\
                             ' + (hasInstructor ? '<span class="tag tag-instructor">' + instructorSvgIcon + ' הדרכה</span>' : '') + '\
                             ' + (hasNotes ? '<span class="tag tag-notes" title="הערות">' + notesSvgIcon + '</span>' : '') + '\
-                            ' + (isOverlap ? '<span class="tag tag-overlap">כפילות</span>' : '') + '\
+                            ' + (isOverlap ? '<span class="tag tag-overlap">' + overlapSvgIcon + ' כפילות</span>' : '') + '\
                         </div>\
                         <div class="badges-group-left">\
                             ' + (isComplete ? '<span class="tag tag-complete" title="משמרת סגורה">' + clockCheckSvg + '</span>' : (!isActive ? '<span class="tag tag-alert" title="נתונים חסרים">' + clockAlertSvg + '</span>' : '')) + '\
