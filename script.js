@@ -2537,31 +2537,8 @@ window.buildMonthPrintReport = function(mk) {
     ';
 };
 
-window.printMonthReport = async function(mk) {
+window.printMonthReport = function(mk) {
     window.buildMonthPrintReport(mk);
-
-    try {
-        if (typeof disableNetwork === 'function' && db) {
-            await disableNetwork(db);
-        }
-    } catch (e) {
-        console.warn('Firestore disableNetwork notice:', e);
-    }
-
-    const restoreNetwork = () => {
-        try {
-            if (typeof enableNetwork === 'function' && db) {
-                enableNetwork(db);
-            }
-        } catch (e) {
-            console.warn('Firestore enableNetwork notice:', e);
-        }
-        window.removeEventListener('afterprint', restoreNetwork);
-    };
-
-    window.addEventListener('afterprint', restoreNetwork, { once: true });
-    setTimeout(restoreNetwork, 3000);
-
     window.print();
 };
 

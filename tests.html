@@ -522,6 +522,55 @@ function formatDurationHoursUnit(start, end) {
     return h + ':' + String(m).padStart(2, '0') + ' שעות';
 }
 
+function formatMonthName(mk) {
+    const [y, m] = mk.split('-');
+    const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+    return months[parseInt(m, 10) - 1] + ' ' + y;
+}
+
+function buildMonthPrintReportContent(shifts, mk) {
+    const mShifts = (shifts || [])
+        .filter(s => s.date && s.date.startsWith(mk))
+        .slice()
+        .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+    if (mShifts.length === 0) {
+        return '';
+    }
+
+    let totWorkMins = 0;
+    let totPremMins = 0;
+    let totNaltMins = 0;
+    let tableRows = '';
+
+    mShifts.forEach(s => {
+         let wMins = 0;
+         if (s.startTime && s.endTime) {
+             wMins = calculateDurationMinutes(s.startTime, s.endTime);
+             totWorkMins += wMins;
+         }
+         let pMins = 0;
+         if (s.premStartTime && s.premEndTime) {
+             pMins = calculateDurationMinutes(s.premStartTime, s.premEndTime);
+             totPremMins += pMins;
+         }
+         const naltMins = (Number(s.naltStartMinutes)||0) + (Number(s.naltEndMinutes)||0);
+         totNaltMins += naltMins;
+
+         const dateParts = (s.date || '').split('-');
+         const dFmt = dateParts.length === 3 ? (dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0]) : (s.date || '-');
+         
+         tableRows += '<tr><td>' + dFmt + '</td><td>' + (s.siddur || '-') + '</td></tr>';
+    });
+
+    return {
+        shiftsCount: mShifts.length,
+        totalWorkMinutes: totWorkMins,
+        monthName: formatMonthName(mk),
+        hasTable: tableRows.length > 0
+    };
+}
+
 function checkIsShiftActive(shift, currentTimeMs) {
     if (!shift || !shift.startTime || shift.endTime || !shift.date) return false;
     const MAX_SHIFT_MS = 12.5 * 60 * 60 * 1000;
@@ -887,6 +936,26 @@ function runAllTests() {
                 { desc: 'מספרי רכבות עם מקף ומסלול רב-תחנות משאיר את המספר בראשי', actual: parseSiddurDisplay('4607-4608 אשדוד - דימונה - אשדוד').primary, expected: '4607-4608' },
                 { desc: 'מסלול בלבד "בני ברק - דימונה" ללא מספר נשאר בראשי', actual: parseSiddurDisplay('בני ברק - דימונה').primary, expected: 'בני ברק - דימונה' }
             ]
+        },
+        {
+            title: '10. הפקת דוח סיכום חודשי (buildMonthPrintReportContent)',
+            tests: (() => {
+                const sampleShifts = [
+                    { id: '1', date: '2026-10-01', startTime: '06:00', endTime: '14:00', siddur: '101' },
+                    { id: '2', date: '2026-10-15', startTime: '14:00', endTime: '22:00', siddur: '102' },
+                    { id: '3', date: '2026-11-01', startTime: '08:00', endTime: '16:00', siddur: '103' }
+                ];
+                const resOct = buildMonthPrintReportContent(sampleShifts, '2026-10');
+                const resNov = buildMonthPrintReportContent(sampleShifts, '2026-11');
+                const resEmpty = buildMonthPrintReportContent(sampleShifts, '2026-12');
+
+                return [
+                    { desc: 'דוח אוקטובר מסנן נכון רק את משמרות אוקטובר (2 משמרות)', actual: resOct.shiftsCount, expected: 2 },
+                    { desc: 'דוח אוקטובר מחשב סה"כ שעות עבודה (960 דקות = 16 שעות)', actual: resOct.totalWorkMinutes, expected: 960 },
+                    { desc: 'דוח חודש ללא משמרות מחזיר ריק', actual: resEmpty, expected: '' },
+                    { desc: 'שם החודש מומר נכון לעברית (אוקטובר 2026)', actual: resOct.monthName, expected: 'אוקטובר 2026' }
+                ];
+            })()
         }
     ];
 
