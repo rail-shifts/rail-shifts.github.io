@@ -3252,6 +3252,16 @@ select.form-control option {
 #printArea {
     display: none;
 }
+body.is-printing-report #printArea {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
+}
 
 @media print {
     @page {
@@ -3278,6 +3288,8 @@ select.form-control option {
     }
     #printArea {
         display: block !important;
+        position: static !important;
+        opacity: 1 !important;
         width: 100% !important;
         direction: rtl !important;
         background: #ffffff !important;
@@ -3302,6 +3314,7 @@ select.form-control option {
         font-family: 'Assistant', sans-serif;
         font-size: 11px !important;
         page-break-inside: auto !important;
+        border: 1.5px solid #132247 !important;
     }
     .print-table th, .print-table td {
         border: 1px solid #cbd5e1 !important;

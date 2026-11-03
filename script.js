@@ -2550,6 +2550,7 @@ window.printMonthReport = function(mk) {
             btn.classList.remove('is-loading');
             btn.innerHTML = originalHTML;
         }
+        document.body.classList.remove('is-printing-report');
         window.removeEventListener('afterprint', restoreBtn);
     };
 
@@ -2564,15 +2565,20 @@ window.printMonthReport = function(mk) {
         return;
     }
 
+    document.body.classList.add('is-printing-report');
     window.addEventListener('afterprint', restoreBtn, { once: true });
     setTimeout(restoreBtn, 4000);
 
-    try {
-        window.print();
-    } catch (e) {
-        console.warn('print error:', e);
-        restoreBtn();
-    }
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            try {
+                window.print();
+            } catch (e) {
+                console.warn('print error:', e);
+                restoreBtn();
+            }
+        }, 180);
+    });
 };
 
 window.sortShiftsByDate = function() {
