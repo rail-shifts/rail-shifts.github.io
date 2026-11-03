@@ -2536,7 +2536,7 @@ window.buildMonthPrintReport = function(mk) {
     ';
 };
 
-window.printMonthReport = async function(mk) {
+window.printMonthReport = function(mk) {
     const btn = document.getElementById('modalExportBtn');
     let originalHTML = '';
     if (btn) {
@@ -2550,6 +2550,7 @@ window.printMonthReport = async function(mk) {
             btn.classList.remove('is-loading');
             btn.innerHTML = originalHTML;
         }
+        window.removeEventListener('afterprint', restoreBtn);
     };
 
     window.buildMonthPrintReport(mk);
@@ -2563,62 +2564,6 @@ window.printMonthReport = async function(mk) {
         return;
     }
 
-    const monthName = formatMonthName(mk);
-    const printDiv = document.getElementById('printArea');
-    const reportHtml = printDiv ? printDiv.innerHTML : '';
-
-    // Check if running on iOS / mobile Standalone PWA where window.print is ignored
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-
-    if (isIOS && isStandalone) {
-        // Build printable self-contained HTML document for Web Share
-        const fullDoc = '<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>דוח משמרות ' + monthName + '</title><style>body{font-family:system-ui,-apple-system,sans-serif;padding:16px;background:#fff;color:#000;direction:rtl;}.print-header{font-size:20px;font-weight:bold;margin-bottom:16px;text-align:center;color:#132247;border-bottom:2px solid #132247;padding-bottom:8px;}.print-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}.print-table th,.print-table td{border:1px solid #cbd5e1;padding:6px 8px;text-align:right;}.print-table th{background:#f1f5f9;font-weight:bold;}.print-summary-row{font-weight:bold;background:#f8fafc;}</style></head><body>' + reportHtml + '</body></html>';
-
-        if (navigator.share) {
-            try {
-                const reportFile = new File([fullDoc], 'דוח_משמרות_' + monthName.replace(/\s+/g, '_') + '.html', { type: 'text/html;charset=utf-8' });
-                if (navigator.canShare && navigator.canShare({ files: [reportFile] })) {
-                    await navigator.share({
-                        title: 'דוח משמרות - ' + monthName,
-                        files: [reportFile]
-                    });
-                    restoreBtn();
-                    return;
-                } else {
-                    await navigator.share({
-                        title: 'דוח משמרות - ' + monthName,
-                        text: 'דוח משמרות לחודש ' + monthName + ' (' + mShifts.length + ' משמרות)',
-                        url: window.location.href
-                    });
-                    restoreBtn();
-                    return;
-                }
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    console.warn('Share notice:', err);
-                }
-            }
-        }
-
-        // Fallback for iOS Standalone: open clean printable window
-        try {
-            const printWin = window.open('', '_blank');
-            if (printWin) {
-                printWin.document.write(fullDoc);
-                printWin.document.close();
-                setTimeout(() => {
-                    try { printWin.print(); } catch (e) {}
-                }, 400);
-                restoreBtn();
-                return;
-            }
-        } catch (e) {
-            console.warn('Fallback window.open notice:', e);
-        }
-    }
-
-    // Standard Desktop / Browser flow
     window.addEventListener('afterprint', restoreBtn, { once: true });
     setTimeout(restoreBtn, 4000);
 
