@@ -1007,6 +1007,11 @@ body.month-picker-open #shiftsContainer {
     transform: scale(0.97);
 }
 
+.btn-popover-export.is-loading {
+    opacity: 0.85;
+    pointer-events: none;
+}
+
 /* Integrated Selection Nav Bar Elements */
 .selection-nav-right {
     display: flex;
